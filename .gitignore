@@ -1,0 +1,32 @@
+# Dependencies
+node_modules/
+Frontend/node_modules/
+
+# Production build output
+dist/
+Frontend/dist/
+
+# Environment files
+.env
+.env.local
+.env.*.local
+
+# IDE & Editor files
+.vscode/
+.idea/
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+
+# OS generated files
+.DS_Store
+Thumbs.db
+
+# Test reports & coverage
+playwright-report/
+blob-report/
+test-results/
+Frontend/playwright-report/
+Frontend/test-results/
