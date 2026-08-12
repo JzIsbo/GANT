@@ -42,7 +42,9 @@ export function renderActivitiesView(subRoute = 'daily-activity') {
   const tabsHtml = `
     <div class="view-tabs">
       ${tabs.map(tab => `
-        <span class="view-tab ${subRoute === tab.id ? 'active' : ''}" data-route="${tab.id}">${tab.label}</span>
+        <span class="view-tab ${subRoute === tab.id ? 'active' : ''}" data-route="${tab.id}">
+          <i data-lucide="${tab.icon}" style="width:16px;height:16px;"></i> ${tab.label}
+        </span>
       `).join('')}
     </div>`;
 
@@ -116,7 +118,7 @@ function renderDailyActivity(p) {
           </button>
         </div>
       </div>
-      <div style="overflow-x:auto;">
+      <div class="table-responsive-wrapper">
         <table class="summary-table" style="width:100%;">
           <thead><tr>
             <th style="padding:0.65rem;color:var(--text-secondary);">ID</th>
@@ -303,7 +305,7 @@ function renderWeeklyActivity(m, act) {
   const randCount = (seed) => [4, 7, 5, 8, 6, 2, 1][seed % 7];
 
   return `
-    <div style="display:grid;grid-template-columns:1fr 1fr;gap:1.5rem;margin-bottom:1.5rem;">
+    <div class="activities-split-bottom" style="margin-bottom:1.5rem;">
       <div class="dashboard-card" style="padding:1.5rem;">
         <div class="card-top-title" style="margin-bottom:1rem;"><i data-lucide="calendar-range"></i> Weekly Activity Summary — Aug 2026</div>
         <div style="display:flex;gap:0.5rem;align-items:flex-end;height:120px;padding-bottom:0.5rem;border-bottom:1px solid var(--border-card);">
@@ -435,9 +437,9 @@ function renderActivityStatus(act) {
         <i data-lucide="trello"></i> Activity Status Board
         <span style="font-size:0.75rem;font-weight:normal;color:var(--text-muted);margin-left:0.5rem;">${activities.length} total activities — click status dropdown in Daily Activity to update</span>
       </div>
-      <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:1rem;">
+      <div class="kanban-board-grid">
         ${Object.entries(grouped).map(([status, items]) => `
-          <div>
+          <div class="kanban-board-column">
             <div style="font-weight:700;font-size:0.85rem;color:${colors[status]};margin-bottom:0.75rem;padding:0.4rem 0.6rem;background:${colors[status]}15;border-radius:4px;display:flex;justify-content:space-between;align-items:center;">
               <span>${status}</span>
               <span style="background:${colors[status]};color:#fff;padding:0.1rem 0.4rem;border-radius:12px;font-size:0.72rem;">${items.length}</span>
@@ -446,7 +448,7 @@ function renderActivityStatus(act) {
               ${items.slice(0, 8).map(a => `
                 <div style="padding:0.65rem;background:var(--bg-card-secondary);border-radius:6px;border-left:3px solid ${colors[status]};">
                   <div style="font-weight:700;font-size:0.8rem;color:var(--brand-blue);">${a.eq}</div>
-                  <div style="font-size:0.75rem;color:var(--text-main);margin-top:0.2rem;">${a.act}</div>
+                  <div style="font-size:0.75rem;color:var(--text-main);margin-top:0.2rem;word-break:break-word;">${a.act}</div>
                   <div style="font-size:0.7rem;color:var(--text-muted);margin-top:0.25rem;">${a.user} • ${a.phase}</div>
                 </div>`).join('')}
               ${items.length > 8 ? `<div style="text-align:center;color:var(--text-muted);font-size:0.75rem;padding:0.4rem;">+${items.length - 8} more</div>` : ''}
@@ -475,7 +477,7 @@ function renderActivityHistory() {
             <i data-lucide="inbox" style="width:32px;height:32px;margin-bottom:0.5rem;display:block;margin-left:auto;margin-right:auto;"></i>
             No activity history recorded yet. Create, edit or update activities to see the audit trail here.
           </div>`
-        : `<div style="overflow-x:auto;">
+        : `<div class="table-responsive-wrapper">
             <table class="summary-table" style="width:100%;">
               <thead><tr>
                 <th style="padding:0.65rem;color:var(--text-secondary);">Timestamp</th>

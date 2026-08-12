@@ -14,12 +14,12 @@ export function renderCxLView(subRoute = 'cxl') {
   const act = activitiesThisWeek;
 
   const navHtml = `
-    <div class="view-tabs" style="display:flex;gap:1rem;margin-bottom:1.5rem;border-bottom:1px solid var(--border-card);padding-bottom:1rem;overflow-x:auto;">
-      <span class="view-tab ${isOverview ? 'active' : ''}" data-route="cxl" style="cursor:pointer;padding:0.5rem 1rem;border-radius:4px;background:${isOverview ? 'var(--brand-blue)' : 'transparent'};color:${isOverview ? '#fff' : 'var(--text-main)'};display:flex;align-items:center;gap:0.5rem;font-weight:600;border:1px solid ${isOverview ? 'var(--brand-blue)' : 'var(--border-card)'};">
-        <i data-lucide="layout-dashboard" style="width:18px;height:18px;"></i> CxL Overview
+    <div class="view-tabs">
+      <span class="view-tab ${isOverview ? 'active' : ''}" data-route="cxl">
+        <i data-lucide="layout-dashboard" style="width:16px;height:16px;"></i> CxL Overview
       </span>
-      <span class="view-tab ${isPhaseProgress ? 'active' : ''}" data-route="phase-progress" style="cursor:pointer;padding:0.5rem 1rem;border-radius:4px;background:${isPhaseProgress ? 'var(--brand-blue)' : 'transparent'};color:${isPhaseProgress ? '#fff' : 'var(--text-main)'};display:flex;align-items:center;gap:0.5rem;font-weight:600;border:1px solid ${isPhaseProgress ? 'var(--brand-blue)' : 'var(--border-card)'};">
-        <i data-lucide="list-checks" style="width:18px;height:18px;"></i> Phase Gate Detail
+      <span class="view-tab ${isPhaseProgress ? 'active' : ''}" data-route="phase-progress">
+        <i data-lucide="list-checks" style="width:16px;height:16px;"></i> Phase Gate Detail
       </span>
     </div>`;
 
@@ -98,11 +98,11 @@ function renderOverview(m, act) {
   const equipmentSource = (window.appState && window.appState.equipment && window.appState.equipment.length > 0) ? window.appState.equipment : masterEquipmentList;
   const equipmentTableHtml = `
     <div class="dashboard-card" style="padding:1.5rem;margin-bottom:1.5rem;">
-      <div class="card-top-title" style="margin-bottom:1rem;display:flex;justify-content:space-between;align-items:center;">
+      <div class="card-top-title" style="margin-bottom:1rem;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:0.5rem;">
         <div><i data-lucide="server"></i> Equipment Commissioning Phase Positioning</div>
         <button class="btn btn-primary" style="font-size:0.78rem;padding:0.35rem 0.75rem;" onclick="window.navigateTo('equipment-list')">View Master Equipment List</button>
       </div>
-      <div style="overflow-x:auto;">
+      <div class="table-responsive-wrapper">
         <table class="summary-table" style="width:100%;text-align:left;border-collapse:collapse;">
           <thead>
             <tr style="border-bottom:2px solid var(--border-card);color:var(--text-muted);font-size:0.78rem;">
@@ -136,33 +136,33 @@ function renderOverview(m, act) {
     </div>`;
 
   const bottomGridHtml = `
-    <div style="display:grid;grid-template-columns:1fr 1fr;gap:1.5rem;margin-bottom:1.5rem;">
+    <div class="cxl-bottom-grid">
       <div class="dashboard-card" style="padding:1.5rem;">
-        <div class="card-top-title" style="margin-bottom:1rem;color:#ef4444;display:flex;justify-content:space-between;align-items:center;">
+        <div class="card-top-title" style="margin-bottom:1rem;color:#ef4444;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:0.5rem;">
           <span><i data-lucide="alert-triangle"></i> Commissioning Attention Items</span>
           <button class="btn" style="font-size:0.72rem;padding:0.25rem 0.5rem;" onclick="window.navigateTo('daily-activity')">View Activity Log</button>
         </div>
         <div style="display:flex;flex-direction:column;gap:0.75rem;">
           ${act.issuesAndRisks.map(risk => `
-            <div style="display:flex;align-items:center;justify-content:space-between;padding:0.75rem;background:var(--bg-card-secondary);border-radius:6px;border-left:3px solid ${risk.color};">
-              <span style="font-size:0.8rem;font-weight:600;color:var(--text-main);">${risk.label}</span>
-              <span style="font-weight:800;font-size:0.9rem;color:${risk.color};border:1px solid ${risk.color};padding:0.15rem 0.5rem;border-radius:10px;">${risk.count}</span>
+            <div style="display:flex;align-items:center;justify-content:space-between;padding:0.6rem 0.75rem;background:var(--bg-card-secondary);border-radius:6px;border-left:3px solid ${risk.color};gap:0.5rem;">
+              <span style="font-size:0.8rem;font-weight:600;color:var(--text-main);flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">${risk.label}</span>
+              <span style="font-weight:800;font-size:0.85rem;color:${risk.color};border:1px solid ${risk.color};padding:0.15rem 0.5rem;border-radius:10px;flex-shrink:0;">${risk.count}</span>
             </div>`).join('')}
         </div>
       </div>
       <div class="dashboard-card" style="padding:1.5rem;">
-        <div class="card-top-title" style="margin-bottom:1rem;display:flex;justify-content:space-between;align-items:center;">
+        <div class="card-top-title" style="margin-bottom:1rem;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:0.5rem;">
           <span><i data-lucide="file-text"></i> Commissioning Evidence &amp; Submittals</span>
           <button class="btn btn-primary" style="font-size:0.72rem;padding:0.25rem 0.5rem;" onclick="window.navigateTo('documents')">Open Documents Hub</button>
         </div>
         <div style="display:flex;flex-direction:column;gap:0.75rem;">
           ${(window.appState && window.appState.documents ? window.appState.documents.slice(0,3) : []).map(doc => `
-            <div style="padding:0.75rem;background:var(--bg-card-secondary);border-radius:6px;display:flex;justify-content:space-between;align-items:center;">
-              <div>
-                <div style="font-weight:600;font-size:0.82rem;">${doc.name}</div>
-                <div style="font-size:0.7rem;color:var(--text-muted);">Uploaded ${doc.date} • ${doc.size}</div>
+            <div style="padding:0.6rem 0.75rem;background:var(--bg-card-secondary);border-radius:6px;display:flex;justify-content:space-between;align-items:center;gap:0.75rem;width:100%;box-sizing:border-box;">
+              <div style="flex:1;min-width:0;overflow:hidden;">
+                <div style="font-weight:600;font-size:0.82rem;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;" title="${doc.name}">${doc.name}</div>
+                <div style="font-size:0.7rem;color:var(--text-muted);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">Uploaded ${doc.date} • ${doc.size}</div>
               </div>
-              <button class="btn" style="font-size:0.7rem;padding:0.2rem 0.5rem;" onclick="window.navigateTo('documents')">View</button>
+              <button class="btn" style="font-size:0.7rem;padding:0.25rem 0.6rem;flex-shrink:0;" onclick="window.navigateTo('documents')">View</button>
             </div>`).join('')}
         </div>
       </div>
@@ -196,7 +196,7 @@ function renderPhaseProgress(m) {
 
   // Phase selector tabs
   const phaseSelectorHtml = `
-    <div style="display:flex;gap:0.5rem;margin-bottom:1.5rem;flex-wrap:wrap;">
+    <div class="phase-selector-tabs view-tabs">
       ${['CxL1','CxL2','CxL3','CxL4','CxL5'].map(ph => {
         const phApproval = (window.appState && window.appState.phaseApprovalState && window.appState.phaseApprovalState[ph]) || { status: 'Not Started' };
         const isActive = ph === activePhase;
@@ -227,9 +227,9 @@ function renderPhaseProgress(m) {
   return `
     <div>
       ${phaseSelectorHtml}
-      <div style="display:grid;grid-template-columns:2fr 1fr;gap:1.5rem;">
+      <div class="cxl-detail-grid">
         <!-- Left Column -->
-        <div style="display:flex;flex-direction:column;gap:1.5rem;">
+        <div style="display:flex;flex-direction:column;gap:1.5rem;min-width:0;">
           <!-- Phase Requirements Checklist -->
           <div class="dashboard-card" style="padding:1.5rem;">
             <div class="card-top-title" style="margin-bottom:1rem;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:0.75rem;">
@@ -256,13 +256,13 @@ function renderPhaseProgress(m) {
               ${checklist.length === 0
                 ? `<div style="padding:1.5rem;text-align:center;color:var(--text-muted);font-size:0.85rem;">No checklist requirements defined for ${activePhase}.</div>`
                 : checklist.map(item => `
-                  <div style="display:flex;align-items:center;gap:1rem;padding:0.75rem;background:var(--bg-card-secondary);border-radius:6px;border-left:4px solid ${item.done ? '#10b981' : '#cbd5e1'};cursor:${isApproved ? 'default' : 'pointer'};transition:opacity 0.15s;"
+                  <div style="display:flex;align-items:center;gap:0.75rem;padding:0.75rem;background:var(--bg-card-secondary);border-radius:6px;border-left:4px solid ${item.done ? '#10b981' : '#cbd5e1'};cursor:${isApproved ? 'default' : 'pointer'};transition:opacity 0.15s;flex-wrap:wrap;"
                     ${!isApproved ? `onclick="window.toggleChecklist('${activePhase}', '${item.id}')"` : ''}
                     title="${isApproved ? 'Phase is already approved' : 'Click to toggle: ' + item.id}">
                     <i data-lucide="${item.done ? 'check-circle-2' : 'circle'}" style="color:${item.done ? '#10b981' : 'var(--text-muted)'};width:18px;height:18px;flex-shrink:0;"></i>
-                    <div style="flex:1;">
-                      <span style="font-size:0.85rem;font-weight:600;text-decoration:${item.done ? 'line-through' : 'none'};opacity:${item.done ? 0.7 : 1};">${item.task}</span>
-                      <span style="font-size:0.7rem;color:var(--text-muted);margin-left:0.5rem;">${item.id}</span>
+                    <div style="flex:1;min-width:160px;word-break:break-word;">
+                      <span style="font-size:0.85rem;font-weight:600;text-decoration:${item.done ? 'line-through' : 'none'};opacity:${item.done ? 0.7 : 1};display:inline-block;">${item.task}</span>
+                      <span style="font-size:0.7rem;color:var(--text-muted);margin-left:0.4rem;display:inline-block;">${item.id}</span>
                     </div>
                     <span style="font-size:0.68rem;font-weight:700;padding:0.15rem 0.45rem;border-radius:4px;white-space:nowrap;background:${item.done ? 'rgba(16,185,129,0.12)' : 'var(--bg-card)'};color:${item.done ? '#10b981' : 'var(--text-muted)'};border:1px solid ${item.done ? 'rgba(16,185,129,0.3)' : 'var(--border-card)'};">${item.done ? '✓ Completed' : 'Pending'}</span>
                   </div>`).join('')}
@@ -275,28 +275,30 @@ function renderPhaseProgress(m) {
 
           <!-- Evidence Documentation -->
           <div class="dashboard-card" style="padding:1.5rem;">
-            <div class="card-top-title" style="margin-bottom:1rem;display:flex;justify-content:space-between;align-items:center;">
+            <div class="card-top-title" style="margin-bottom:1rem;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:0.5rem;">
               <span><i data-lucide="file-text"></i> Required Phase Gate Documentation</span>
               <button class="btn" style="font-size:0.75rem;" onclick="window.navigateTo('documents')">Documents Hub</button>
             </div>
-            <table class="summary-table" style="width:100%;text-align:left;border-collapse:collapse;">
-              <tbody>
-                ${phaseDocs.length === 0
-                  ? `<tr><td style="padding:1rem;color:var(--text-muted);text-align:center;">No documents linked.</td></tr>`
-                  : phaseDocs.map(doc => `
-                    <tr style="border-bottom:1px solid var(--border-card);">
-                      <td style="padding:0.75rem 0;display:flex;align-items:center;gap:0.75rem;">
-                        <i data-lucide="file-text" style="color:var(--brand-blue);width:16px;height:16px;"></i>
-                        <span style="font-weight:500;font-size:0.85rem;">${doc.name}</span>
-                      </td>
-                      <td style="padding:0.75rem 0;color:var(--text-secondary);text-align:right;font-size:0.8rem;">${doc.size}</td>
-                      <td style="padding:0.75rem 0;color:var(--text-muted);text-align:right;font-size:0.8rem;">${doc.date}</td>
-                      <td style="padding:0.75rem 0;text-align:right;">
-                        <button class="btn" style="padding:2px 8px;font-size:11px;background:var(--bg-card-secondary);" onclick="window.navigateTo('documents')">View</button>
-                      </td>
-                    </tr>`).join('')}
-              </tbody>
-            </table>
+            <div class="table-responsive-wrapper">
+              <table class="summary-table" style="width:100%;text-align:left;border-collapse:collapse;">
+                <tbody>
+                  ${phaseDocs.length === 0
+                    ? `<tr><td style="padding:1rem;color:var(--text-muted);text-align:center;">No documents linked.</td></tr>`
+                    : phaseDocs.map(doc => `
+                      <tr style="border-bottom:1px solid var(--border-card);">
+                        <td style="padding:0.75rem 0;display:flex;align-items:center;gap:0.75rem;min-width:180px;">
+                          <i data-lucide="file-text" style="color:var(--brand-blue);width:16px;height:16px;flex-shrink:0;"></i>
+                          <span style="font-weight:500;font-size:0.85rem;word-break:break-all;">${doc.name}</span>
+                        </td>
+                        <td style="padding:0.75rem 0.5rem;color:var(--text-secondary);text-align:right;font-size:0.8rem;white-space:nowrap;">${doc.size}</td>
+                        <td style="padding:0.75rem 0.5rem;color:var(--text-muted);text-align:right;font-size:0.8rem;white-space:nowrap;">${doc.date}</td>
+                        <td style="padding:0.75rem 0.5rem;text-align:right;">
+                          <button class="btn" style="padding:2px 8px;font-size:11px;background:var(--bg-card-secondary);" onclick="window.navigateTo('documents')">View</button>
+                        </td>
+                      </tr>`).join('')}
+                </tbody>
+              </table>
+            </div>
           </div>
         </div>
 

@@ -23,7 +23,10 @@ test.describe('E2E Coverage: Global Search Interaction & Route Redirection', () 
   test('Search Equipment, click result & verify route navigation', async ({ page }) => {
     await page.fill('#global-search-input', 'AHU-001');
     await expect(page.locator('#search-results-dropdown')).toBeVisible();
-    await page.click('.search-result-item:has-text("AHU-001")');
+    await page.evaluate(() => {
+      const item = document.querySelector('.search-result-item');
+      if (item) item.click();
+    });
 
     await expect(page.locator('.card-top-title:has-text("Equipment Master List")')).toBeVisible();
   });

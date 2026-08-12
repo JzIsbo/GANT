@@ -29,11 +29,11 @@ export function renderGanttView(subRoute = 'gantt') {
     const p = projectIdentity;
 
     const tabsHtml = `
-        <div class="view-tabs" style="display: flex; gap: 20px; border-bottom: 1px solid var(--border-card); margin-bottom: 20px; padding-bottom: 10px; overflow-x: auto;">
-            <span class="view-tab ${activeTab === 'gantt' ? 'active' : ''}" data-route="gantt" style="cursor: pointer; color: ${activeTab === 'gantt' ? 'var(--brand-blue)' : 'var(--text-muted)'}; font-weight: ${activeTab === 'gantt' ? 'bold' : 'normal'}; border-bottom: ${activeTab === 'gantt' ? '2px solid var(--brand-blue)' : '2px solid transparent'}; padding-bottom: 10px; margin-bottom: -11px; white-space: nowrap;">Timeline Overview</span>
-            <span class="view-tab ${activeTab === 'equipment-timeline' ? 'active' : ''}" data-route="equipment-timeline" style="cursor: pointer; color: ${activeTab === 'equipment-timeline' ? 'var(--brand-blue)' : 'var(--text-muted)'}; font-weight: ${activeTab === 'equipment-timeline' ? 'bold' : 'normal'}; border-bottom: ${activeTab === 'equipment-timeline' ? '2px solid var(--brand-blue)' : '2px solid transparent'}; padding-bottom: 10px; margin-bottom: -11px; white-space: nowrap;">Equipment Timeline</span>
-            <span class="view-tab ${activeTab === 'phase-progress' ? 'active' : ''}" data-route="phase-progress" style="cursor: pointer; color: ${activeTab === 'phase-progress' ? 'var(--brand-blue)' : 'var(--text-muted)'}; font-weight: ${activeTab === 'phase-progress' ? 'bold' : 'normal'}; border-bottom: ${activeTab === 'phase-progress' ? '2px solid var(--brand-blue)' : '2px solid transparent'}; padding-bottom: 10px; margin-bottom: -11px; white-space: nowrap;">Phase Progress</span>
-            <span class="view-tab ${activeTab === 'duration-analysis' ? 'active' : ''}" data-route="duration-analysis" style="cursor: pointer; color: ${activeTab === 'duration-analysis' ? 'var(--brand-blue)' : 'var(--text-muted)'}; font-weight: ${activeTab === 'duration-analysis' ? 'bold' : 'normal'}; border-bottom: ${activeTab === 'duration-analysis' ? '2px solid var(--brand-blue)' : '2px solid transparent'}; padding-bottom: 10px; margin-bottom: -11px; white-space: nowrap;">Duration Analysis</span>
+        <div class="view-tabs">
+            <span class="view-tab ${activeTab === 'gantt' ? 'active' : ''}" data-route="gantt"><i data-lucide="gantt-chart-square" style="width:16px;height:16px;"></i> Timeline Overview</span>
+            <span class="view-tab ${activeTab === 'equipment-timeline' ? 'active' : ''}" data-route="equipment-timeline"><i data-lucide="hard-drive" style="width:16px;height:16px;"></i> Equipment Timeline</span>
+            <span class="view-tab ${activeTab === 'phase-progress' ? 'active' : ''}" data-route="phase-progress"><i data-lucide="workflow" style="width:16px;height:16px;"></i> Phase Progress</span>
+            <span class="view-tab ${activeTab === 'duration-analysis' ? 'active' : ''}" data-route="duration-analysis"><i data-lucide="clock" style="width:16px;height:16px;"></i> Duration Analysis</span>
         </div>
     `;
 
@@ -166,8 +166,8 @@ export function renderGanttView(subRoute = 'gantt') {
                     </div>
                     
                     <!-- Gantt Chart Main Area -->
-                    <div class="gantt-chart-area" style="flex: 1; min-width: 0; border: 1px solid var(--border-card); border-radius: 8px; background: var(--bg-card);">
-                        <div style="width: 100%; min-width: 0; position: relative;">
+                    <div class="gantt-chart-area" style="flex: 1; min-width: 0; border: 1px solid var(--border-card); border-radius: 8px; background: var(--bg-card); overflow-x: auto; -webkit-overflow-scrolling: touch; width: 100%;">
+                        <div style="width: 100%; min-width: 660px; position: relative;">
                             <!-- 2-TIER CALENDAR DATE AXIS -->
                             <div style="display: grid; grid-template-columns: 120px repeat(8, 1fr); border-bottom: 1px solid var(--border-card); background: var(--bg-card-secondary); padding: 8px 0; text-align: center; font-size: 12px; color: var(--text-main); font-weight: bold;">
                                 <div style="text-align: left; padding-left: 10px;">Equipment ID</div>
@@ -266,34 +266,34 @@ export function renderGanttView(subRoute = 'gantt') {
                     </div>
                 </div>
 
-                <div style="background: var(--bg-card-secondary); border: 1px solid var(--border-card); border-radius: 8px; padding: 12px 16px; margin-bottom: 20px; display: flex; gap: 1.5rem; align-items: center; flex-wrap: wrap;">
+                <div style="background: var(--bg-card-secondary); border: 1px solid var(--border-card); border-radius: 8px; padding: 12px 16px; margin-bottom: 20px; display: flex; gap: 1rem; align-items: center; flex-wrap: wrap;">
                     <div style="font-size: 0.85rem;"><strong style="color: var(--brand-blue);">${selectedEq}</strong> — ${eqItem.type}</div>
-                    <div style="font-size: 0.8rem; color: var(--text-secondary);">Building: <strong>${eqItem.building}</strong> / Room: <strong>${eqItem.room}</strong></div>
-                    <div style="font-size: 0.8rem; color: var(--text-secondary);">Gate Status: <strong style="color: ${eqItem.status === 'Active' ? '#10b981' : '#9ca3af'};">${eqItem.status}</strong></div>
+                    <div style="font-size: 0.8rem; color: var(--text-secondary);">Building: <strong>${eqItem.buildingName || eqItem.building || 'Building A'}</strong> / Room: <strong>${eqItem.room || 'Room 101'}</strong></div>
+                    <div style="font-size: 0.8rem; color: var(--text-secondary);">Gate Status: <strong style="color: ${eqItem.status === 'Active' ? '#10b981' : '#9ca3af'};">${eqItem.status || 'Active'}</strong></div>
                 </div>
 
                 <div class="duration-summary-row" style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 15px; margin-bottom: 25px;">
-                    <div class="duration-box stat-mini-box" style="padding: 15px; background: var(--bg-card-secondary); border: 1px solid var(--border-card); border-radius: 8px; text-align: center;">
-                        <div style="font-size: 13px; color: var(--text-secondary); margin-bottom: 5px;">Planned Duration</div>
-                        <div style="font-size: 24px; font-weight: bold; color: var(--text-main);">${td.duration} Days</div>
+                    <div class="duration-box stat-mini-box" style="padding: 12px; background: var(--bg-card-secondary); border: 1px solid var(--border-card); border-radius: 8px; text-align: center;">
+                        <div style="font-size: 11px; color: var(--text-secondary); margin-bottom: 4px;">Planned Duration</div>
+                        <div style="font-size: 20px; font-weight: bold; color: var(--text-main);">${td.duration} Days</div>
                     </div>
-                    <div class="duration-box stat-mini-box" style="padding: 15px; background: var(--bg-card-secondary); border: 1px solid var(--border-card); border-radius: 8px; text-align: center;">
-                        <div style="font-size: 13px; color: var(--text-secondary); margin-bottom: 5px;">Active Phase</div>
-                        <div style="font-size: 20px; font-weight: bold; color: #f97316;">${td.activePhase}</div>
+                    <div class="duration-box stat-mini-box" style="padding: 12px; background: var(--bg-card-secondary); border: 1px solid var(--border-card); border-radius: 8px; text-align: center;">
+                        <div style="font-size: 11px; color: var(--text-secondary); margin-bottom: 4px;">Active Phase</div>
+                        <div style="font-size: 16px; font-weight: bold; color: #f97316;">${td.activePhase}</div>
                     </div>
-                    <div class="duration-box stat-mini-box" style="padding: 15px; background: var(--bg-card-secondary); border: 1px solid var(--border-card); border-radius: 8px; text-align: center;">
-                        <div style="font-size: 13px; color: var(--text-secondary); margin-bottom: 5px;">Progress</div>
-                        <div style="font-size: 24px; font-weight: bold; color: #10b981;">${td.progress}%</div>
+                    <div class="duration-box stat-mini-box" style="padding: 12px; background: var(--bg-card-secondary); border: 1px solid var(--border-card); border-radius: 8px; text-align: center;">
+                        <div style="font-size: 11px; color: var(--text-secondary); margin-bottom: 4px;">Progress</div>
+                        <div style="font-size: 20px; font-weight: bold; color: #10b981;">${td.progress}%</div>
                     </div>
-                    <div class="duration-box stat-mini-box" style="padding: 15px; background: var(--bg-card-secondary); border: 1px solid var(--border-card); border-radius: 8px; text-align: center;">
-                        <div style="font-size: 13px; color: var(--text-secondary); margin-bottom: 5px;">Schedule Variance</div>
-                        <div style="font-size: 24px; font-weight: bold; color: ${td.variance < 0 ? '#ef4444' : '#10b981'};">${td.variance > 0 ? '+' : ''}${td.variance}%</div>
+                    <div class="duration-box stat-mini-box" style="padding: 12px; background: var(--bg-card-secondary); border: 1px solid var(--border-card); border-radius: 8px; text-align: center;">
+                        <div style="font-size: 11px; color: var(--text-secondary); margin-bottom: 4px;">Schedule Variance</div>
+                        <div style="font-size: 20px; font-weight: bold; color: ${td.variance < 0 ? '#ef4444' : '#10b981'};">${td.variance > 0 ? '+' : ''}${td.variance}%</div>
                     </div>
                 </div>
                 
-                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
-                    <h3 style="font-size: 16px; margin: 0; color: var(--text-main);">Phase Execution Timeline — ${selectedEq}</h3>
-                    <button class="btn btn-primary" onclick="openModal({
+                <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 0.5rem; margin-bottom: 12px;">
+                    <h3 style="font-size: 15px; margin: 0; color: var(--text-main);">Phase Execution Timeline — ${selectedEq}</h3>
+                    <button class="btn btn-primary" style="font-size: 0.78rem; padding: 0.35rem 0.75rem;" onclick="openModal({
                         title: 'Edit Equipment Schedule: ${selectedEq}',
                         bodyHtml: '<div class=\\'form-row\\'><label>Delivery Date</label><input id=\\'es-del\\' type=\\'date\\' value=\\'2026-08-15\\'/></div><div class=\\'form-row\\'><label>CxL3 Target End</label><input id=\\'es-end\\' type=\\'date\\' value=\\'2026-10-25\\'/></div><div class=\\'form-row\\'><label>Schedule Adjustment Reason</label><input id=\\'es-reason\\' type=\\'text\\' placeholder=\\'Vendor panel delay\\'/></div>',
                         confirmText: 'Save Schedule',
@@ -303,37 +303,37 @@ export function renderGanttView(subRoute = 'gantt') {
                             showToast('${selectedEq} schedule updated successfully.', 'success');
                             window.renderApp();
                         }
-                    })"><i data-lucide="edit" style="width: 14px; height: 14px;"></i> Edit Schedule</button>
+                    })"><i data-lucide="edit" style="width: 13px; height: 13px;"></i> Edit Schedule</button>
                 </div>
 
-                <div style="overflow-x: auto; margin-bottom: 30px; border: 1px solid var(--border-card); border-radius: 8px;">
-                    <table class="detail-phase-table summary-table" style="width: 100%; text-align: left; border-collapse: collapse;">
+                <div class="table-responsive-wrapper" style="margin-bottom: 20px; border: 1px solid var(--border-card); border-radius: 8px; overflow-x: auto; -webkit-overflow-scrolling: touch; width: 100%;">
+                    <table class="detail-phase-table summary-table" style="width: 100%; min-width: 580px; text-align: left; border-collapse: collapse;">
                         <thead>
                             <tr style="border-bottom: 1px solid var(--border-card); background: var(--bg-card-secondary); color: var(--text-secondary);">
-                                <th style="padding: 12px 16px; font-weight: 600; font-size: 13px;">Phase</th>
-                                <th style="padding: 12px 16px; font-weight: 600; font-size: 13px;">Start Date</th>
-                                <th style="padding: 12px 16px; font-weight: 600; font-size: 13px;">End Date</th>
-                                <th style="padding: 12px 16px; font-weight: 600; font-size: 13px;">Duration</th>
-                                <th style="padding: 12px 16px; font-weight: 600; font-size: 13px;">Status</th>
-                                <th style="padding: 12px 16px; font-weight: 600; font-size: 13px; width: 25%;">Progress</th>
+                                <th style="padding: 10px 12px; font-weight: 600; font-size: 12px; white-space: nowrap;">Phase</th>
+                                <th style="padding: 10px 12px; font-weight: 600; font-size: 12px; white-space: nowrap;">Start Date</th>
+                                <th style="padding: 10px 12px; font-weight: 600; font-size: 12px; white-space: nowrap;">End Date</th>
+                                <th style="padding: 10px 12px; font-weight: 600; font-size: 12px; white-space: nowrap;">Duration</th>
+                                <th style="padding: 10px 12px; font-weight: 600; font-size: 12px; white-space: nowrap;">Status</th>
+                                <th style="padding: 10px 12px; font-weight: 600; font-size: 12px; white-space: nowrap; width: 25%;">Progress</th>
                             </tr>
                         </thead>
                         <tbody>
                             ${td.phases.map(ph => `
                             <tr style="border-bottom: 1px solid var(--border-card);">
-                                <td style="padding: 12px 16px; font-weight: 600; color: ${ph.color}; font-size: 14px;">${ph.name}</td>
-                                <td style="padding: 12px 16px; font-size: 13px;">${ph.start}</td>
-                                <td style="padding: 12px 16px; font-size: 13px;">${ph.end}</td>
-                                <td style="padding: 12px 16px; font-size: 13px;">${ph.dur}</td>
-                                <td style="padding: 12px 16px;">
-                                    <span style="font-size: 0.72rem; font-weight: 700; padding: 2px 8px; border-radius: 10px; background: ${ph.status === 'Completed' ? 'rgba(16,185,129,0.15)' : ph.status === 'In Progress' ? 'rgba(249,115,22,0.15)' : 'rgba(148,163,184,0.15)'}; color: ${ph.status === 'Completed' ? '#10b981' : ph.status === 'In Progress' ? '#f97316' : '#94a3b8'};">${ph.status}</span>
+                                <td style="padding: 10px 12px; font-weight: 600; color: ${ph.color}; font-size: 13px; white-space: nowrap;">${ph.name}</td>
+                                <td style="padding: 10px 12px; font-size: 12px; white-space: nowrap;">${ph.start}</td>
+                                <td style="padding: 10px 12px; font-size: 12px; white-space: nowrap;">${ph.end}</td>
+                                <td style="padding: 10px 12px; font-size: 12px; white-space: nowrap;">${ph.dur}</td>
+                                <td style="padding: 10px 12px; white-space: nowrap;">
+                                    <span style="font-size: 0.7rem; font-weight: 700; padding: 2px 8px; border-radius: 10px; background: ${ph.status === 'Completed' ? 'rgba(16,185,129,0.15)' : ph.status === 'In Progress' ? 'rgba(249,115,22,0.15)' : 'rgba(148,163,184,0.15)'}; color: ${ph.status === 'Completed' ? '#10b981' : ph.status === 'In Progress' ? '#f97316' : '#94a3b8'};">${ph.status}</span>
                                 </td>
-                                <td style="padding: 12px 16px;">
+                                <td style="padding: 10px 12px; white-space: nowrap;">
                                     <div style="display: flex; align-items: center; gap: 8px;">
-                                        <div style="flex: 1; height: 8px; background: var(--bg-card-secondary); border-radius: 4px; overflow: hidden; border: 1px solid var(--border-card);">
+                                        <div style="flex: 1; min-width: 60px; height: 8px; background: var(--bg-card-secondary); border-radius: 4px; overflow: hidden; border: 1px solid var(--border-card);">
                                             <div style="width: ${ph.pct}%; height: 100%; background: ${ph.color}; transition: width 0.3s;"></div>
                                         </div>
-                                        <span style="font-size: 12px; font-weight: 700; color: ${ph.color}; width: 32px; text-align: right;">${ph.pct}%</span>
+                                        <span style="font-size: 11px; font-weight: 700; color: ${ph.color}; width: 32px; text-align: right;">${ph.pct}%</span>
                                     </div>
                                 </td>
                             </tr>`).join('')}
@@ -410,7 +410,7 @@ export function renderGanttView(subRoute = 'gantt') {
                 `).join('')}
             </div>
 
-            <div style="display: grid; grid-template-columns: 2fr 1fr; gap: 1.5rem;">
+            <div class="cxl-detail-grid">
                 <!-- Left Column -->
                 <div style="display: flex; flex-direction: column; gap: 1.5rem;">
                     <div class="dashboard-card" style="padding: 1.5rem;">
@@ -435,7 +435,8 @@ export function renderGanttView(subRoute = 'gantt') {
 
                     <div class="dashboard-card" style="padding: 1.5rem;">
                         <div class="card-top-title" style="margin-bottom: 1rem;"><i data-lucide="file-text"></i> Required Phase Documentation</div>
-                        <table class="summary-table" style="width: 100%; text-align: left; border-collapse: collapse;">
+                        <div class="table-responsive-wrapper">
+                            <table class="summary-table" style="width: 100%; text-align: left; border-collapse: collapse;">
                             <tbody>
                                 ${fallbackDocs.map(doc => `
                                     <tr style="border-bottom: 1px solid var(--border-card);">
@@ -510,7 +511,7 @@ export function renderGanttView(subRoute = 'gantt') {
                     </div>
                 </div>
                 
-                <div class="four-stat-boxes" style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 15px; margin-bottom: 30px;">
+                <div class="four-stat-boxes" style="margin-bottom: 20px;">
                     <div class="metric-card" style="padding: 20px; background: var(--bg-card-secondary); border: 1px solid var(--border-card); border-radius: 8px; box-shadow: 0 1px 3px rgba(0,0,0,0.05);">
                         <div class="metric-card-title" style="font-size: 13px; font-weight: 500; color: var(--text-secondary); margin-bottom: 8px;">Average Delay</div>
                         <div class="metric-big-num" style="font-size: 28px; font-weight: bold; color: #ef4444;">+4.2 Days</div>
@@ -529,10 +530,10 @@ export function renderGanttView(subRoute = 'gantt') {
                     </div>
                 </div>
                 
-                <div style="border: 1px solid var(--border-card); border-radius: 8px; padding: 25px; margin-bottom: 30px; background: var(--bg-card);">
-                    <h3 style="font-size: 15px; font-weight: 600; color: var(--text-main); margin-top: 0; margin-bottom: 25px;">Phase Duration Comparison (Planned vs Actual Days)</h3>
+                <div class="chart-responsive-wrapper" style="border: 1px solid var(--border-card); border-radius: 8px; padding: 15px; margin-bottom: 20px; background: var(--bg-card); overflow-x: auto; -webkit-overflow-scrolling: touch; width: 100%;">
+                    <h3 style="font-size: 15px; font-weight: 600; color: var(--text-main); margin-top: 0; margin-bottom: 15px;">Phase Duration Comparison (Planned vs Actual Days)</h3>
                     <!-- Bar Chart SVG -->
-                    <svg width="100%" height="280" viewBox="0 0 800 280" style="background: var(--bg-card);">
+                    <svg width="100%" height="240" viewBox="0 0 760 240" style="min-width: 520px; background: var(--bg-card); display: block;">
                         <line x1="80" y1="40" x2="750" y2="40" stroke="var(--border-card)" stroke-dasharray="4" />
                         <line x1="80" y1="90" x2="750" y2="90" stroke="var(--border-card)" stroke-dasharray="4" />
                         <line x1="80" y1="140" x2="750" y2="140" stroke="var(--border-card)" stroke-dasharray="4" />
@@ -573,9 +574,9 @@ export function renderGanttView(subRoute = 'gantt') {
                     </svg>
                 </div>
                 
-                <h3 style="font-size: 16px; margin-bottom: 15px; color: var(--text-main);">Equipment Delay &amp; Variance Details</h3>
-                <div style="border: 1px solid var(--border-card); border-radius: 8px; overflow: hidden;">
-                    <table class="summary-table" style="width: 100%; text-align: left; border-collapse: collapse;">
+                <h3 style="font-size: 15px; margin-bottom: 15px; color: var(--text-main);">Equipment Delay &amp; Variance Details</h3>
+                <div class="table-responsive-wrapper" style="border: 1px solid var(--border-card); border-radius: 8px; overflow-x: auto; -webkit-overflow-scrolling: touch; width: 100%;">
+                    <table class="summary-table" style="width: 100%; min-width: 520px; text-align: left; border-collapse: collapse;">
                         <thead>
                             <tr style="border-bottom: 1px solid var(--border-card); background: var(--bg-card-secondary); color: var(--text-secondary);">
                                 <th style="padding: 12px 16px; font-weight: 600; font-size: 13px;">Equipment</th>

@@ -278,35 +278,37 @@ export function renderDashboardView() {
           </div>
 
           <!-- Cx Level Table -->
-          <table class="summary-table">
-            <thead>
-              <tr>
-                <th>Cx Level</th>
-                <th>Planned</th>
-                <th>Completed</th>
-                <th>In Progress</th>
-                <th>Not Started</th>
-                <th>Progress</th>
-              </tr>
-            </thead>
-            <tbody>
-              ${sum.tableRows.map(r => `
-                <tr class="${r.isTotal ? 'total-row' : ''}">
-                  <td><strong>${r.phase}</strong></td>
-                  <td>${r.planned}</td>
-                  <td>${r.completed}</td>
-                  <td>${r.inProgress}</td>
-                  <td>${r.notStarted}</td>
-                  <td>
-                    <span>${r.progressPct}%</span>
-                    <div class="mini-bar-progress">
-                      <div class="mini-bar-progress-fill" style="width: ${r.progressPct}%;"></div>
-                    </div>
-                  </td>
+          <div class="table-responsive-wrapper">
+            <table class="summary-table">
+              <thead>
+                <tr>
+                  <th>Cx Level</th>
+                  <th>Planned</th>
+                  <th>Completed</th>
+                  <th>In Progress</th>
+                  <th>Not Started</th>
+                  <th>Progress</th>
                 </tr>
-              `).join('')}
-            </tbody>
-          </table>
+              </thead>
+              <tbody>
+                ${sum.tableRows.map(r => `
+                  <tr class="${r.isTotal ? 'total-row' : ''}">
+                    <td><strong>${r.phase}</strong></td>
+                    <td>${r.planned}</td>
+                    <td>${r.completed}</td>
+                    <td>${r.inProgress}</td>
+                    <td>${r.notStarted}</td>
+                    <td>
+                      <span>${r.progressPct}%</span>
+                      <div class="mini-bar-progress">
+                        <div class="mini-bar-progress-fill" style="width: ${r.progressPct}%;"></div>
+                      </div>
+                    </td>
+                  </tr>
+                `).join('')}
+              </tbody>
+            </table>
+          </div>
         </div>
 
       </div>
@@ -317,7 +319,7 @@ export function renderDashboardView() {
            Column 1: Gantt Overview (Top) + Weekly Progress Trend (Bottom)
            Column 2: Timeline Detail - AHU-001
            ==================================================================== -->
-      <div class="bottom-cards-row" style="display: grid; grid-template-columns: 1.25fr 1fr; gap: 1rem; align-items: stretch;">
+      <div class="bottom-cards-row">
         
         <!-- COLUMN 1: Gantt Overview + Weekly Progress Trend Stacked -->
         <div style="display: flex; flex-direction: column; gap: 1rem; min-width: 0;">
@@ -508,35 +510,37 @@ export function renderDashboardView() {
             </div>
 
             <!-- Phase Table -->
-            <table class="detail-phase-table" style="margin-bottom: 0.75rem;">
-              <thead>
-                <tr>
-                  <th>Phase Gate</th>
-                  <th>Schedule Window</th>
-                  <th>Duration</th>
-                  <th>Status</th>
-                  <th>Progress</th>
-                </tr>
-              </thead>
-              <tbody>
-                ${ahu.rows.map(r => `
+            <div class="table-responsive-wrapper">
+              <table class="detail-phase-table" style="margin-bottom: 0.75rem;">
+                <thead>
                   <tr>
-                    <td><strong>${r.phase}</strong></td>
-                    <td style="white-space: nowrap;">${r.dates}</td>
-                    <td>${r.duration}</td>
-                    <td><span class="status-badge" style="font-size: 0.68rem; padding: 2px 5px; background: ${r.barColor}20; color: ${r.barColor}; font-weight: 700;">${r.status}</span></td>
-                    <td>
-                      <div style="display: flex; align-items: center; gap: 5px;">
-                        <div class="mini-bar-progress" style="flex: 1;">
-                          <div class="mini-bar-progress-fill" style="width: ${r.progressPct}%; background-color: ${r.barColor};"></div>
-                        </div>
-                        <span style="font-size: 0.68rem; font-weight: 600;">${r.progressPct}%</span>
-                      </div>
-                    </td>
+                    <th>Phase Gate</th>
+                    <th>Schedule Window</th>
+                    <th>Duration</th>
+                    <th>Status</th>
+                    <th>Progress</th>
                   </tr>
-                `).join('')}
-              </tbody>
-            </table>
+                </thead>
+                <tbody>
+                  ${ahu.rows.map(r => `
+                    <tr>
+                      <td><strong>${r.phase}</strong></td>
+                      <td style="white-space: nowrap;">${r.dates}</td>
+                      <td>${r.duration}</td>
+                      <td><span class="status-badge" style="font-size: 0.68rem; padding: 2px 5px; background: ${r.barColor}20; color: ${r.barColor}; font-weight: 700;">${r.status}</span></td>
+                      <td>
+                        <div style="display: flex; align-items: center; gap: 5px;">
+                          <div class="mini-bar-progress" style="flex: 1;">
+                            <div class="mini-bar-progress-fill" style="width: ${r.progressPct}%; background-color: ${r.barColor};"></div>
+                          </div>
+                          <span style="font-size: 0.68rem; font-weight: 600;">${r.progressPct}%</span>
+                        </div>
+                      </td>
+                    </tr>
+                  `).join('')}
+                </tbody>
+              </table>
+            </div>
           </div>
 
           <div>

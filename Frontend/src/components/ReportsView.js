@@ -5,15 +5,15 @@ export function renderReportsView(subRoute = 'weekly-report') {
 
   const renderTabs = () => {
     return `
-      <div class="view-tabs" style="display: flex; gap: 1rem; margin-bottom: 1.5rem; border-bottom: 1px solid var(--border-card); padding-bottom: 0.5rem;">
-        <span class="view-tab ${currentRoute === 'weekly-report' ? 'active' : ''}" data-route="weekly-report" style="cursor: pointer; padding: 0.5rem 1rem; border-radius: 4px; font-weight: 500; display: flex; align-items: center; gap: 0.5rem; ${currentRoute === 'weekly-report' ? 'background: var(--brand-blue); color: white;' : 'color: var(--text-secondary);'}">
-          <i data-lucide="calendar" style="width: 18px; height: 18px;"></i>Weekly Report
+      <div class="view-tabs">
+        <span class="view-tab ${currentRoute === 'weekly-report' ? 'active' : ''}" data-route="weekly-report">
+          <i data-lucide="calendar" style="width: 16px; height: 16px;"></i> Weekly Report
         </span>
-        <span class="view-tab ${currentRoute === 'monthly-report' ? 'active' : ''}" data-route="monthly-report" style="cursor: pointer; padding: 0.5rem 1rem; border-radius: 4px; font-weight: 500; display: flex; align-items: center; gap: 0.5rem; ${currentRoute === 'monthly-report' ? 'background: var(--brand-blue); color: white;' : 'color: var(--text-secondary);'}">
-          <i data-lucide="pie-chart" style="width: 18px; height: 18px;"></i>Monthly Report
+        <span class="view-tab ${currentRoute === 'monthly-report' ? 'active' : ''}" data-route="monthly-report">
+          <i data-lucide="pie-chart" style="width: 16px; height: 16px;"></i> Monthly Report
         </span>
-        <span class="view-tab ${currentRoute === 'export-report' ? 'active' : ''}" data-route="export-report" style="cursor: pointer; padding: 0.5rem 1rem; border-radius: 4px; font-weight: 500; display: flex; align-items: center; gap: 0.5rem; ${currentRoute === 'export-report' ? 'background: var(--brand-blue); color: white;' : 'color: var(--text-secondary);'}">
-          <i data-lucide="download" style="width: 18px; height: 18px;"></i>Export Report
+        <span class="view-tab ${currentRoute === 'export-report' ? 'active' : ''}" data-route="export-report">
+          <i data-lucide="download" style="width: 16px; height: 16px;"></i> Export Report
         </span>
       </div>
     `;
@@ -24,120 +24,122 @@ export function renderReportsView(subRoute = 'weekly-report') {
     const selectedWeek = wf.week || 'Week 32 (03-08 Aug 2026)';
     const weeks = ['Week 32 (03-08 Aug 2026)', 'Week 31 (27 Jul-02 Aug 2026)', 'Week 30 (20-26 Jul 2026)', 'Week 29 (13-19 Jul 2026)'];
     return `
-      <div class="dashboard-card" style="margin-bottom: 1.5rem;">
-        <div class="card-top-title">
-          <h2 style="margin: 0; font-size: 1.25rem;">Weekly Progress Report</h2>
-          <div style="display: flex; gap: 0.5rem; align-items: center;">
-            <label style="color: var(--text-secondary); font-size: 0.875rem;">Select Week:</label>
-            <select style="padding: 0.25rem 0.5rem; border-radius: 4px; border: 1px solid var(--border-card); background: var(--bg-card); color: var(--text-main);"
+      <div class="dashboard-card" style="margin-bottom: 1rem; padding: 0.75rem;">
+        <div class="card-top-title" style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 0.35rem;">
+          <h2 style="margin: 0; font-size: 1rem;">Weekly Progress Report</h2>
+          <div style="display: flex; gap: 0.35rem; align-items: center;">
+            <label style="color: var(--text-secondary); font-size: 0.72rem;">Select Week:</label>
+            <select style="padding: 0.15rem 0.35rem; border-radius: 4px; border: 1px solid var(--border-card); background: var(--bg-card); color: var(--text-main); font-size: 0.72rem;"
               onchange="window.setReportFilter('week', this.value)">
               ${weeks.map(w => `<option ${w === selectedWeek ? 'selected' : ''}>${w}</option>`).join('')}
             </select>
           </div>
         </div>
         
-        <div class="four-stat-boxes" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem; margin-top: 1.5rem;">
-          <div class="stat-mini-box metric-card" style="padding: 1rem; background: var(--bg-card-secondary); border-radius: 8px; border: 1px solid var(--border-card);">
-            <div class="metric-card-title" style="color: var(--text-secondary); font-size: 0.875rem; margin-bottom: 0.5rem;">Activities Planned</div>
-            <div class="metric-big-num" style="font-size: 1.5rem; font-weight: bold; color: var(--text-main);">124</div>
+        <div class="four-stat-boxes" style="margin-top: 0.6rem;">
+          <div class="stat-mini-box metric-card" style="padding: 0.4rem 0.5rem; background: var(--bg-card-secondary); border-radius: 6px; border: 1px solid var(--border-card);">
+            <div class="metric-card-title" style="color: var(--text-secondary); font-size: 0.68rem; margin-bottom: 0.1rem;">Activities Planned</div>
+            <div class="metric-big-num" style="font-size: 1.1rem; font-weight: bold; color: var(--text-main);">124</div>
           </div>
-          <div class="stat-mini-box metric-card" style="padding: 1rem; background: var(--bg-card-secondary); border-radius: 8px; border: 1px solid var(--border-card);">
-            <div class="metric-card-title" style="color: var(--text-secondary); font-size: 0.875rem; margin-bottom: 0.5rem;">Completed</div>
-            <div class="metric-big-num" style="font-size: 1.5rem; font-weight: bold; color: var(--text-main);">118</div>
+          <div class="stat-mini-box metric-card" style="padding: 0.4rem 0.5rem; background: var(--bg-card-secondary); border-radius: 6px; border: 1px solid var(--border-card);">
+            <div class="metric-card-title" style="color: var(--text-secondary); font-size: 0.68rem; margin-bottom: 0.1rem;">Completed</div>
+            <div class="metric-big-num" style="font-size: 1.1rem; font-weight: bold; color: var(--text-main);">118</div>
           </div>
-          <div class="stat-mini-box metric-card" style="padding: 1rem; background: var(--bg-card-secondary); border-radius: 8px; border: 1px solid var(--border-card);">
-            <div class="metric-card-title" style="color: var(--text-secondary); font-size: 0.875rem; margin-bottom: 0.5rem;">Completion Rate %</div>
-            <div class="metric-big-num" style="font-size: 1.5rem; font-weight: bold; color: #10b981;">95.1%</div>
+          <div class="stat-mini-box metric-card" style="padding: 0.4rem 0.5rem; background: var(--bg-card-secondary); border-radius: 6px; border: 1px solid var(--border-card);">
+            <div class="metric-card-title" style="color: var(--text-secondary); font-size: 0.68rem; margin-bottom: 0.1rem;">Completion Rate %</div>
+            <div class="metric-big-num" style="font-size: 1.1rem; font-weight: bold; color: #10b981;">95.1%</div>
           </div>
-          <div class="stat-mini-box metric-card" style="padding: 1rem; background: var(--bg-card-secondary); border-radius: 8px; border: 1px solid var(--border-card);">
-            <div class="metric-card-title" style="color: var(--text-secondary); font-size: 0.875rem; margin-bottom: 0.5rem;">Issues Count</div>
-            <div class="metric-big-num" style="font-size: 1.5rem; font-weight: bold; color: #ef4444;">3</div>
+          <div class="stat-mini-box metric-card" style="padding: 0.4rem 0.5rem; background: var(--bg-card-secondary); border-radius: 6px; border: 1px solid var(--border-card);">
+            <div class="metric-card-title" style="color: var(--text-secondary); font-size: 0.68rem; margin-bottom: 0.1rem;">Issues Count</div>
+            <div class="metric-big-num" style="font-size: 1.1rem; font-weight: bold; color: #ef4444;">3</div>
           </div>
         </div>
 
-        <div style="margin-top: 2rem; display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem;">
+        <div class="reports-two-col-grid" style="margin-top: 0.75rem; gap: 0.75rem;">
           <div>
-            <h3 style="font-size: 1rem; margin-bottom: 1rem; color: var(--text-main);">Progress by CxL Phase</h3>
-            <table class="summary-table" style="width: 100%; text-align: left; border-collapse: collapse; color: var(--text-main);">
+            <h3 style="font-size: 0.8rem; margin-bottom: 0.35rem; color: var(--text-main);">Progress by CxL Phase</h3>
+            <div class="table-responsive-wrapper" style="overflow-x: auto; -webkit-overflow-scrolling: touch; width: 100%;">
+              <table class="summary-table" style="width: 100%; min-width: 340px; text-align: left; border-collapse: collapse; color: var(--text-main); font-size: 0.75rem; line-height: 1.2;">
               <thead>
-                <tr style="border-bottom: 2px solid var(--border-card);">
-                  <th style="padding: 0.75rem 0.5rem;">Phase</th>
-                  <th style="padding: 0.75rem 0.5rem;">Planned</th>
-                  <th style="padding: 0.75rem 0.5rem;">Actual</th>
-                  <th style="padding: 0.75rem 0.5rem;">Delta</th>
+                <tr style="border-bottom: 1.5px solid var(--border-card);">
+                  <th style="padding: 0.35rem 0.4rem; white-space: nowrap;">Phase</th>
+                  <th style="padding: 0.35rem 0.4rem; text-align: center; white-space: nowrap;">Planned</th>
+                  <th style="padding: 0.35rem 0.4rem; text-align: center; white-space: nowrap;">Actual</th>
+                  <th style="padding: 0.35rem 0.4rem; text-align: center; white-space: nowrap;">Delta</th>
                 </tr>
               </thead>
               <tbody>
                 <tr style="border-bottom: 1px solid var(--border-card);">
-                  <td style="padding: 0.75rem 0.5rem;">L1 - Factory Testing</td>
-                  <td style="padding: 0.75rem 0.5rem;">100%</td>
-                  <td style="padding: 0.75rem 0.5rem;">100%</td>
-                  <td style="padding: 0.75rem 0.5rem; color: #10b981;">0%</td>
+                  <td style="padding: 0.35rem 0.4rem; font-weight: 500; white-space: nowrap;">L1 - Factory Acceptance Testing</td>
+                  <td style="padding: 0.35rem 0.4rem; text-align: center;">100%</td>
+                  <td style="padding: 0.35rem 0.4rem; text-align: center;">100%</td>
+                  <td style="padding: 0.35rem 0.4rem; text-align: center; color: #10b981;">0%</td>
                 </tr>
                 <tr style="border-bottom: 1px solid var(--border-card);">
-                  <td style="padding: 0.75rem 0.5rem;">L2 - Receipt Verification</td>
-                  <td style="padding: 0.75rem 0.5rem;">90%</td>
-                  <td style="padding: 0.75rem 0.5rem;">85%</td>
-                  <td style="padding: 0.75rem 0.5rem; color: #ef4444;">-5%</td>
+                  <td style="padding: 0.35rem 0.4rem; font-weight: 500; white-space: nowrap;">L2 - Site Receipt & Installation</td>
+                  <td style="padding: 0.35rem 0.4rem; text-align: center;">90%</td>
+                  <td style="padding: 0.35rem 0.4rem; text-align: center;">85%</td>
+                  <td style="padding: 0.35rem 0.4rem; text-align: center; color: #ef4444;">-5%</td>
                 </tr>
                 <tr style="border-bottom: 1px solid var(--border-card);">
-                  <td style="padding: 0.75rem 0.5rem;">L3 - Pre-Commissioning</td>
-                  <td style="padding: 0.75rem 0.5rem;">40%</td>
-                  <td style="padding: 0.75rem 0.5rem;">42%</td>
-                  <td style="padding: 0.75rem 0.5rem; color: #10b981;">+2%</td>
+                  <td style="padding: 0.35rem 0.4rem; font-weight: 500; white-space: nowrap;">L3 - Pre-Commissioning Check</td>
+                  <td style="padding: 0.35rem 0.4rem; text-align: center;">40%</td>
+                  <td style="padding: 0.35rem 0.4rem; text-align: center;">42%</td>
+                  <td style="padding: 0.35rem 0.4rem; text-align: center; color: #10b981;">+2%</td>
                 </tr>
                 <tr>
-                  <td style="padding: 0.75rem 0.5rem;">L4 - Functional Testing</td>
-                  <td style="padding: 0.75rem 0.5rem;">10%</td>
-                  <td style="padding: 0.75rem 0.5rem;">8%</td>
-                  <td style="padding: 0.75rem 0.5rem; color: #ef4444;">-2%</td>
+                  <td style="padding: 0.35rem 0.4rem; font-weight: 500; white-space: nowrap;">L4 - Functional System Testing</td>
+                  <td style="padding: 0.35rem 0.4rem; text-align: center;">10%</td>
+                  <td style="padding: 0.35rem 0.4rem; text-align: center;">8%</td>
+                  <td style="padding: 0.35rem 0.4rem; text-align: center; color: #ef4444;">-2%</td>
                 </tr>
               </tbody>
             </table>
           </div>
+          </div>
           <div>
-            <h3 style="font-size: 1rem; margin-bottom: 1rem; color: var(--text-main);">Weekly Trend (Planned vs Actual)</h3>
-            <div style="background: var(--bg-card-secondary); padding: 1.5rem; border-radius: 8px; border: 1px solid var(--border-card); height: 200px; display: flex; align-items: flex-end;">
-              <svg viewBox="0 0 400 150" style="width: 100%; height: 100%; overflow: visible;">
+            <h3 style="font-size: 0.8rem; margin-bottom: 0.35rem; color: var(--text-main);">Weekly Trend (Planned vs Actual)</h3>
+            <div class="chart-responsive-wrapper" style="background: var(--bg-card-secondary); padding: 0.5rem; border-radius: 6px; border: 1px solid var(--border-card); overflow-x: auto; -webkit-overflow-scrolling: touch; width: 100%;">
+              <svg viewBox="0 0 360 110" style="min-width: 320px; width: 100%; height: 100px; display: block;">
                 <!-- Grid Lines -->
-                <line x1="0" y1="150" x2="400" y2="150" stroke="var(--border-card)" stroke-width="1" />
-                <line x1="0" y1="100" x2="400" y2="100" stroke="var(--border-card)" stroke-width="1" stroke-dasharray="4" />
-                <line x1="0" y1="50" x2="400" y2="50" stroke="var(--border-card)" stroke-width="1" stroke-dasharray="4" />
-                <line x1="0" y1="0" x2="400" y2="0" stroke="var(--border-card)" stroke-width="1" stroke-dasharray="4" />
+                <line x1="15" y1="80" x2="345" y2="80" stroke="var(--border-card)" stroke-width="1" />
+                <line x1="15" y1="55" x2="345" y2="55" stroke="var(--border-card)" stroke-width="1" stroke-dasharray="4" />
+                <line x1="15" y1="30" x2="345" y2="30" stroke="var(--border-card)" stroke-width="1" stroke-dasharray="4" />
+                <line x1="15" y1="5" x2="345" y2="5" stroke="var(--border-card)" stroke-width="1" stroke-dasharray="4" />
                 
                 <!-- Planned (Dashed) -->
-                <polyline points="0,140 100,100 200,60 300,40 400,20" fill="none" stroke="var(--text-muted)" stroke-width="3" stroke-dasharray="5,5" />
+                <polyline points="30,75 105,52 180,32 255,20 330,8" fill="none" stroke="var(--text-muted)" stroke-width="2" stroke-dasharray="3,3" />
                 
                 <!-- Actual (Solid Line) -->
-                <polyline points="0,145 100,110 200,70 300,50 400,10" fill="none" stroke="var(--brand-blue)" stroke-width="3" />
-                <circle cx="0" cy="145" r="5" fill="var(--brand-blue)" />
-                <circle cx="100" cy="110" r="5" fill="var(--brand-blue)" />
-                <circle cx="200" cy="70" r="5" fill="var(--brand-blue)" />
-                <circle cx="300" cy="50" r="5" fill="var(--brand-blue)" />
-                <circle cx="400" cy="10" r="5" fill="var(--brand-blue)" />
+                <polyline points="30,78 105,58 180,36 255,24 330,5" fill="none" stroke="var(--brand-blue)" stroke-width="2" />
+                <circle cx="30" cy="78" r="2.5" fill="var(--brand-blue)" />
+                <circle cx="105" cy="58" r="2.5" fill="var(--brand-blue)" />
+                <circle cx="180" cy="36" r="2.5" fill="var(--brand-blue)" />
+                <circle cx="255" cy="24" r="2.5" fill="var(--brand-blue)" />
+                <circle cx="330" cy="5" r="2.5" fill="var(--brand-blue)" />
                 
                 <!-- X-Axis Labels -->
-                <text x="0" y="175" text-anchor="middle" fill="var(--text-secondary)" font-size="12">W39</text>
-                <text x="100" y="175" text-anchor="middle" fill="var(--text-secondary)" font-size="12">W40</text>
-                <text x="200" y="175" text-anchor="middle" fill="var(--text-secondary)" font-size="12">W41</text>
-                <text x="300" y="175" text-anchor="middle" fill="var(--text-secondary)" font-size="12">W42</text>
-                <text x="400" y="175" text-anchor="middle" fill="var(--text-secondary)" font-size="12">W43</text>
+                <text x="30" y="98" text-anchor="middle" fill="var(--text-secondary)" font-size="9.5" font-weight="600">W39</text>
+                <text x="105" y="98" text-anchor="middle" fill="var(--text-secondary)" font-size="9.5" font-weight="600">W40</text>
+                <text x="180" y="98" text-anchor="middle" fill="var(--text-secondary)" font-size="9.5" font-weight="600">W41</text>
+                <text x="255" y="98" text-anchor="middle" fill="var(--text-secondary)" font-size="9.5" font-weight="600">W42</text>
+                <text x="330" y="98" text-anchor="middle" fill="var(--text-secondary)" font-size="9.5" font-weight="600">W43</text>
               </svg>
             </div>
-            <div style="display: flex; gap: 1.5rem; margin-top: 1.5rem; font-size: 0.875rem; justify-content: center; color: var(--text-secondary);">
-              <span style="display: flex; align-items: center; gap: 0.5rem;"><span style="width: 16px; border-bottom: 2px dashed var(--text-muted);"></span> Planned</span>
-              <span style="display: flex; align-items: center; gap: 0.5rem;"><span style="width: 16px; border-bottom: 3px solid var(--brand-blue);"></span> Actual</span>
+            <div style="display: flex; gap: 0.75rem; margin-top: 0.35rem; font-size: 0.7rem; justify-content: center; color: var(--text-secondary);">
+              <span style="display: flex; align-items: center; gap: 0.35rem;"><span style="width: 12px; border-bottom: 2px dashed var(--text-muted);"></span> Planned</span>
+              <span style="display: flex; align-items: center; gap: 0.35rem;"><span style="width: 12px; border-bottom: 2.5px solid var(--brand-blue);"></span> Actual</span>
             </div>
           </div>
         </div>
 
-        <div style="margin-top: 2.5rem;">
-          <h3 style="font-size: 1rem; margin-bottom: 1rem; color: var(--text-main);">Key Highlights & Issues</h3>
-          <ul style="color: var(--text-main); line-height: 1.8; padding-left: 1.5rem; margin: 0;">
-            <li><strong>Highlight:</strong> Level 1 Factory Acceptance Testing completed ahead of schedule for Main Switchboards.</li>
-            <li><strong>Highlight:</strong> Pre-commissioning documentation approved for HVAC units on Deck 3.</li>
-            <li><strong>Issue:</strong> Delay in L2 Receipt Verification for Transformer TX-02 due to missing shipping manifest (Severity: Medium).</li>
-            <li><strong>Issue:</strong> Quality non-conformance logged for piping welds in sector B; rework scheduled for Week 43.</li>
+        <div style="margin-top: 0.75rem;">
+          <h3 style="font-size: 0.8rem; margin-bottom: 0.35rem; color: var(--text-main);">Key Highlights & Issues</h3>
+          <ul style="color: var(--text-main); line-height: 1.35; padding-left: 1rem; margin: 0; font-size: 0.72rem;">
+            <li><strong>Highlight:</strong> L1 FAT completed ahead of schedule for Main Switchboards.</li>
+            <li><strong>Highlight:</strong> Pre-commissioning docs approved for HVAC units on Deck 3.</li>
+            <li><strong>Issue:</strong> Delay in L2 Receipt Verification for Transformer TX-02 (Severity: Medium).</li>
+            <li><strong>Issue:</strong> Quality non-conformance logged for piping welds in sector B; rework scheduled W43.</li>
           </ul>
         </div>
       </div>
@@ -149,104 +151,106 @@ export function renderReportsView(subRoute = 'weekly-report') {
     const selectedMonth = wf.month || 'August 2026';
     const months = ['August 2026', 'September 2026', 'October 2026', 'November 2026'];
     return `
-      <div class="dashboard-card" style="margin-bottom: 1.5rem;">
-        <div class="card-top-title">
-          <h2 style="margin: 0; font-size: 1.25rem;">Monthly Executive Summary</h2>
-          <div style="display: flex; gap: 0.5rem; align-items: center;">
-            <label style="color: var(--text-secondary); font-size: 0.875rem;">Select Month:</label>
-            <select style="padding: 0.25rem 0.5rem; border-radius: 4px; border: 1px solid var(--border-card); background: var(--bg-card); color: var(--text-main);"
+      <div class="dashboard-card" style="margin-bottom: 1rem; padding: 0.75rem;">
+        <div class="card-top-title" style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 0.35rem;">
+          <h2 style="margin: 0; font-size: 1rem;">Monthly Executive Summary</h2>
+          <div style="display: flex; gap: 0.35rem; align-items: center;">
+            <label style="color: var(--text-secondary); font-size: 0.72rem;">Select Month:</label>
+            <select style="padding: 0.15rem 0.35rem; border-radius: 4px; border: 1px solid var(--border-card); background: var(--bg-card); color: var(--text-main); font-size: 0.72rem;"
               onchange="window.setReportFilter('month', this.value)">
               ${months.map(m => `<option ${m === selectedMonth ? 'selected' : ''}>${m}</option>`).join('')}
             </select>
           </div>
         </div>
         
-        <div class="four-stat-boxes" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem; margin-top: 1.5rem;">
-          <div class="stat-mini-box metric-card" style="padding: 1rem; background: var(--bg-card-secondary); border-radius: 8px; border: 1px solid var(--border-card);">
-            <div class="metric-card-title" style="color: var(--text-secondary); font-size: 0.875rem; margin-bottom: 0.5rem;">Overall Progress %</div>
-            <div class="metric-big-num" style="font-size: 1.5rem; font-weight: bold; color: var(--brand-blue);">68.5%</div>
+        <div class="four-stat-boxes" style="margin-top: 0.6rem;">
+          <div class="stat-mini-box metric-card" style="padding: 0.4rem 0.5rem; background: var(--bg-card-secondary); border-radius: 6px; border: 1px solid var(--border-card);">
+            <div class="metric-card-title" style="color: var(--text-secondary); font-size: 0.68rem; margin-bottom: 0.1rem;">Overall Progress %</div>
+            <div class="metric-big-num" style="font-size: 1.1rem; font-weight: bold; color: var(--brand-blue);">68.5%</div>
           </div>
-          <div class="stat-mini-box metric-card" style="padding: 1rem; background: var(--bg-card-secondary); border-radius: 8px; border: 1px solid var(--border-card);">
-            <div class="metric-card-title" style="color: var(--text-secondary); font-size: 0.875rem; margin-bottom: 0.5rem;">Schedule Variance</div>
-            <div class="metric-big-num" style="font-size: 1.5rem; font-weight: bold; color: #10b981;">+2 Days</div>
+          <div class="stat-mini-box metric-card" style="padding: 0.4rem 0.5rem; background: var(--bg-card-secondary); border-radius: 6px; border: 1px solid var(--border-card);">
+            <div class="metric-card-title" style="color: var(--text-secondary); font-size: 0.68rem; margin-bottom: 0.1rem;">Schedule Variance</div>
+            <div class="metric-big-num" style="font-size: 1.1rem; font-weight: bold; color: #10b981;">+2 Days</div>
           </div>
-          <div class="stat-mini-box metric-card" style="padding: 1rem; background: var(--bg-card-secondary); border-radius: 8px; border: 1px solid var(--border-card);">
-            <div class="metric-card-title" style="color: var(--text-secondary); font-size: 0.875rem; margin-bottom: 0.5rem;">Cost Performance (CPI)</div>
-            <div class="metric-big-num" style="font-size: 1.5rem; font-weight: bold; color: #10b981;">1.04</div>
+          <div class="stat-mini-box metric-card" style="padding: 0.4rem 0.5rem; background: var(--bg-card-secondary); border-radius: 6px; border: 1px solid var(--border-card);">
+            <div class="metric-card-title" style="color: var(--text-secondary); font-size: 0.68rem; margin-bottom: 0.1rem;">Cost Performance (CPI)</div>
+            <div class="metric-big-num" style="font-size: 1.1rem; font-weight: bold; color: #10b981;">1.04</div>
           </div>
-          <div class="stat-mini-box metric-card" style="padding: 1rem; background: var(--bg-card-secondary); border-radius: 8px; border: 1px solid var(--border-card);">
-            <div class="metric-card-title" style="color: var(--text-secondary); font-size: 0.875rem; margin-bottom: 0.5rem;">Quality Score</div>
-            <div class="metric-big-num" style="font-size: 1.5rem; font-weight: bold; color: #f59e0b;">92/100</div>
+          <div class="stat-mini-box metric-card" style="padding: 0.4rem 0.5rem; background: var(--bg-card-secondary); border-radius: 6px; border: 1px solid var(--border-card);">
+            <div class="metric-card-title" style="color: var(--text-secondary); font-size: 0.68rem; margin-bottom: 0.1rem;">Quality Score</div>
+            <div class="metric-big-num" style="font-size: 1.1rem; font-weight: bold; color: #f59e0b;">92/100</div>
           </div>
         </div>
 
-        <div style="margin-top: 2rem; display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem;">
+        <div class="reports-two-col-grid" style="margin-top: 0.75rem; gap: 0.75rem;">
           <div>
-            <h3 style="font-size: 1rem; margin-bottom: 1rem; color: var(--text-main);">Equipment Completion by Type</h3>
-            <div style="background: var(--bg-card-secondary); padding: 1.5rem; border-radius: 8px; border: 1px solid var(--border-card); height: 250px; display: flex; align-items: flex-end;">
-              <svg viewBox="0 0 400 200" style="width: 100%; height: 100%; overflow: visible;">
-                <line x1="0" y1="200" x2="400" y2="200" stroke="var(--border-card)" stroke-width="2" />
+            <h3 style="font-size: 0.8rem; margin-bottom: 0.35rem; color: var(--text-main);">Equipment Completion by Type</h3>
+            <div class="chart-responsive-wrapper" style="background: var(--bg-card-secondary); padding: 0.5rem; border-radius: 6px; border: 1px solid var(--border-card); overflow-x: auto; -webkit-overflow-scrolling: touch; width: 100%;">
+              <svg viewBox="0 0 360 115" style="min-width: 320px; width: 100%; height: 105px; display: block;">
+                <line x1="10" y1="95" x2="350" y2="95" stroke="var(--border-card)" stroke-width="1.5" />
                 
-                <rect x="20" y="50" width="40" height="150" fill="var(--brand-blue)" rx="2"/>
-                <text x="40" y="40" text-anchor="middle" fill="var(--text-main)" font-size="12">85%</text>
-                <text x="40" y="220" text-anchor="middle" fill="var(--text-secondary)" font-size="11">ELEC</text>
+                <rect x="20" y="27" width="38" height="68" fill="var(--brand-blue)" rx="3"/>
+                <text x="39" y="20" text-anchor="middle" fill="var(--text-main)" font-size="9.5" font-weight="bold">85%</text>
+                <text x="39" y="108" text-anchor="middle" fill="var(--text-secondary)" font-size="9.5" font-weight="600">ELEC</text>
                 
-                <rect x="100" y="90" width="40" height="110" fill="var(--brand-blue)" rx="2"/>
-                <text x="120" y="80" text-anchor="middle" fill="var(--text-main)" font-size="12">62%</text>
-                <text x="120" y="220" text-anchor="middle" fill="var(--text-secondary)" font-size="11">HVAC</text>
+                <rect x="85" y="45" width="38" height="50" fill="var(--brand-blue)" rx="3"/>
+                <text x="104" y="38" text-anchor="middle" fill="var(--text-main)" font-size="9.5" font-weight="bold">62%</text>
+                <text x="104" y="108" text-anchor="middle" fill="var(--text-secondary)" font-size="9.5" font-weight="600">HVAC</text>
                 
-                <rect x="180" y="20" width="40" height="180" fill="var(--brand-blue)" rx="2"/>
-                <text x="200" y="10" text-anchor="middle" fill="var(--text-main)" font-size="12">95%</text>
-                <text x="200" y="220" text-anchor="middle" fill="var(--text-secondary)" font-size="11">FIRE</text>
+                <rect x="150" y="19" width="38" height="76" fill="var(--brand-blue)" rx="3"/>
+                <text x="169" y="12" text-anchor="middle" fill="var(--text-main)" font-size="9.5" font-weight="bold">95%</text>
+                <text x="169" y="108" text-anchor="middle" fill="var(--text-secondary)" font-size="9.5" font-weight="600">FIRE</text>
                 
-                <rect x="260" y="130" width="40" height="70" fill="var(--brand-blue)" rx="2"/>
-                <text x="280" y="120" text-anchor="middle" fill="var(--text-main)" font-size="12">40%</text>
-                <text x="280" y="220" text-anchor="middle" fill="var(--text-secondary)" font-size="11">MECH</text>
+                <rect x="215" y="63" width="38" height="32" fill="var(--brand-blue)" rx="3"/>
+                <text x="234" y="56" text-anchor="middle" fill="var(--text-main)" font-size="9.5" font-weight="bold">40%</text>
+                <text x="234" y="108" text-anchor="middle" fill="var(--text-secondary)" font-size="9.5" font-weight="600">MECH</text>
                 
-                <rect x="340" y="150" width="40" height="50" fill="var(--brand-blue)" rx="2"/>
-                <text x="360" y="140" text-anchor="middle" fill="var(--text-main)" font-size="12">25%</text>
-                <text x="360" y="220" text-anchor="middle" fill="var(--text-secondary)" font-size="11">CTRL</text>
+                <rect x="280" y="75" width="38" height="20" fill="var(--brand-blue)" rx="3"/>
+                <text x="299" y="68" text-anchor="middle" fill="var(--text-main)" font-size="9.5" font-weight="bold">25%</text>
+                <text x="299" y="108" text-anchor="middle" fill="var(--text-secondary)" font-size="9.5" font-weight="600">CTRL</text>
               </svg>
             </div>
           </div>
           <div>
-            <h3 style="font-size: 1rem; margin-bottom: 1rem; color: var(--text-main);">Top 5 Risk Register</h3>
-            <table class="summary-table" style="width: 100%; text-align: left; border-collapse: collapse; font-size: 0.875rem; color: var(--text-main);">
+            <h3 style="font-size: 0.8rem; margin-bottom: 0.35rem; color: var(--text-main);">Top 5 Risk Register</h3>
+            <div class="table-responsive-wrapper" style="overflow-x: auto; -webkit-overflow-scrolling: touch; width: 100%;">
+              <table class="summary-table" style="width: 100%; min-width: 340px; text-align: left; border-collapse: collapse; color: var(--text-main); font-size: 0.75rem; line-height: 1.2;">
               <thead>
-                <tr style="border-bottom: 2px solid var(--border-card);">
-                  <th style="padding: 0.75rem 0.5rem;">Risk ID</th>
-                  <th style="padding: 0.75rem 0.5rem;">Description</th>
-                  <th style="padding: 0.75rem 0.5rem;">Severity</th>
+                <tr style="border-bottom: 1.5px solid var(--border-card);">
+                  <th style="padding: 0.35rem 0.4rem; white-space: nowrap;">Risk ID</th>
+                  <th style="padding: 0.35rem 0.4rem; white-space: nowrap;">Description</th>
+                  <th style="padding: 0.35rem 0.4rem; text-align: center; white-space: nowrap;">Severity</th>
                 </tr>
               </thead>
               <tbody>
                 <tr style="border-bottom: 1px solid var(--border-card);">
-                  <td style="padding: 0.75rem 0.5rem; font-family: monospace;">RSK-042</td>
-                  <td style="padding: 0.75rem 0.5rem;">Vendor delay on Control Panels</td>
-                  <td style="padding: 0.75rem 0.5rem;"><span style="background: rgba(239, 68, 68, 0.1); color: #ef4444; padding: 2px 8px; border-radius: 12px; font-weight: bold;">High</span></td>
+                  <td style="padding: 0.35rem 0.4rem; font-family: monospace; font-size: 0.72rem; white-space: nowrap;">RSK-042</td>
+                  <td style="padding: 0.35rem 0.4rem; white-space: nowrap;">Vendor delay on Control Panels</td>
+                  <td style="padding: 0.35rem 0.4rem; text-align: center; white-space: nowrap;"><span style="background: rgba(239, 68, 68, 0.1); color: #ef4444; padding: 2px 6px; border-radius: 10px; font-weight: bold; font-size: 0.68rem;">High</span></td>
                 </tr>
                 <tr style="border-bottom: 1px solid var(--border-card);">
-                  <td style="padding: 0.75rem 0.5rem; font-family: monospace;">RSK-018</td>
-                  <td style="padding: 0.75rem 0.5rem;">Site access limitations in Zone B</td>
-                  <td style="padding: 0.75rem 0.5rem;"><span style="background: rgba(239, 68, 68, 0.1); color: #ef4444; padding: 2px 8px; border-radius: 12px; font-weight: bold;">High</span></td>
+                  <td style="padding: 0.35rem 0.4rem; font-family: monospace; font-size: 0.72rem; white-space: nowrap;">RSK-018</td>
+                  <td style="padding: 0.35rem 0.4rem; white-space: nowrap;">Site access limits in Zone B</td>
+                  <td style="padding: 0.35rem 0.4rem; text-align: center; white-space: nowrap;"><span style="background: rgba(239, 68, 68, 0.1); color: #ef4444; padding: 2px 6px; border-radius: 10px; font-weight: bold; font-size: 0.68rem;">High</span></td>
                 </tr>
                 <tr style="border-bottom: 1px solid var(--border-card);">
-                  <td style="padding: 0.75rem 0.5rem; font-family: monospace;">RSK-055</td>
-                  <td style="padding: 0.75rem 0.5rem;">Design clash in MECH vs ELEC routing</td>
-                  <td style="padding: 0.75rem 0.5rem;"><span style="background: rgba(245, 158, 11, 0.1); color: #f59e0b; padding: 2px 8px; border-radius: 12px; font-weight: bold;">Medium</span></td>
+                  <td style="padding: 0.35rem 0.4rem; font-family: monospace; font-size: 0.72rem; white-space: nowrap;">RSK-055</td>
+                  <td style="padding: 0.35rem 0.4rem; white-space: nowrap;">Design clash in MECH/ELEC routing</td>
+                  <td style="padding: 0.35rem 0.4rem; text-align: center; white-space: nowrap;"><span style="background: rgba(245, 158, 11, 0.1); color: #f59e0b; padding: 2px 6px; border-radius: 10px; font-weight: bold; font-size: 0.68rem;">Medium</span></td>
                 </tr>
                 <tr style="border-bottom: 1px solid var(--border-card);">
-                  <td style="padding: 0.75rem 0.5rem; font-family: monospace;">RSK-061</td>
-                  <td style="padding: 0.75rem 0.5rem;">Pending approval for L4 procedures</td>
-                  <td style="padding: 0.75rem 0.5rem;"><span style="background: rgba(245, 158, 11, 0.1); color: #f59e0b; padding: 2px 8px; border-radius: 12px; font-weight: bold;">Medium</span></td>
+                  <td style="padding: 0.35rem 0.4rem; font-family: monospace; font-size: 0.72rem; white-space: nowrap;">RSK-061</td>
+                  <td style="padding: 0.35rem 0.4rem; white-space: nowrap;">Pending L4 procedure sign-off</td>
+                  <td style="padding: 0.35rem 0.4rem; text-align: center; white-space: nowrap;"><span style="background: rgba(245, 158, 11, 0.1); color: #f59e0b; padding: 2px 6px; border-radius: 10px; font-weight: bold; font-size: 0.68rem;">Medium</span></td>
                 </tr>
                 <tr>
-                  <td style="padding: 0.75rem 0.5rem; font-family: monospace;">RSK-033</td>
-                  <td style="padding: 0.75rem 0.5rem;">Resource constraints for testing team</td>
-                  <td style="padding: 0.75rem 0.5rem;"><span style="background: rgba(16, 185, 129, 0.1); color: #10b981; padding: 2px 8px; border-radius: 12px; font-weight: bold;">Low</span></td>
+                  <td style="padding: 0.35rem 0.4rem; font-family: monospace; font-size: 0.72rem; white-space: nowrap;">RSK-033</td>
+                  <td style="padding: 0.35rem 0.4rem; white-space: nowrap;">Resource constraints testing team</td>
+                  <td style="padding: 0.35rem 0.4rem; text-align: center; white-space: nowrap;"><span style="background: rgba(16, 185, 129, 0.1); color: #10b981; padding: 2px 6px; border-radius: 10px; font-weight: bold; font-size: 0.68rem;">Low</span></td>
                 </tr>
               </tbody>
             </table>
+          </div>
           </div>
         </div>
       </div>
@@ -264,7 +268,7 @@ export function renderReportsView(subRoute = 'weekly-report') {
           <h2 style="margin: 0; font-size: 1.25rem;">Export Reports Data</h2>
         </div>
         
-        <div style="display: grid; grid-template-columns: 320px 1fr; gap: 2rem;">
+        <div class="nas-tab-grid">
           <div style="background: var(--bg-card-secondary); padding: 1.5rem; border-radius: 8px; border: 1px solid var(--border-card);">
             <h3 style="font-size: 1rem; margin-top: 0; margin-bottom: 1.25rem; color: var(--text-main);">Export Configuration</h3>
             
@@ -306,7 +310,7 @@ export function renderReportsView(subRoute = 'weekly-report') {
                 <span>Preview: ${wf.week || 'Current Week'} — ${actCount} activities + ${eqCount} equipment rows</span>
                 <span onclick="window.navigateTo('daily-activity')" style="font-size: 0.75rem; color: var(--brand-blue); cursor:pointer; text-decoration:underline;">View Activities</span>
               </div>
-              <div style="padding: 1.5rem; color: var(--text-main); background: var(--bg-card); white-space: pre-wrap; line-height: 1.6;">REPORT_ID, DATE, PHASE, PLANNED_PCT, ACTUAL_PCT, STATUS
+              <div style="padding: 1rem; color: var(--text-main); background: var(--bg-card); white-space: pre; font-family: monospace; font-size: 0.75rem; line-height: 1.6; overflow-x: auto; -webkit-overflow-scrolling: touch;">REPORT_ID, DATE, PHASE, PLANNED_PCT, ACTUAL_PCT, STATUS
 WPR-101, 2026-10-18, L1, 100, 100, COMPLETED
 WPR-101, 2026-10-18, L2, 90, 85, DELAYED
 WPR-101, 2026-10-18, L3, 40, 42, AHEAD

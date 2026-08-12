@@ -10,13 +10,10 @@ export function renderDocumentsView(subRoute = 'documents') {
   ];
 
   const tabsHtml = `
-    <div class="tabs-container view-tabs" style="margin-bottom:24px;border-bottom:1px solid var(--border-card);display:flex;gap:24px;overflow-x:auto;">
+    <div class="view-tabs">
       ${tabs.map(tab => `
-        <span class="view-tab ${activeTab === tab.id ? 'active' : ''}" data-route="${tab.id}"
-          style="cursor:pointer;padding:12px 4px;white-space:nowrap;color:${activeTab === tab.id ? 'var(--brand-blue)' : 'var(--text-secondary)'};
-          border-bottom:${activeTab === tab.id ? '2px solid var(--brand-blue)' : '2px solid transparent'};
-          display:flex;align-items:center;gap:8px;font-weight:500;transition:all 0.2s;">
-          <i data-lucide="${tab.icon}" style="width:18px;height:18px;"></i> ${tab.label}
+        <span class="view-tab ${activeTab === tab.id ? 'active' : ''}" data-route="${tab.id}">
+          <i data-lucide="${tab.icon}" style="width:16px;height:16px;"></i> ${tab.label}
         </span>`).join('')}
     </div>`;
 
@@ -43,14 +40,14 @@ export function renderDocumentsView(subRoute = 'documents') {
 
   return `
     <div class="documents-view-container" style="animation:fadeIn 0.3s ease-in-out;">
-      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:24px;">
-        <h1 style="font-size:24px;font-weight:600;margin:0;color:var(--text-main);">Documents &amp; Files</h1>
-        <div style="display:flex;gap:12px;">
-          <button class="btn" style="display:flex;align-items:center;gap:8px;" onclick="document.getElementById('global-search-input')?.focus()">
-            <i data-lucide="search" style="width:16px;height:16px;"></i> Global Search
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:1.25rem;flex-wrap:wrap;gap:0.75rem;">
+        <h1 style="font-size:1.4rem;font-weight:700;margin:0;color:var(--text-main);">Documents &amp; Files</h1>
+        <div style="display:flex;gap:0.5rem;flex-wrap:wrap;align-items:center;">
+          <button class="btn" style="display:flex;align-items:center;gap:0.4rem;" onclick="document.getElementById('global-search-input')?.focus()">
+            <i data-lucide="search" style="width:14px;height:14px;"></i> Global Search
           </button>
-          <button class="btn btn-primary" style="display:flex;align-items:center;gap:8px;" onclick="window._openUploadDocModal()">
-            <i data-lucide="plus" style="width:16px;height:16px;"></i> New Document
+          <button class="btn btn-primary" style="display:flex;align-items:center;gap:0.4rem;" onclick="window._openUploadDocModal()">
+            <i data-lucide="plus" style="width:14px;height:14px;"></i> New Document
           </button>
         </div>
       </div>
@@ -151,7 +148,7 @@ function renderDocumentsTab(s, statusBadge) {
   const statRevise   = docs.filter(d => d.status === 'Revise & Resubmit').length;
 
   return `
-    <div style="display:grid;grid-template-columns:repeat(5,1fr);gap:16px;margin-bottom:24px;">
+    <div class="five-stat-boxes" style="margin-bottom:1.5rem;">
       ${[
         { label:'Total Documents', value: docs.length, color:'var(--text-main)' },
         { label:'Approved', value: statApproved, color:'#10b981' },
@@ -196,7 +193,7 @@ function renderDocumentsTab(s, statusBadge) {
         </div>
       </div>
 
-      <div style="overflow-x:auto;">
+      <div class="table-responsive-wrapper">
         <table class="summary-table" style="width:100%;border-collapse:collapse;text-align:left;font-size:14px;">
           <thead>
             <tr style="border-bottom:2px solid var(--border-card);color:var(--text-muted);">
@@ -259,7 +256,7 @@ function renderNasFilesTab() {
   ];
 
   return `
-    <div style="display:grid;grid-template-columns:260px 1fr;gap:24px;min-height:500px;">
+    <div class="nas-tab-grid">
       <div class="dashboard-card" style="padding:20px;">
         <div style="margin-bottom:24px;">
           <div style="display:flex;justify-content:space-between;margin-bottom:8px;font-size:13px;">
@@ -279,7 +276,7 @@ function renderNasFilesTab() {
         </div>
       </div>
       <div class="dashboard-card" style="padding:20px;">
-        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px;padding-bottom:16px;border-bottom:1px solid var(--border-card);">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px;padding-bottom:16px;border-bottom:1px solid var(--border-card);flex-wrap:wrap;gap:0.75rem;">
           <div style="font-size:16px;font-weight:500;color:var(--text-main);">
             <span style="color:var(--text-secondary);">Projects / NAS / </span> CxL2-Documents
           </div>
@@ -298,7 +295,7 @@ function renderNasFilesTab() {
           <i data-lucide="alert-triangle" style="width:14px;height:14px;display:inline;vertical-align:middle;"></i>
           <strong>Session-only frontend mode.</strong> NAS/backend connectivity is not implemented. File listings below are reference data only.
         </div>
-        <div style="overflow-x:auto;">
+        <div class="table-responsive-wrapper">
           <table class="summary-table" style="width:100%;border-collapse:collapse;text-align:left;font-size:14px;">
             <thead>
               <tr style="border-bottom:2px solid var(--border-card);color:var(--text-muted);">
@@ -354,7 +351,7 @@ function renderSharedFilesTab(s) {
       </div>
       ${links.length === 0
         ? `<div style="text-align:center;color:var(--text-muted);padding:2rem;">No active shared links.</div>`
-        : `<div style="overflow-x:auto;">
+        : `<div class="table-responsive-wrapper">
             <table class="summary-table" style="width:100%;border-collapse:collapse;text-align:left;font-size:14px;">
               <thead><tr style="border-bottom:2px solid var(--border-card);color:var(--text-muted);">
                 <th style="padding:12px 8px;">File Name</th>
@@ -408,7 +405,7 @@ function renderImportTab(s) {
   const eqOpts = (s.equipment || []).slice(0, 30).map(e => `<option value="${e.id}">${e.id}</option>`).join('');
 
   return `
-    <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-bottom:24px;">
+    <div class="four-stat-boxes" style="margin-bottom:1.5rem;">
       ${[
         { label:'In Queue', value: queue.length, color:'var(--brand-blue)' },
         { label:'Validated', value: validated, color:'#10b981' },
@@ -427,33 +424,33 @@ function renderImportTab(s) {
         <i data-lucide="file-up" style="width:48px;height:48px;color:var(--brand-blue);margin-bottom:12px;"></i>
         <h3 style="margin:0 0 6px 0;font-size:16px;font-weight:600;color:var(--text-main);">Drag &amp; Drop Batch Documents Here</h3>
         <p style="margin:0 0 16px 0;font-size:13px;color:var(--text-secondary);">Supports PDF, XLSX, ZIP, DWG, DOCX • Session-only — no NAS backend</p>
-        <div style="display:flex;gap:12px;justify-content:center;align-items:center;">
-          <button class="btn btn-primary" style="display:flex;align-items:center;gap:8px;" onclick="window._openBatchImportModal('${eqOpts.replace(/'/g,'')}')">
-            <i data-lucide="folder-plus" style="width:16px;height:16px;"></i> Browse Files
+        <div style="display:flex;gap:0.5rem;justify-content:center;align-items:center;flex-wrap:wrap;">
+          <button class="btn btn-primary" style="display:flex;align-items:center;gap:0.4rem;" onclick="window._openBatchImportModal()">
+            <i data-lucide="folder-plus" style="width:14px;height:14px;"></i> Browse Files
           </button>
-          <button class="btn" style="display:flex;align-items:center;gap:8px;" onclick="window._downloadImportTemplate()">
-            <i data-lucide="download" style="width:16px;height:16px;"></i> Download Template
+          <button class="btn" style="display:flex;align-items:center;gap:0.4rem;" onclick="window._downloadImportTemplate()">
+            <i data-lucide="download" style="width:14px;height:14px;"></i> Download Template
           </button>
         </div>
       </div>
     </div>
 
     <!-- Import Queue Table -->
-    <div class="dashboard-card" style="padding:20px;">
-      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px;">
+    <div class="dashboard-card" style="padding:1.25rem;">
+      <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:1.25rem;flex-wrap:wrap;gap:0.75rem;">
         <div>
           <h3 class="card-top-title" style="margin:0;">Import Queue &amp; Mapping</h3>
-          <p style="margin:4px 0 0 0;font-size:12px;color:var(--text-secondary);">Resolve mapping errors before committing batch import</p>
+          <p style="margin:4px 0 0 0;font-size:0.75rem;color:var(--text-secondary);">Resolve mapping errors before committing batch import</p>
         </div>
-        <div style="display:flex;gap:12px;">
-          <button class="btn" style="display:flex;align-items:center;gap:8px;" onclick="window.seedSampleQueueData()">
-            <i data-lucide="database" style="width:14px;height:14px;"></i> Load Sample Queue
+        <div style="display:flex;gap:0.5rem;flex-wrap:wrap;align-items:center;">
+          <button class="btn" style="display:flex;align-items:center;gap:0.4rem;font-size:0.75rem;" onclick="window.seedSampleQueueData()">
+            <i data-lucide="database" style="width:13px;height:13px;"></i> Load Sample Queue
           </button>
-          <button class="btn" style="display:flex;align-items:center;gap:8px;" onclick="window.clearImportQueue()">
-            <i data-lucide="trash-2" style="width:14px;height:14px;"></i> Clear Queue
+          <button class="btn" style="display:flex;align-items:center;gap:0.4rem;font-size:0.75rem;" onclick="window.clearImportQueue()">
+            <i data-lucide="trash-2" style="width:13px;height:13px;"></i> Clear Queue
           </button>
-          <button class="btn btn-primary" style="display:flex;align-items:center;gap:8px;" onclick="window.commitImportBatch()">
-            <i data-lucide="check-circle-2" style="width:14px;height:14px;"></i> Commit Batch (${validated} validated)
+          <button class="btn btn-primary" style="display:flex;align-items:center;gap:0.4rem;font-size:0.75rem;" onclick="window.commitImportBatch()">
+            <i data-lucide="check-circle-2" style="width:13px;height:13px;"></i> Commit Batch (${validated})
           </button>
         </div>
       </div>
@@ -466,7 +463,7 @@ function renderImportTab(s) {
               <i data-lucide="database" style="width:16px;height:16px;"></i> Load Sample Queue Data
             </button>
            </div>`
-        : `<div style="overflow-x:auto;">
+        : `<div class="table-responsive-wrapper">
             <table class="summary-table" style="width:100%;border-collapse:collapse;font-size:14px;">
               <thead><tr style="border-bottom:2px solid var(--border-card);color:var(--text-muted);">
                 <th style="padding:12px 8px;">ID</th>

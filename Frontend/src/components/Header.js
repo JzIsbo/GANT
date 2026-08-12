@@ -2,8 +2,8 @@
  * Header Component
  */
 window._openUserProfileModal = function() {
-  const user = JSON.parse(sessionStorage.getItem('gantt_user') || '{"name":"Admin User","role":"Project Manager","email":"admin@gan.co.id"}');
-  const nameParts = (user.name || 'Admin User').trim().split(' ');
+  const user = JSON.parse(sessionStorage.getItem('gantt_user') || '{"name":"Admin","role":"Project Manager","email":"admin@gan.co.id"}');
+  const nameParts = (user.name || 'Admin').trim().split(' ');
   const initials = nameParts.length > 1 
     ? (nameParts[0][0] + nameParts[nameParts.length - 1][0]).toUpperCase()
     : (nameParts[0][0] || 'A').toUpperCase();
@@ -18,7 +18,7 @@ window._openUserProfileModal = function() {
       <div style="display:flex;align-items:center;gap:1rem;margin-bottom:1rem;">
         ${modalAvatarDisplay}
         <div>
-          <div style="font-weight:700;font-size:1rem;color:var(--text-main);">${window.escapeHtml(user.name || 'Admin User')}</div>
+          <div style="font-weight:700;font-size:1rem;color:var(--text-main);">${window.escapeHtml(user.name || 'Admin')}</div>
           <div style="color:var(--text-muted);font-size:0.8rem;">${window.escapeHtml(user.role || 'Project Manager')}</div>
         </div>
       </div>
@@ -35,25 +35,32 @@ export function renderHeader(pageTitle = 'Dashboard') {
   const themeIcon = isDark ? 'sun' : 'moon';
   const themeTooltip = isDark ? 'Switch to Light Mode' : 'Switch to Dark Mode';
 
-  const user = JSON.parse(sessionStorage.getItem('gantt_user') || '{"name":"Admin User","role":"Project Manager","email":"admin@gan.co.id"}');
-  const nameParts = (user.name || 'Admin User').trim().split(' ');
+  const user = JSON.parse(sessionStorage.getItem('gantt_user') || '{"name":"Admin","role":"Project Manager","email":"admin@gan.co.id"}');
+  const nameParts = (user.name || 'Admin').trim().split(' ');
   const initials = nameParts.length > 1 
     ? (nameParts[0][0] + nameParts[nameParts.length - 1][0]).toUpperCase()
     : (nameParts[0][0] || 'A').toUpperCase();
 
   const avatarDisplay = user.avatarUrl
-    ? `<img src="${user.avatarUrl}" alt="${window.escapeHtml(user.name)}" style="width:32px;height:32px;border-radius:50%;object-fit:cover;border:1px solid var(--border-card);" />`
+    ? `<img src="${user.avatarUrl}" alt="${window.escapeHtml(user.name)}" class="user-avatar-img" />`
     : `<div class="user-avatar-img">${initials}</div>`;
 
   return `
     <header class="app-header">
-      <div class="header-left-wrap" style="display:flex;align-items:center;gap:0.75rem;">
-        <button class="icon-btn mobile-hamburger-btn" onclick="window.toggleMobileSidebar()" title="Open Menu">
-          <i data-lucide="menu" style="width:20px;height:20px;"></i>
-        </button>
+      <!-- Desktop Header Left: Active Page Title + Date Subtitle -->
+      <div class="header-left-wrap header-desktop-left">
         <div class="header-title-area">
           <div class="header-title">${pageTitle}</div>
           <div class="header-date-sub">Reporting Week: 03–08 Aug 2026</div>
+        </div>
+      </div>
+
+      <!-- Mobile Header Left: Brand Logo + GANT + Subtitle -->
+      <div class="header-left-wrap header-mobile-brand" onclick="window.navigateTo('dashboard')" title="GANT Workspace">
+        <img src="/logo.png" alt="Logo" class="header-mobile-logo" style="width:30px;height:30px;object-fit:contain;flex-shrink:0;" />
+        <div class="header-title-area" style="display:flex;flex-direction:column;justify-content:center;">
+          <div class="header-brand-title" style="font-weight:800;font-size:1rem;color:var(--brand-blue);letter-spacing:-0.02em;font-family:var(--font-heading);line-height:1.1;">GANT</div>
+          <div class="header-brand-sub" style="font-size:0.65rem;color:var(--text-secondary);white-space:nowrap;line-height:1.1;margin-top:1px;">Project &amp; Commissioning Tracker</div>
         </div>
       </div>
 
@@ -65,7 +72,7 @@ export function renderHeader(pageTitle = 'Dashboard') {
         </div>
 
         <!-- Theme Toggle -->
-        <button class="icon-btn" id="theme-toggle" title="${themeTooltip}">
+        <button class="icon-btn" id="theme-toggle" onclick="window.toggleTheme()" title="${themeTooltip}">
           <i data-lucide="${themeIcon}"></i>
         </button>
 

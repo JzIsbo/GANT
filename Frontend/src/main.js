@@ -11,6 +11,7 @@ import { openModal, showToast } from './components/Modal.js';
 import { renderLoginView } from './components/LoginView.js';
 import { renderLandingWelcomeView } from './components/LandingWelcomeView.js';
 import { renderWelcomeView } from './components/WelcomeView.js';
+import { renderMobileMenuPortal } from './components/MobileMenuModal.js';
 import { masterEquipmentList, projectIdentity } from './mockData.js';
 
 // ---- Auth State ----
@@ -34,13 +35,17 @@ try {
   }
 } catch (e) {}
 
+let _themeToggling = false;
 window.toggleTheme = function() {
+  if (_themeToggling) return;
+  _themeToggling = true;
   document.body.classList.toggle('dark-mode');
   const isDark = document.body.classList.contains('dark-mode');
   try {
     localStorage.setItem('gant_theme', isDark ? 'dark' : 'light');
   } catch (e) {}
   renderApp();
+  setTimeout(() => { _themeToggling = false; }, 100);
 };
 
 // ================================================================
@@ -1153,11 +1158,34 @@ function renderLoginPage() {
 }
 
 window.toggleMobileSidebar = function() {
-  document.body.classList.toggle('mobile-sidebar-open');
+  document.body.classList.remove('mobile-sidebar-open');
+  const portal = document.getElementById('mobile-menu-portal');
+  if (portal) {
+    const isVisible = portal.classList.contains('active');
+    if (isVisible) {
+      portal.classList.remove('active');
+      document.documentElement.classList.remove('mobile-menu-open');
+      document.body.classList.remove('mobile-menu-open');
+      document.body.style.overflow = '';
+    } else {
+      portal.classList.add('active');
+      document.documentElement.classList.add('mobile-menu-open');
+      document.body.classList.add('mobile-menu-open');
+      document.body.style.overflow = 'hidden';
+      if (window.lucide) window.lucide.createIcons();
+    }
+  }
 };
 
 window.closeMobileSidebar = function() {
   document.body.classList.remove('mobile-sidebar-open');
+  document.documentElement.classList.remove('mobile-menu-open');
+  document.body.classList.remove('mobile-menu-open');
+  document.body.style.overflow = '';
+  const portal = document.getElementById('mobile-menu-portal');
+  if (portal) {
+    portal.classList.remove('active');
+  }
 };
 
 function renderMobileBottomNav(activeRoute = 'dashboard') {
@@ -1176,6 +1204,12 @@ function renderMobileBottomNav(activeRoute = 'dashboard') {
         <i data-lucide="calendar"></i>
         <span>Activities</span>
       </a>
+      <a class="mobile-nav-item mobile-nav-center-btn" onclick="window.toggleMobileSidebar()">
+        <div class="mobile-menu-circle">
+          <i data-lucide="menu"></i>
+        </div>
+        <span>Menu</span>
+      </a>
       <a class="mobile-nav-item ${isDocuments ? 'active' : ''}" onclick="window.navigateTo('documents');window.closeMobileSidebar();">
         <i data-lucide="file-text"></i>
         <span>Documents</span>
@@ -1183,10 +1217,6 @@ function renderMobileBottomNav(activeRoute = 'dashboard') {
       <a class="mobile-nav-item ${isReports ? 'active' : ''}" onclick="window.navigateTo('weekly-report');window.closeMobileSidebar();">
         <i data-lucide="bar-chart-2"></i>
         <span>Reports</span>
-      </a>
-      <a class="mobile-nav-item" onclick="window.toggleMobileSidebar()">
-        <i data-lucide="more-horizontal"></i>
-        <span>More</span>
       </a>
     </nav>
   `;
@@ -1209,6 +1239,7 @@ function renderApp() {
       </div>
     </main>
     ${renderMobileBottomNav(currentRoute)}
+    ${renderMobileMenuPortal()}
   `;
   if (window.lucide) window.lucide.createIcons();
   attachEventListeners();
@@ -1336,10 +1367,6 @@ function attachEventListeners() {
       if (itemsEl) itemsEl.style.display = isNowExpanded ? '' : 'none';
     });
   });
-  const themeToggle = document.getElementById('theme-toggle');
-  if (themeToggle) {
-    themeToggle.addEventListener('click', () => { window.toggleTheme(); });
-  }
   // NOTE: attachTableFilterListeners() REMOVED — all filters use window.setXxxFilter() inline handlers
 }
 

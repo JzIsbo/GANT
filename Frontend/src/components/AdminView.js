@@ -43,10 +43,10 @@ export function renderAdminView(subRoute = 'equipment-list') {
   const activeTabs = isSettings ? settingsTabs : masterDataTabs;
 
   const tabsHtml = `
-    <div class="admin-tabs view-tabs" style="display:flex;gap:1rem;margin-bottom:1.5rem;border-bottom:1px solid var(--border-card);padding-bottom:0.5rem;overflow-x:auto;">
+    <div class="admin-tabs view-tabs">
       ${activeTabs.map(tab => `
-        <span class="view-tab ${subRoute === tab.id ? 'active' : ''}" data-route="${tab.id}" style="cursor:pointer;display:flex;align-items:center;gap:0.5rem;padding:0.5rem 1rem;color:${subRoute === tab.id ? 'var(--brand-blue)' : 'var(--text-secondary)'};border-bottom:${subRoute === tab.id ? '2px solid var(--brand-blue)' : '2px solid transparent'};font-weight:${subRoute === tab.id ? 'bold' : 'normal'};white-space:nowrap;">
-          <i data-lucide="${tab.icon}" style="width:18px;height:18px;"></i>${tab.label}
+        <span class="admin-tab view-tab ${subRoute === tab.id ? 'active' : ''}" data-route="${tab.id}">
+          <i data-lucide="${tab.icon}" style="width:16px;height:16px;"></i> ${tab.label}
         </span>`).join('')}
     </div>`;
 
@@ -121,7 +121,7 @@ function renderEquipmentList() {
           </button>
         </div>
       </div>
-      <div style="overflow-x:auto;">
+      <div class="table-responsive-wrapper">
         <table class="summary-table" style="width:100%;text-align:left;border-collapse:collapse;">
           <thead>
             <tr style="border-bottom:1px solid var(--border-card);background:var(--bg-card-secondary);">
@@ -349,7 +349,7 @@ function renderRoomBuilding() {
             </button>
           </div>
         </div>
-        <div style="overflow-x:auto;">
+        <div class="table-responsive-wrapper">
           <table class="summary-table" style="width:100%;text-align:left;border-collapse:collapse;">
             <thead>
               <tr style="border-bottom:1px solid var(--border-card);background:var(--bg-card-secondary);">
@@ -586,7 +586,7 @@ function renderUserManagement() {
           </button>
         </div>
       </div>
-      <div style="overflow-x:auto;">
+      <div class="table-responsive-wrapper">
         <table class="summary-table" style="width:100%;text-align:left;border-collapse:collapse;">
           <thead>
             <tr style="border-bottom:1px solid var(--border-card);background:var(--bg-card-secondary);">
@@ -729,7 +729,7 @@ function renderProjectSettings() {
       </div>
       <div class="dashboard-card">
         <h2 class="card-top-title" style="margin-bottom:1rem;border-bottom:1px solid var(--border-card);padding-bottom:0.5rem;">CxL Phase Definitions</h2>
-        <div style="overflow-x:auto;">
+        <div class="table-responsive-wrapper">
           <table class="summary-table" style="width:100%;text-align:left;border-collapse:collapse;">
             <thead><tr style="border-bottom:1px solid var(--border-card);background:var(--bg-card-secondary);">
               <th style="padding:0.65rem;color:var(--text-secondary);">Phase</th>

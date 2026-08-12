@@ -37,13 +37,13 @@ export function renderLandingWelcomeView() {
           <a href="#about" onclick="event.preventDefault();document.getElementById('landing-about').scrollIntoView({behavior:'smooth'});">About ${p.name}</a>
         </nav>
 
-        <div style="display: flex; gap: 0.75rem; align-items: center;">
+        <div style="display: flex; gap: 0.5rem; align-items: center;">
           <button type="button" class="landing-theme-toggle-btn" onclick="window.toggleTheme()" title="${themeTitle}">
             <i data-lucide="${themeIcon}"></i>
-            <span>${themeText}</span>
+            <span class="hide-mobile">${themeText}</span>
           </button>
           <button class="btn-landing-login" onclick="window.handleGoToLogin()">
-            <i data-lucide="log-in" style="width: 16px; height: 16px;"></i> Sign In to Workspace
+            <i data-lucide="log-in" style="width: 16px; height: 16px;"></i> Sign In<span class="hide-mobile"> to Workspace</span>
           </button>
         </div>
       </header>

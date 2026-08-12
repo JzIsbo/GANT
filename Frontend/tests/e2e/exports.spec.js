@@ -37,7 +37,7 @@ test.describe('E2E Coverage: Report & Gantt CSV Export Download Events', () => {
 
   test('Duration Analysis CSV export download event', async ({ page }) => {
     await page.evaluate(() => window.navigateTo('duration-analysis'));
-    await expect(page.locator('h2:has-text("Duration Analysis")')).toBeVisible();
+    await expect(page.locator('.card-top-title:has-text("Duration Analysis")')).toBeVisible();
 
     const downloadPromise = page.waitForEvent('download');
     await page.evaluate(() => window._exportDurationCsv());
