@@ -3530,6 +3530,31 @@ body:not(.dark-mode) .landing-footer {
 }
 
 @media (max-width: 768px) {
+  #app {
+    width: 100% !important;
+    max-width: 100% !important;
+    overflow-x: hidden !important;
+  }
+
+  .app-main {
+    margin-left: 0 !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    min-width: 0 !important;
+    flex: 1 !important;
+    box-sizing: border-box !important;
+    overflow-x: hidden !important;
+    padding-bottom: 74px !important;
+  }
+
+  .dashboard-container {
+    padding: 0.75rem !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    box-sizing: border-box !important;
+    overflow-x: hidden !important;
+  }
+
   .mobile-hamburger-btn {
     display: flex !important;
     align-items: center;
@@ -3556,6 +3581,8 @@ body:not(.dark-mode) .landing-footer {
     height: auto !important;
     min-height: 56px;
     gap: 0.5rem;
+    width: 100% !important;
+    box-sizing: border-box !important;
   }
 
   .header-title {
@@ -3620,15 +3647,6 @@ body:not(.dark-mode) .landing-footer {
     stroke-width: 2.3px;
   }
 
-  /* Padding at bottom of main container so content never gets covered by bottom nav */
-  .app-main {
-    padding-bottom: 74px !important;
-  }
-
-  .dashboard-container {
-    padding: 0.85rem !important;
-  }
-
   /* Drawer Sidebar Slide-in */
   .app-sidebar {
     position: fixed !important;
@@ -3652,23 +3670,26 @@ body:not(.dark-mode) .landing-footer {
   }
 
   /* Dashboard Cards Grid adjustments for Mobile */
-  .dashboard-top-grid {
-    grid-template-columns: 1fr !important;
-    gap: 0.75rem !important;
-  }
-
-  .dashboard-middle-grid {
-    grid-template-columns: 1fr !important;
-    gap: 0.75rem !important;
-  }
-
+  .top-cards-row,
+  .middle-cards-row,
+  .dashboard-top-grid,
+  .dashboard-middle-grid,
   .dashboard-activities-grid {
     grid-template-columns: 1fr !important;
     gap: 0.75rem !important;
+    width: 100% !important;
+  }
+
+  .metric-card,
+  .dashboard-card {
+    width: 100% !important;
+    max-width: 100% !important;
+    box-sizing: border-box !important;
   }
 
   .stat-mini-boxes-row {
     grid-template-columns: repeat(2, 1fr) !important;
     gap: 0.5rem !important;
+    width: 100% !important;
   }
 }
