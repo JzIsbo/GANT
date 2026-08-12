@@ -3501,3 +3501,174 @@ body:not(.dark-mode) .landing-footer {
   .landing-nav-links { display: none; }
   .landing-hero { padding: 8rem 1.5rem 4rem; }
 }
+
+/* ================================================================
+   MOBILE RESPONSIVE SYSTEM & BOTTOM NAVIGATION (Screenshot 16)
+   ================================================================ */
+
+.mobile-hamburger-btn {
+  display: none;
+}
+
+.mobile-bottom-nav {
+  display: none;
+}
+
+.mobile-sidebar-overlay {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.6);
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+  z-index: 1040;
+  opacity: 0;
+  transition: opacity 0.25s ease;
+}
+
+@media (max-width: 768px) {
+  .mobile-hamburger-btn {
+    display: flex !important;
+    align-items: center;
+    justify-content: center;
+    width: 36px;
+    height: 36px;
+    border-radius: 8px;
+    background: var(--bg-card-secondary);
+    border: 1px solid var(--border-card);
+    color: var(--text-main);
+    cursor: pointer;
+  }
+
+  .header-search {
+    display: none !important;
+  }
+
+  .user-text-info {
+    display: none !important;
+  }
+
+  .app-header {
+    padding: 0.65rem 1rem !important;
+    height: auto !important;
+    min-height: 56px;
+    gap: 0.5rem;
+  }
+
+  .header-title {
+    font-size: 1.1rem !important;
+  }
+
+  .header-date-sub {
+    font-size: 0.65rem !important;
+  }
+
+  /* Fixed Mobile Bottom Navigation Bar */
+  .mobile-bottom-nav {
+    display: flex !important;
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 64px;
+    background: var(--bg-card);
+    border-top: 1px solid var(--border-card);
+    z-index: 1000;
+    align-items: center;
+    justify-content: space-around;
+    padding: 0 0.5rem;
+    box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.3);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+  }
+
+  .mobile-nav-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 3px;
+    flex: 1;
+    height: 100%;
+    color: var(--text-muted);
+    font-size: 0.68rem;
+    font-weight: 500;
+    cursor: pointer;
+    text-decoration: none;
+    transition: color 0.2s ease, transform 0.15s ease;
+    user-select: none;
+  }
+
+  .mobile-nav-item i,
+  .mobile-nav-item svg {
+    width: 20px;
+    height: 20px;
+    stroke-width: 2px;
+  }
+
+  .mobile-nav-item.active {
+    color: var(--brand-blue);
+    font-weight: 700;
+  }
+
+  .mobile-nav-item.active i,
+  .mobile-nav-item.active svg {
+    color: var(--brand-blue);
+    stroke-width: 2.3px;
+  }
+
+  /* Padding at bottom of main container so content never gets covered by bottom nav */
+  .app-main {
+    padding-bottom: 74px !important;
+  }
+
+  .dashboard-container {
+    padding: 0.85rem !important;
+  }
+
+  /* Drawer Sidebar Slide-in */
+  .app-sidebar {
+    position: fixed !important;
+    top: 0 !important;
+    left: 0 !important;
+    bottom: 0 !important;
+    width: 280px !important;
+    z-index: 1050 !important;
+    transform: translateX(-100%) !important;
+    transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1) !important;
+    box-shadow: 8px 0 30px rgba(0, 0, 0, 0.35) !important;
+  }
+
+  body.mobile-sidebar-open .app-sidebar {
+    transform: translateX(0) !important;
+  }
+
+  body.mobile-sidebar-open .mobile-sidebar-overlay {
+    display: block !important;
+    opacity: 1 !important;
+  }
+
+  /* Dashboard Cards Grid adjustments for Mobile */
+  .dashboard-top-grid {
+    grid-template-columns: 1fr !important;
+    gap: 0.75rem !important;
+  }
+
+  .dashboard-middle-grid {
+    grid-template-columns: 1fr !important;
+    gap: 0.75rem !important;
+  }
+
+  .dashboard-activities-grid {
+    grid-template-columns: 1fr !important;
+    gap: 0.75rem !important;
+  }
+
+  .stat-mini-boxes-row {
+    grid-template-columns: repeat(2, 1fr) !important;
+    gap: 0.5rem !important;
+  }
+}

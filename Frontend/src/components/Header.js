@@ -47,9 +47,14 @@ export function renderHeader(pageTitle = 'Dashboard') {
 
   return `
     <header class="app-header">
-      <div class="header-title-area">
-        <div class="header-title">${pageTitle}</div>
-        <div class="header-date-sub">Reporting Week: 03–08 Aug 2026</div>
+      <div class="header-left-wrap" style="display:flex;align-items:center;gap:0.75rem;">
+        <button class="icon-btn mobile-hamburger-btn" onclick="window.toggleMobileSidebar()" title="Open Menu">
+          <i data-lucide="menu" style="width:20px;height:20px;"></i>
+        </button>
+        <div class="header-title-area">
+          <div class="header-title">${pageTitle}</div>
+          <div class="header-date-sub">Reporting Week: 03–08 Aug 2026</div>
+        </div>
       </div>
 
       <div class="header-right">

@@ -1152,6 +1152,46 @@ function renderLoginPage() {
   if (window.lucide) window.lucide.createIcons();
 }
 
+window.toggleMobileSidebar = function() {
+  document.body.classList.toggle('mobile-sidebar-open');
+};
+
+window.closeMobileSidebar = function() {
+  document.body.classList.remove('mobile-sidebar-open');
+};
+
+function renderMobileBottomNav(activeRoute = 'dashboard') {
+  const isDashboard = activeRoute === 'dashboard';
+  const isActivities = ['daily-activity','weekly-activity','activity-progress','activity-status','activity-history'].includes(activeRoute);
+  const isDocuments = ['documents','nas-files','shared-files','import-documents'].includes(activeRoute);
+  const isReports = ['weekly-report','monthly-report','export-report'].includes(activeRoute);
+
+  return `
+    <nav class="mobile-bottom-nav">
+      <a class="mobile-nav-item ${isDashboard ? 'active' : ''}" onclick="window.navigateTo('dashboard');window.closeMobileSidebar();">
+        <i data-lucide="home"></i>
+        <span>Dashboard</span>
+      </a>
+      <a class="mobile-nav-item ${isActivities ? 'active' : ''}" onclick="window.navigateTo('daily-activity');window.closeMobileSidebar();">
+        <i data-lucide="calendar"></i>
+        <span>Activities</span>
+      </a>
+      <a class="mobile-nav-item ${isDocuments ? 'active' : ''}" onclick="window.navigateTo('documents');window.closeMobileSidebar();">
+        <i data-lucide="file-text"></i>
+        <span>Documents</span>
+      </a>
+      <a class="mobile-nav-item ${isReports ? 'active' : ''}" onclick="window.navigateTo('weekly-report');window.closeMobileSidebar();">
+        <i data-lucide="bar-chart-2"></i>
+        <span>Reports</span>
+      </a>
+      <a class="mobile-nav-item" onclick="window.toggleMobileSidebar()">
+        <i data-lucide="more-horizontal"></i>
+        <span>More</span>
+      </a>
+    </nav>
+  `;
+}
+
 function renderApp() {
   if (!isAuthenticated) {
     showLoginPage ? renderLoginPage() : renderLandingPage();
@@ -1160,6 +1200,7 @@ function renderApp() {
   const appEl = document.getElementById('app');
   if (!appEl) return;
   appEl.innerHTML = `
+    <div class="mobile-sidebar-overlay" onclick="window.closeMobileSidebar()"></div>
     ${renderSidebar(currentRoute)}
     <main class="app-main">
       ${renderHeader(getPageTitle(currentRoute))}
@@ -1167,6 +1208,7 @@ function renderApp() {
         ${getViewForRoute(currentRoute)}
       </div>
     </main>
+    ${renderMobileBottomNav(currentRoute)}
   `;
   if (window.lucide) window.lucide.createIcons();
   attachEventListeners();
@@ -1181,6 +1223,7 @@ window.renderApp = renderApp;
 function navigate(route) {
   if (route && route !== currentRoute) {
     currentRoute = route;
+    window.closeMobileSidebar();
     renderApp();
   }
 }
