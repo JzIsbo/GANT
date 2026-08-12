@@ -27,7 +27,7 @@ export function renderLandingWelcomeView() {
           <img src="/logo.png" alt="Logo" class="landing-logo-img" style="width: 34px; height: 34px; object-fit: contain; flex-shrink: 0;" />
           <div style="display:flex;flex-direction:column;justify-content:center;overflow:hidden;">
             <span class="landing-gant-text">${p.name}</span>
-            <span style="font-size: 0.65rem; color: rgba(255,255,255,0.6); white-space: nowrap;">Project &amp; Commissioning Tracker</span>
+            <span class="landing-brand-sub" style="font-size: 0.68rem; white-space: nowrap;">Project &amp; Commissioning Tracker</span>
           </div>
         </div>
 

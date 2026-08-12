@@ -2420,6 +2420,11 @@ body:not(.dark-mode) .landing-gant-text {
   color: #0f172a;
 }
 
+body:not(.dark-mode) .landing-brand-sub {
+  color: #475569 !important;
+  font-weight: 500;
+}
+
 body:not(.dark-mode) .landing-nav-links a {
   color: #334155;
   font-weight: 600;
