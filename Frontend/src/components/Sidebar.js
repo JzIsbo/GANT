@@ -124,6 +124,9 @@ export function renderSidebar(activeRoute = 'dashboard') {
               `).join('')}
             </select>
           </div>
+          <button type="button" class="btn-edit-project-icon" onclick="window._openEditProjectModal(window.appState.selectedProjectId)" title="Edit Project Aktif" style="background:var(--bg-card-secondary);color:var(--text-main);border:1px solid var(--border-card);border-radius:6px;width:24px;height:24px;display:flex;align-items:center;justify-content:center;cursor:pointer;flex-shrink:0;">
+            <i data-lucide="edit-2" style="width:12px;height:12px;"></i>
+          </button>
           <button type="button" class="btn-add-project-icon" onclick="window._openAddProjectModal()" title="Tambah Project Baru" style="background:rgba(37,99,235,0.12);color:var(--brand-blue);border:1px solid rgba(37,99,235,0.25);border-radius:6px;width:24px;height:24px;display:flex;align-items:center;justify-content:center;cursor:pointer;flex-shrink:0;">
             <i data-lucide="plus" style="width:13px;height:13px;"></i>
           </button>

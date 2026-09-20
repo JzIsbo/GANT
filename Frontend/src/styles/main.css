@@ -109,6 +109,19 @@ body.dark-mode ::-webkit-scrollbar-thumb {
   background: var(--text-muted);
 }
 
+/* Select Option Dark Mode Contrast Fix */
+select option,
+.project-select-input option {
+  background-color: var(--bg-card);
+  color: var(--text-main);
+}
+
+body.dark-mode select option,
+body.dark-mode .project-select-input option {
+  background-color: #0f172a !important;
+  color: #f8fafc !important;
+}
+
 /* ==========================================================================
    UNIVERSAL SUB-MENU NAVIGATION TABS (VIEW TABS & ADMIN TABS) — MOBILE TOUCH SWIPE
    ========================================================================== */

@@ -509,6 +509,44 @@ window._openAddProjectModal = function() {
   });
 };
 
+window._openEditProjectModal = function(projectId) {
+  const prjId = projectId || window.appState.selectedProjectId;
+  const prj = (window.appState.projects || []).find(p => p.id === prjId);
+  if (!prj) return showToast('Project tidak ditemukan.', 'danger');
+
+  openModal({
+    title: `Edit Project: ${prj.name}`,
+    bodyHtml: `
+      <div class="form-row"><label>Kode Project</label><input type="text" value="${prj.code}" readonly style="width:100%;padding:0.5rem;border:1px solid var(--border-card);border-radius:4px;background:var(--bg-card-secondary);color:var(--text-muted);cursor:not-allowed;"></div>
+      <div class="form-row"><label>Nama Project <span style="color:#ef4444;">*</span></label><input id="ep-name" type="text" value="${prj.name}" style="width:100%;padding:0.5rem;border:1px solid var(--border-card);border-radius:4px;background:var(--bg-card-secondary);color:var(--text-main);"></div>
+      <div class="form-row"><label>Nama Client</label><input id="ep-client" type="text" value="${prj.client}" style="width:100%;padding:0.5rem;border:1px solid var(--border-card);border-radius:4px;background:var(--bg-card-secondary);color:var(--text-main);"></div>
+      <div class="form-row"><label>Status Project</label><select id="ep-status" style="width:100%;padding:0.5rem;border:1px solid var(--border-card);border-radius:4px;background:var(--bg-card-secondary);color:var(--text-main);">
+        ${['Active','Planning','Completed'].map(s => `<option value="${s}" ${s === prj.status ? 'selected' : ''}>${s}</option>`).join('')}
+      </select></div>`,
+    confirmText: 'Simpan Perubahan',
+    onConfirm: (overlay) => {
+      const name   = overlay.querySelector('#ep-name')?.value?.trim();
+      const client = overlay.querySelector('#ep-client')?.value?.trim();
+      const status = overlay.querySelector('#ep-status')?.value;
+      const result = window.updateProject(prjId, { name, client, status });
+      if (!result.ok) {
+        let errEl = overlay.querySelector('#ep-error-msg');
+        if (!errEl) {
+          errEl = document.createElement('div');
+          errEl.id = 'ep-error-msg';
+          errEl.style.cssText = 'color:#ef4444;font-size:0.8rem;font-weight:600;padding:0.5rem 0.75rem;background:rgba(239,68,68,0.1);border-radius:4px;border:1px solid rgba(239,68,68,0.3);margin-top:0.75rem;';
+          overlay.querySelector('.modal-body')?.appendChild(errEl);
+        }
+        errEl.textContent = '⚠ ' + result.error;
+        errEl.style.display = 'block';
+        return false;
+      }
+      showToast(`Project "${name}" berhasil diperbarui.`, 'success', 3500);
+      renderApp();
+    }
+  });
+};
+
 // ================================================================
 // BUILDING CRUD
 // ================================================================
