@@ -469,6 +469,46 @@ window.deleteProject = function(id) {
   return { ok: true };
 };
 
+window._openAddProjectModal = function() {
+  const nextNum = (window.appState.projects || []).length + 1;
+  const defaultCode = `PRJ-0${nextNum}`;
+  const defaultName = `Project ${nextNum} — Substation Expansion`;
+
+  openModal({
+    title: 'Tambah Project Baru',
+    bodyHtml: `
+      <div class="form-row"><label>Kode Project <span style="color:#ef4444;">*</span></label><input id="np-code" type="text" value="${defaultCode}" placeholder="e.g. PRJ-03" style="width:100%;padding:0.5rem;border:1px solid var(--border-card);border-radius:4px;background:var(--bg-card-secondary);color:var(--text-main);"></div>
+      <div class="form-row"><label>Nama Project <span style="color:#ef4444;">*</span></label><input id="np-name" type="text" value="${defaultName}" placeholder="e.g. Project 3 — Substation Expansion" style="width:100%;padding:0.5rem;border:1px solid var(--border-card);border-radius:4px;background:var(--bg-card-secondary);color:var(--text-main);"></div>
+      <div class="form-row"><label>Nama Client</label><input id="np-client" type="text" value="PT. Global Adimitra Nusaabadi" style="width:100%;padding:0.5rem;border:1px solid var(--border-card);border-radius:4px;background:var(--bg-card-secondary);color:var(--text-main);"></div>
+      <div class="form-row"><label>Status Project</label><select id="np-status" style="width:100%;padding:0.5rem;border:1px solid var(--border-card);border-radius:4px;background:var(--bg-card-secondary);color:var(--text-main);">
+        <option value="Active" selected>Active</option><option value="Planning">Planning</option><option value="Completed">Completed</option>
+      </select></div>`,
+    confirmText: 'Buat Project Baru',
+    onConfirm: (overlay) => {
+      const code   = overlay.querySelector('#np-code')?.value?.trim();
+      const name   = overlay.querySelector('#np-name')?.value?.trim();
+      const client = overlay.querySelector('#np-client')?.value?.trim();
+      const status = overlay.querySelector('#np-status')?.value;
+      const result = window.createProject({ code, name, client, status });
+      if (!result.ok) {
+        let errEl = overlay.querySelector('#np-error-msg');
+        if (!errEl) {
+          errEl = document.createElement('div');
+          errEl.id = 'np-error-msg';
+          errEl.style.cssText = 'color:#ef4444;font-size:0.8rem;font-weight:600;padding:0.5rem 0.75rem;background:rgba(239,68,68,0.1);border-radius:4px;border:1px solid rgba(239,68,68,0.3);margin-top:0.75rem;';
+          overlay.querySelector('.modal-body')?.appendChild(errEl);
+        }
+        errEl.textContent = '⚠ ' + result.error;
+        errEl.style.display = 'block';
+        return false;
+      }
+      window.appState.selectedProjectId = result.project.id;
+      showToast(`Project "${name}" (${code}) berhasil dibuat & di-set sebagai project aktif!`, 'success', 4000);
+      renderApp();
+    }
+  });
+};
+
 // ================================================================
 // BUILDING CRUD
 // ================================================================

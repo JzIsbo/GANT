@@ -112,10 +112,10 @@ export function renderSidebar(activeRoute = 'dashboard') {
         </a>
 
         <!-- Multi-Project Switcher Header -->
-        <div class="sidebar-project-selector" style="padding: 0.5rem 0.75rem; margin: 0.35rem 0.75rem 0.5rem; background: var(--bg-card); border: 1px solid var(--border-card); border-radius: 8px; display: flex; align-items: center; justify-content: space-between;">
-          <div style="display:flex;align-items:center;gap:0.45rem;overflow:hidden;width:100%;">
+        <div class="sidebar-project-selector" style="padding: 0.45rem 0.65rem; margin: 0.35rem 0.75rem 0.5rem; background: var(--bg-card); border: 1px solid var(--border-card); border-radius: 8px; display: flex; align-items: center; justify-content: space-between; gap: 0.3rem;">
+          <div style="display:flex;align-items:center;gap:0.4rem;overflow:hidden;flex:1;">
             <i data-lucide="briefcase" style="width:14px;height:14px;color:var(--brand-blue);flex-shrink:0;"></i>
-            <select class="project-select-input" onchange="window.switchProject(this.value)" style="background:transparent;border:none;color:var(--text-main);font-size:0.74rem;font-weight:700;outline:none;cursor:pointer;width:100%;text-overflow:ellipsis;" title="Select Active Project">
+            <select class="project-select-input" onchange="window.switchProject(this.value)" style="background:transparent;border:none;color:var(--text-main);font-size:0.74rem;font-weight:700;outline:none;cursor:pointer;width:100%;text-overflow:ellipsis;" title="Pilih Project Aktif">
               ${(window.appState?.projects || [
                 { id: 'PRJ-01', name: 'Project 1 — HVAC & Plant' },
                 { id: 'PRJ-02', name: 'Project 2 — Data Center' }
@@ -124,6 +124,9 @@ export function renderSidebar(activeRoute = 'dashboard') {
               `).join('')}
             </select>
           </div>
+          <button type="button" class="btn-add-project-icon" onclick="window._openAddProjectModal()" title="Tambah Project Baru" style="background:rgba(37,99,235,0.12);color:var(--brand-blue);border:1px solid rgba(37,99,235,0.25);border-radius:6px;width:24px;height:24px;display:flex;align-items:center;justify-content:center;cursor:pointer;flex-shrink:0;">
+            <i data-lucide="plus" style="width:13px;height:13px;"></i>
+          </button>
         </div>
 
         <!-- Collapsible Menu Sections -->
