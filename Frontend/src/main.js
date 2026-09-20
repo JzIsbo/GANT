@@ -95,20 +95,29 @@ window.CXL_CHECKLISTS = {
 // PHASE 06.4 — GLOBAL APPLICATION STATE INITIALIZATION
 // ================================================================
 function _buildInitialState() {
-  const seedEquipment = masterEquipmentList.map(eq => ({
-    id: eq.id,
-    code: eq.id,
-    name: eq.name,
-    type: eq.type,
-    buildingId: eq.building === 'Building A' ? 'BLDG-A' : eq.building === 'Building B' ? 'BLDG-B' : 'BLDG-C',
-    buildingName: eq.building,
-    room: eq.room,
-    phase: eq.phase,
-    status: eq.status,
-    updated: eq.updated,
-    createdAt: '01 Aug 2026',
-    updatedAt: eq.updated
-  }));
+  const seedEquipment = [
+    ...masterEquipmentList.map(eq => ({
+      id: eq.id,
+      code: eq.id,
+      name: eq.name,
+      type: eq.type,
+      buildingId: eq.building === 'Building A' ? 'BLDG-A' : eq.building === 'Building B' ? 'BLDG-B' : 'BLDG-C',
+      buildingName: eq.building,
+      room: eq.room,
+      phase: eq.phase,
+      status: eq.status,
+      updated: eq.updated,
+      createdAt: '01 Aug 2026',
+      updatedAt: eq.updated,
+      projectId: 'PRJ-01'
+    })),
+    { id: 'TRF-101', code: 'TRF-101', name: '11kV Main Transformer', type: 'Transformer', buildingId: 'BLDG-B', buildingName: 'Building B', room: '101', phase: 'CxL2 Pre-Cx', status: 'Ready', updated: '11 Aug 2026', createdAt: '01 Aug 2026', updatedAt: '11 Aug 2026', projectId: 'PRJ-02' },
+    { id: 'SWG-201', code: 'SWG-201', name: 'MV Switchgear Panel', type: 'Switchgear', buildingId: 'BLDG-B', buildingName: 'Building B', room: '101', phase: 'CxL3 Startup', status: 'In Progress', updated: '11 Aug 2026', createdAt: '01 Aug 2026', updatedAt: '11 Aug 2026', projectId: 'PRJ-02' },
+    { id: 'UPS-301', code: 'UPS-301', name: '500kVA Double-Conversion UPS', type: 'UPS System', buildingId: 'BLDG-B', buildingName: 'Building B', room: '102', phase: 'CxL4 Functional', status: 'Not Started', updated: '11 Aug 2026', createdAt: '01 Aug 2026', updatedAt: '11 Aug 2026', projectId: 'PRJ-02' },
+    { id: 'GEN-401', code: 'GEN-401', name: '2MW Standby Diesel Generator', type: 'Generator', buildingId: 'BLDG-C', buildingName: 'Building C', room: 'RF-301', phase: 'CxL3 Startup', status: 'Not Started', updated: '11 Aug 2026', createdAt: '01 Aug 2026', updatedAt: '11 Aug 2026', projectId: 'PRJ-02' },
+    { id: 'CRAC-501', code: 'CRAC-501', name: 'Precision Air Conditioning Unit', type: 'Air Handling Unit', buildingId: 'BLDG-A', buildingName: 'Building A', room: '201', phase: 'CxL2 Pre-Cx', status: 'In Progress', updated: '11 Aug 2026', createdAt: '01 Aug 2026', updatedAt: '11 Aug 2026', projectId: 'PRJ-02' },
+    { id: 'ATS-102', code: 'ATS-102', name: 'Auto Transfer Switch Cabinet', type: 'Switchgear', buildingId: 'BLDG-B', buildingName: 'Building B', room: '101', phase: 'CxL1 FAT', status: 'Ready', updated: '11 Aug 2026', createdAt: '01 Aug 2026', updatedAt: '11 Aug 2026', projectId: 'PRJ-02' }
+  ];
 
   return {
     _initialized: true,
@@ -137,14 +146,20 @@ function _buildInitialState() {
     ],
     equipment: seedEquipment,
     activities: [
-      { id: 'ACT-101', equipmentId: 'PMP-101', eq: 'PMP-101', act: 'Pump Alignment & Coupling',   phase: 'CxL3 Startup',    status: 'In Progress', user: 'J. Smith', start: '08:00', end: '12:00', notes: 'Waiting on shims',          date: '11 Aug 2026', createdAt: '11 Aug 2026', updatedAt: '11 Aug 2026' },
-      { id: 'ACT-102', equipmentId: 'VLV-205', eq: 'VLV-205', act: 'Stroke Test & Calibration',   phase: 'CxL2 Pre-Cx',     status: 'Completed',   user: 'T. Jones', start: '09:00', end: '10:30', notes: 'Passed all criteria',       date: '11 Aug 2026', createdAt: '11 Aug 2026', updatedAt: '11 Aug 2026' },
-      { id: 'ACT-103', equipmentId: 'VLV-206', eq: 'VLV-206', act: 'Stroke Test & Calibration',   phase: 'CxL2 Pre-Cx',     status: 'Completed',   user: 'T. Jones', start: '10:30', end: '11:45', notes: 'Passed',                   date: '11 Aug 2026', createdAt: '11 Aug 2026', updatedAt: '11 Aug 2026' },
-      { id: 'ACT-104', equipmentId: 'HX-301',  eq: 'HX-301',  act: 'Hydrotest & Leak Check',      phase: 'CxL2 Pre-Cx',     status: 'Blocked',     user: 'M. Davis', start: '13:00', end: '16:00', notes: 'Permit issue',              date: '11 Aug 2026', createdAt: '11 Aug 2026', updatedAt: '11 Aug 2026' },
-      { id: 'ACT-105', equipmentId: 'MCC-001', eq: 'MCC-001', act: 'Megger & Insulation Test',    phase: 'CxL3 Startup',    status: 'Not Started', user: 'R. Clark', start: '14:00', end: '17:00', notes: 'Scheduled afternoon',       date: '11 Aug 2026', createdAt: '11 Aug 2026', updatedAt: '11 Aug 2026' },
-      { id: 'ACT-106', equipmentId: 'PMP-102', eq: 'PMP-102', act: 'Vibration Baseline Test',     phase: 'CxL3 Startup',    status: 'In Progress', user: 'J. Smith', start: '13:00', end: '15:00', notes: 'Taking readings',           date: '11 Aug 2026', createdAt: '11 Aug 2026', updatedAt: '11 Aug 2026' },
-      { id: 'ACT-107', equipmentId: 'TK-400',  eq: 'TK-400',  act: 'Internal Vessel Inspect',     phase: 'CxL5 Complete',   status: 'Completed',   user: 'S. Lee',   start: '07:30', end: '09:30', notes: 'Clean and clear',          date: '11 Aug 2026', createdAt: '11 Aug 2026', updatedAt: '11 Aug 2026' },
-      { id: 'ACT-108', equipmentId: 'VRF-001', eq: 'VRF-001', act: 'Loop Check & Power On',       phase: 'CxL4 Functional', status: 'Not Started', user: 'A. White', start: '15:00', end: '17:00', notes: 'Pending panel power',       date: '11 Aug 2026', createdAt: '11 Aug 2026', updatedAt: '11 Aug 2026' }
+      { id: 'ACT-101', projectId: 'PRJ-01', equipmentId: 'PMP-101', eq: 'PMP-101', act: 'Pump Alignment & Coupling',   phase: 'CxL3 Startup',    status: 'In Progress', user: 'J. Smith', start: '08:00', end: '12:00', notes: 'Waiting on shims',          date: '11 Aug 2026', createdAt: '11 Aug 2026', updatedAt: '11 Aug 2026' },
+      { id: 'ACT-102', projectId: 'PRJ-01', equipmentId: 'VLV-205', eq: 'VLV-205', act: 'Stroke Test & Calibration',   phase: 'CxL2 Pre-Cx',     status: 'Completed',   user: 'T. Jones', start: '09:00', end: '10:30', notes: 'Passed all criteria',       date: '11 Aug 2026', createdAt: '11 Aug 2026', updatedAt: '11 Aug 2026' },
+      { id: 'ACT-103', projectId: 'PRJ-01', equipmentId: 'VLV-206', eq: 'VLV-206', act: 'Stroke Test & Calibration',   phase: 'CxL2 Pre-Cx',     status: 'Completed',   user: 'T. Jones', start: '10:30', end: '11:45', notes: 'Passed',                   date: '11 Aug 2026', createdAt: '11 Aug 2026', updatedAt: '11 Aug 2026' },
+      { id: 'ACT-104', projectId: 'PRJ-01', equipmentId: 'HX-301',  eq: 'HX-301',  act: 'Hydrotest & Leak Check',      phase: 'CxL2 Pre-Cx',     status: 'Blocked',     user: 'M. Davis', start: '13:00', end: '16:00', notes: 'Permit issue',              date: '11 Aug 2026', createdAt: '11 Aug 2026', updatedAt: '11 Aug 2026' },
+      { id: 'ACT-105', projectId: 'PRJ-01', equipmentId: 'MCC-001', eq: 'MCC-001', act: 'Megger & Insulation Test',    phase: 'CxL3 Startup',    status: 'Not Started', user: 'R. Clark', start: '14:00', end: '17:00', notes: 'Scheduled afternoon',       date: '11 Aug 2026', createdAt: '11 Aug 2026', updatedAt: '11 Aug 2026' },
+      { id: 'ACT-106', projectId: 'PRJ-01', equipmentId: 'PMP-102', eq: 'PMP-102', act: 'Vibration Baseline Test',     phase: 'CxL3 Startup',    status: 'In Progress', user: 'J. Smith', start: '13:00', end: '15:00', notes: 'Taking readings',           date: '11 Aug 2026', createdAt: '11 Aug 2026', updatedAt: '11 Aug 2026' },
+      { id: 'ACT-107', projectId: 'PRJ-01', equipmentId: 'TK-400',  eq: 'TK-400',  act: 'Internal Vessel Inspect',     phase: 'CxL5 Complete',   status: 'Completed',   user: 'S. Lee',   start: '07:30', end: '09:30', notes: 'Clean and clear',          date: '11 Aug 2026', createdAt: '11 Aug 2026', updatedAt: '11 Aug 2026' },
+      { id: 'ACT-108', projectId: 'PRJ-01', equipmentId: 'VRF-001', eq: 'VRF-001', act: 'Loop Check & Power On',       phase: 'CxL4 Functional', status: 'Not Started', user: 'A. White', start: '15:00', end: '17:00', notes: 'Pending panel power',       date: '11 Aug 2026', createdAt: '11 Aug 2026', updatedAt: '11 Aug 2026' },
+      { id: 'ACT-201', projectId: 'PRJ-02', equipmentId: 'SWG-201', eq: 'SWG-201', act: 'Busbar Torquing & Interlock Check', phase: 'CxL3 Startup', status: 'In Progress', user: 'C. Davis', start: '08:30', end: '11:30', notes: 'Torquing busbars & mechanical interlocks', date: '11 Aug 2026', createdAt: '11 Aug 2026', updatedAt: '11 Aug 2026' },
+      { id: 'ACT-202', projectId: 'PRJ-02', equipmentId: 'TRF-101', eq: 'TRF-101', act: 'Oil Sampling & Dielectric Test', phase: 'CxL2 Pre-Cx', status: 'Completed', user: 'E. Wright', start: '09:00', end: '10:30', notes: 'Dielectric strength 68kV — Passed', date: '11 Aug 2026', createdAt: '11 Aug 2026', updatedAt: '11 Aug 2026' },
+      { id: 'ACT-203', projectId: 'PRJ-02', equipmentId: 'UPS-301', eq: 'UPS-301', act: 'Battery Discharge & Load Test', phase: 'CxL4 Functional', status: 'Blocked', user: 'E. Wright', start: '13:00', end: '16:00', notes: 'Waiting on load bank delivery', date: '11 Aug 2026', createdAt: '11 Aug 2026', updatedAt: '11 Aug 2026' },
+      { id: 'ACT-204', projectId: 'PRJ-02', equipmentId: 'GEN-401', eq: 'GEN-401', act: 'Step Load & Synchronizing Test', phase: 'CxL3 Startup', status: 'Not Started', user: 'B. Jones', start: '14:00', end: '17:00', notes: 'Fuel day tank 100% full', date: '11 Aug 2026', createdAt: '11 Aug 2026', updatedAt: '11 Aug 2026' },
+      { id: 'ACT-205', projectId: 'PRJ-02', equipmentId: 'CRAC-501', eq: 'CRAC-501', act: 'Airflow & Temperature Tuning', phase: 'CxL2 Pre-Cx', status: 'In Progress', user: 'C. Davis', start: '10:00', end: '12:00', notes: 'Balancing CFM in Zone B', date: '11 Aug 2026', createdAt: '11 Aug 2026', updatedAt: '11 Aug 2026' },
+      { id: 'ACT-206', projectId: 'PRJ-02', equipmentId: 'ATS-102', eq: 'ATS-102', act: 'Automatic Transfer Switch Test', phase: 'CxL1 FAT', status: 'Completed', user: 'E. Wright', start: '08:00', end: '09:30', notes: 'Factory test report signed', date: '11 Aug 2026', createdAt: '11 Aug 2026', updatedAt: '11 Aug 2026' }
     ],
     users: [
       { id: 'USR-001', name: 'Alice Smith',     email: 'alice.s@example.com',   role: 'Admin',           dept: 'IT',         status: 'Active',   lastLogin: '2 mins ago',  createdAt: '01 Aug 2026' },
@@ -675,6 +690,7 @@ window.createEquipment = function(data) {
   const now = new Date().toLocaleDateString('en-GB', { day:'2-digit', month:'short', year:'numeric' });
   const eq = {
     id, code: id, name,
+    projectId: s.selectedProjectId || 'PRJ-01',
     type: (data.type || 'General').trim(),
     buildingId: data.buildingId,
     buildingName: bldg.name,
@@ -736,6 +752,7 @@ window.createActivity = function(data) {
   const now = new Date().toLocaleDateString('en-GB', { day:'2-digit', month:'short', year:'numeric' });
   const activity = {
     id: window.generateId('ACT'),
+    projectId: s.selectedProjectId || 'PRJ-01',
     equipmentId: eq, eq, act,
     phase: data.phase || 'CxL3 Startup',
     status: 'Not Started',

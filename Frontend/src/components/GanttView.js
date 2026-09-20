@@ -66,8 +66,14 @@ export function renderGanttView(subRoute = 'gantt') {
             'cxl5 integrated testing': 'CxL5'
         };
 
-        // Filter appState.equipment (or fallback to masterEquipmentList) based on active filter state
-        const equipmentSource = (window.appState && window.appState.equipment && window.appState.equipment.length > 0) ? window.appState.equipment : masterEquipmentList;
+        // Filter appState.equipment by active project context
+        const selectedPrjId = window.appState?.selectedProjectId || 'PRJ-01';
+        const activePrj = (window.appState?.projects || []).find(prj => prj.id === selectedPrjId);
+        const activePrjStatus = activePrj ? (activePrj.status || 'Active') : 'Active';
+
+        const rawEquipment = (window.appState && window.appState.equipment && window.appState.equipment.length > 0) ? window.appState.equipment : masterEquipmentList;
+        const equipmentSource = rawEquipment.filter(item => item.projectId === selectedPrjId || (!item.projectId && selectedPrjId === 'PRJ-01'));
+
         let filteredEquipment = equipmentSource.filter(item => {
             const buildingName = item.buildingName || item.building || '';
             const buildingOk = gf.building === 'all' || buildingName.toLowerCase() === gf.building.toLowerCase();

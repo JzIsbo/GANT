@@ -85,8 +85,11 @@ function renderEquipmentList() {
     `<option value="${t}" ${ef.type === t ? 'selected' : ''}>${t}</option>`
   ).join('');
 
+  const selectedPrjId = s.selectedProjectId || 'PRJ-01';
+  const projectEquipment = s.equipment.filter(eq => eq.projectId === selectedPrjId || (!eq.projectId && selectedPrjId === 'PRJ-01'));
+
   // Apply filters
-  const filteredList = s.equipment.filter(eq => {
+  const filteredList = projectEquipment.filter(eq => {
     const bldgOk   = ef.building === 'all' || eq.buildingName === ef.building || eq.building === ef.building;
     const typeOk   = ef.type === 'all' || (eq.type || '').toLowerCase().includes(ef.type.toLowerCase());
     const searchOk = !ef.search || eq.id.toLowerCase().includes(ef.search.toLowerCase()) || (eq.name || '').toLowerCase().includes(ef.search.toLowerCase()) || (eq.type || '').toLowerCase().includes(ef.search.toLowerCase());
@@ -197,6 +200,9 @@ window._openAddEquipmentModal = function() {
       const phase  = overlay.querySelector('#neq-phase')?.value;
       const result = window.createEquipment({ id, name, type, buildingId: bldgId, room, phase });
       if (!result.ok) { _showFormError(overlay, result.error); return false; }
+      const prjId = window.appState.selectedProjectId || 'PRJ-01';
+      const count = window.appState.equipment.filter(e => e.projectId === prjId || (!e.projectId && prjId === 'PRJ-01')).length;
+      window.appPageState['equipment-list'] = Math.ceil(count / 8);
       showToast(`Equipment "${id}" added successfully.`, 'success');
       window.renderApp();
     }

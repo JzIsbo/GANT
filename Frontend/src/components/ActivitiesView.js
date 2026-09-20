@@ -66,14 +66,23 @@ export function renderActivitiesView(subRoute = 'daily-activity') {
 // ================================================================
 function renderDailyActivity(p) {
   const s = window.appState;
-  const allActivities = s.activities; // LIVE STATE — not local array
+  const selectedPrjId = s.selectedProjectId || 'PRJ-01';
+  const activePrj = (s.projects || []).find(prj => prj.id === selectedPrjId);
+  const activePrjName = activePrj ? activePrj.name : p.name;
+  const activePrjStatus = activePrj ? (activePrj.status || 'Active') : 'Active';
+
+  // Filter activities scoped to active project
+  let projectActivities = (s.activities || []).filter(a => a.projectId === selectedPrjId || (!a.projectId && selectedPrjId === 'PRJ-01'));
+
+  // If active project is set to Completed, mark activities as Completed
+  if (activePrjStatus === 'Completed') {
+    projectActivities = projectActivities.map(a => ({ ...a, status: 'Completed' }));
+  }
 
   const af = s.activityFilters || { phase: 'all', status: 'all', search: '' };
+  const allPhases  = [...new Set(projectActivities.map(a => a.phase).filter(Boolean))].sort();
 
-  // Get unique phases and statuses from live data
-  const allPhases  = [...new Set(allActivities.map(a => a.phase).filter(Boolean))].sort();
-
-  const filtered = allActivities.filter(a => {
+  const filtered = projectActivities.filter(a => {
     const phaseOk  = af.phase === 'all' || (a.phase || '').toLowerCase().includes(af.phase.toLowerCase());
     const statusOk = af.status === 'all' || a.status === af.status;
     const searchOk = !af.search || (a.eq || '').toLowerCase().includes(af.search.toLowerCase()) || (a.act || '').toLowerCase().includes(af.search.toLowerCase()) || (a.id || '').toLowerCase().includes(af.search.toLowerCase());
@@ -92,7 +101,7 @@ function renderDailyActivity(p) {
         <div>
           <span>Daily Site Activity Log</span>
           <div style="font-size:0.72rem;color:var(--text-muted);font-weight:normal;margin-top:0.1rem;">
-            Showing ${filtered.length} of ${allActivities.length} activities for project <strong>${p.name}</strong>
+            Showing ${filtered.length} of ${projectActivities.length} activities for <strong>${window.escapeHtml(activePrjName)}</strong>
           </div>
         </div>
         <div style="display:flex;gap:0.5rem;flex-wrap:wrap;align-items:center;">
@@ -296,7 +305,14 @@ window._confirmDeleteActivity = function(actId) {
 // ================================================================
 function renderWeeklyActivity(m, act) {
   const s = window.appState;
-  const activities = s.activities;
+  const selectedPrjId = s.selectedProjectId || 'PRJ-01';
+  const activePrj = (s.projects || []).find(prj => prj.id === selectedPrjId);
+  const activePrjStatus = activePrj ? (activePrj.status || 'Active') : 'Active';
+
+  let activities = (s.activities || []).filter(a => a.projectId === selectedPrjId || (!a.projectId && selectedPrjId === 'PRJ-01'));
+  if (activePrjStatus === 'Completed') {
+    activities = activities.map(a => ({ ...a, status: 'Completed' }));
+  }
 
   const statusCounts = { 'Completed': 0, 'In Progress': 0, 'Blocked': 0, 'Not Started': 0, 'Delayed': 0 };
   activities.forEach(a => { if (statusCounts.hasOwnProperty(a.status)) statusCounts[a.status]++; });
@@ -354,7 +370,14 @@ function renderWeeklyActivity(m, act) {
 // ================================================================
 function renderActivityProgress(m, act) {
   const s = window.appState;
-  const activities = s.activities;
+  const selectedPrjId = s.selectedProjectId || 'PRJ-01';
+  const activePrj = (s.projects || []).find(prj => prj.id === selectedPrjId);
+  const activePrjStatus = activePrj ? (activePrj.status || 'Active') : 'Active';
+
+  let activities = (s.activities || []).filter(a => a.projectId === selectedPrjId || (!a.projectId && selectedPrjId === 'PRJ-01'));
+  if (activePrjStatus === 'Completed') {
+    activities = activities.map(a => ({ ...a, status: 'Completed' }));
+  }
 
   const phaseBreakdown = {};
   activities.forEach(a => {
