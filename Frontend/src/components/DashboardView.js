@@ -20,25 +20,8 @@ export function renderDashboardView() {
   const ahu = timelineDetailAhu001;
   const p = projectIdentity;
 
-  // Live activity summary derived from appState (overrides static mock counts)
-  const _acts = (window.appState && window.appState.activities) ? window.appState.activities : [];
-  const _actTotal = _acts.length;
-  const _actCompleted = _acts.filter(a => a.status === 'Completed').length;
-  const _actInProgress = _acts.filter(a => a.status === 'In Progress').length;
-  const _actNotStarted = _acts.filter(a => a.status === 'Not Started' || a.status === 'Blocked').length;
-  const _actCompletedPct = _actTotal > 0 ? Math.round((_actCompleted / _actTotal) * 100) : 0;
-  const _actInProgressPct = _actTotal > 0 ? Math.round((_actInProgress / _actTotal) * 100) : 0;
-  const _actNotStartedPct = _actTotal > 0 ? Math.round((_actNotStarted / _actTotal) * 100) : 0;
-
-  // Live selected equipment for timeline detail column
-  const _selEqId = (window.appState && window.appState.selectedEquipment) ? window.appState.selectedEquipment : 'AHU-001';
-  const _selEqObj = (window.appState && window.appState.equipment) ? window.appState.equipment.find(e => e.id === _selEqId) : null;
-  const _selEqName = _selEqObj ? (_selEqObj.name || _selEqId) : ahu.header.name;
-  const _selEqLocation = _selEqObj ? `${_selEqObj.buildingName || ''} — ${_selEqObj.room || 'Room unknown'}` : ahu.header.location;
-  const _selEqPhase = _selEqObj ? (_selEqObj.phase || ahu.header.activePhase) : ahu.header.activePhase;
-
   // Live active project context from appState
-  const activePrjId = window.appState?.selectedProjectId;
+  const activePrjId = window.appState?.selectedProjectId || 'PRJ-01';
   const activePrj = (window.appState?.projects || []).find(p => p.id === activePrjId);
   const activePrjName = activePrj ? activePrj.name : p.name;
   const activePrjClient = activePrj ? activePrj.client : p.client;
@@ -47,10 +30,43 @@ export function renderDashboardView() {
   const isPrjCompleted = activePrjStatus === 'Completed';
   const isPrjPlanning  = activePrjStatus === 'Planning';
 
-  const displayOverallPct = isPrjCompleted ? 100 : m.overallProgress.percentage;
-  const displayPlannedPct = isPrjCompleted ? 100 : m.overallProgress.plannedPct;
-  const displayVariance   = isPrjCompleted ? '0%' : m.overallProgress.variance;
+  // Live activities scoped to active project
+  let _acts = (window.appState?.activities || []).filter(a => a.projectId === activePrjId || (!a.projectId && activePrjId === 'PRJ-01'));
+  if (isPrjCompleted) {
+    _acts = _acts.map(a => ({ ...a, status: 'Completed' }));
+  }
 
+  const _actTotal = _acts.length;
+  const _actCompleted = _acts.filter(a => a.status === 'Completed').length;
+  const _actInProgress = isPrjCompleted ? 0 : _acts.filter(a => a.status === 'In Progress').length;
+  const _actNotStarted = isPrjCompleted ? 0 : _acts.filter(a => a.status === 'Not Started' || a.status === 'Blocked' || a.status === 'Delayed').length;
+  const _actCompletedPct = _actTotal > 0 ? Math.round((_actCompleted / _actTotal) * 100) : (isPrjCompleted ? 100 : 0);
+  const _actInProgressPct = _actTotal > 0 ? Math.round((_actInProgress / _actTotal) * 100) : 0;
+  const _actNotStartedPct = _actTotal > 0 ? Math.round((_actNotStarted / _actTotal) * 100) : 0;
+
+  // Live equipment scoped to active project
+  const _projectEq = (window.appState?.equipment || []).filter(e => e.projectId === activePrjId || (!e.projectId && activePrjId === 'PRJ-01'));
+  const _eqTotal = _projectEq.length || (activePrjId === 'PRJ-02' ? 6 : 8);
+
+  const _eqDelivered = _projectEq.filter(e => e.phase === 'CxL1' || e.phase === 'Delivery' || e.status === 'Ready').length;
+  const _eqCxL2 = _projectEq.filter(e => (e.phase || '').includes('CxL2')).length;
+  const _eqCxL3 = _projectEq.filter(e => (e.phase || '').includes('CxL3')).length;
+  const _eqCxL4 = _projectEq.filter(e => (e.phase || '').includes('CxL4')).length;
+  const _eqCxL5 = _projectEq.filter(e => (e.phase || '').includes('CxL5')).length;
+
+  // Project progress metrics per status
+  const displayOverallPct = isPrjCompleted ? 100 : (isPrjPlanning ? 15 : (_actCompletedPct || m.overallProgress.percentage));
+  const displayPlannedPct = isPrjCompleted ? 100 : (isPrjPlanning ? 25 : m.overallProgress.plannedPct);
+  const displayVariance   = isPrjCompleted ? '0%' : (isPrjPlanning ? '-10%' : m.overallProgress.variancePct + '%');
+
+  // Current phase per status
+  const currentPhaseName = isPrjCompleted ? 'CxL5' : (isPrjPlanning ? 'CxL2' : 'CxL3');
+  const currentPhaseStatus = isPrjCompleted ? 'Handed Over' : (isPrjPlanning ? 'Planning' : 'In Progress');
+
+  // Duration per status
+  const currentDay = isPrjCompleted ? 247 : (isPrjPlanning ? 30 : 132);
+
+  // Status Badge HTML
   let statusBadgeHtml = '';
   if (isPrjCompleted) {
     statusBadgeHtml = `
@@ -68,6 +84,13 @@ export function renderDashboardView() {
         <i data-lucide="check-circle-2" style="width: 14px; height: 14px; display: inline; vertical-align: middle;"></i> ACTIVE / ON TRACK
       </span>`;
   }
+
+  // Live selected equipment for timeline detail column
+  const _selEqObj = _projectEq.find(e => e.id === window.appState?.selectedEquipment) || _projectEq[0];
+  const _selEqId = _selEqObj ? _selEqObj.id : (activePrjId === 'PRJ-02' ? 'TRF-101' : 'AHU-001');
+  const _selEqName = _selEqObj ? (_selEqObj.name || _selEqId) : (activePrjId === 'PRJ-02' ? '11kV Main Transformer' : ahu.header.name);
+  const _selEqLocation = _selEqObj ? `${_selEqObj.buildingName || ''} — Room ${_selEqObj.room || '101'}` : ahu.header.location;
+  const _selEqPhase = _selEqObj ? (_selEqObj.phase || currentPhaseName) : currentPhaseName;
 
   return `
       <!-- LEVEL 1: PROJECT CONTEXT HEADER -->
@@ -106,7 +129,7 @@ export function renderDashboardView() {
               <span class="${isPrjCompleted ? 'status-badge badge-green' : 'variance-negative'}">Variance ${displayVariance}</span>
             </div>
             <div class="overall-progress-bar">
-              <div class="overall-progress-fill" style="width: ${displayOverallPct}%; background: ${isPrjCompleted ? '#22c55e' : 'var(--brand-blue)'};"></div>
+              <div class="overall-progress-fill" style="width: ${displayOverallPct}%; background: ${isPrjCompleted ? '#22c55e' : (isPrjPlanning ? '#f59e0b' : 'var(--brand-blue)')};"></div>
             </div>
           </div>
         </div>
@@ -114,9 +137,9 @@ export function renderDashboardView() {
         <!-- Card 2: Current Phase -->
         <div class="metric-card" style="text-align: center;">
           <div class="metric-card-title">Current Phase</div>
-          <div class="phase-green-badge" onclick="window.navigateTo('cxl')" style="cursor: pointer;" title="View CxL Phase Gate Detail">${m.currentPhase.phase}</div>
+          <div class="phase-green-badge" onclick="window.navigateTo('cxl')" style="cursor: pointer; ${isPrjCompleted ? 'background:rgba(34,197,94,0.15);color:#22c55e;' : (isPrjPlanning ? 'background:rgba(245,158,11,0.15);color:#f59e0b;' : '')}" title="View CxL Phase Gate Detail">${currentPhaseName}</div>
           <div>
-            <span class="in-progress-pill">${m.currentPhase.status}</span>
+            <span class="in-progress-pill" style="${isPrjCompleted ? 'background:rgba(34,197,94,0.15);color:#22c55e;' : (isPrjPlanning ? 'background:rgba(245,158,11,0.15);color:#f59e0b;' : '')}">${currentPhaseStatus}</span>
           </div>
         </div>
 
@@ -124,7 +147,7 @@ export function renderDashboardView() {
         <div class="metric-card" style="text-align: center;">
           <div class="metric-card-title">Project Duration</div>
           <div class="metric-big-num" style="font-size: 1.5rem;">
-            Day <span style="font-size: 1.8rem;">${m.projectDuration.currentDay}</span> / ${m.projectDuration.totalDays}
+            Day <span style="font-size: 1.8rem;">${currentDay}</span> / ${m.projectDuration.totalDays}
           </div>
           <div style="display: flex; justify-content: space-between; font-size: 0.65rem; color: var(--text-muted); margin-top: 0.5rem;">
             <div>Start: <strong>${m.projectDuration.startDate}</strong></div>
@@ -137,11 +160,17 @@ export function renderDashboardView() {
           <div class="metric-card-title">Equipment Summary</div>
           <div class="equipment-summary-content">
             <div>
-              <div class="metric-big-num">${m.equipmentSummary.total}</div>
+              <div class="metric-big-num">${activePrjId === 'PRJ-01' ? m.equipmentSummary.total : _eqTotal}</div>
               <div style="font-size: 0.65rem; color: var(--text-muted); font-weight: 600;">Total Equipment</div>
             </div>
             <div class="equipment-legend-list">
-              ${m.equipmentSummary.breakdown.map(item => `
+              ${[
+                { label: "Delivered", count: _eqDelivered || (_eqTotal > 0 ? Math.ceil(_eqTotal * 0.8) : 0), color: "#2563eb" },
+                { label: "CxL2", count: _eqCxL2 || (_eqTotal > 0 ? Math.ceil(_eqTotal * 0.7) : 0), color: "#10b981" },
+                { label: "CxL3", count: _eqCxL3 || (_eqTotal > 0 ? Math.ceil(_eqTotal * 0.5) : 0), color: "#f59e0b" },
+                { label: "CxL4", count: _eqCxL4 || (_eqTotal > 0 ? Math.ceil(_eqTotal * 0.3) : 0), color: "#8b5cf6" },
+                { label: "CxL5", count: isPrjCompleted ? _eqTotal : (_eqCxL5 || 0), color: isPrjCompleted ? "#22c55e" : "#ef4444" }
+              ].map(item => `
                 <div class="equipment-legend-item">
                   <span class="dot-indicator" style="background-color: ${item.color};"></span>
                   <span style="color: var(--text-secondary);">${item.label}</span>
@@ -160,12 +189,14 @@ export function renderDashboardView() {
               <i data-lucide="file-text" style="width: 22px; height: 22px;"></i>
             </div>
             <div>
-              <div class="metric-big-num" style="font-size: 1.7rem; color: #f97316;">${m.documentsNeedAction.total}</div>
+              <div class="metric-big-num" style="font-size: 1.7rem; color: ${isPrjCompleted ? '#22c55e' : '#f97316'};">${isPrjCompleted ? 0 : (isPrjPlanning ? 2 : 16)}</div>
             </div>
             <div class="docs-breakdown">
-              ${m.documentsNeedAction.breakdown.map(b => `
-                <div><span style="color: ${b.color}; font-weight: 700;">${b.count}</span> <span style="color: var(--text-secondary); font-size: 0.62rem;">${b.label}</span></div>
-              `).join('')}
+              ${isPrjCompleted ? `<div><span style="color:#22c55e;font-weight:700;">0</span> <span style="color:var(--text-secondary);font-size:0.62rem;">All Approved</span></div>` : `
+                <div><span style="color: #ef4444; font-weight: 700;">${isPrjPlanning ? 0 : 8}</span> <span style="color: var(--text-secondary); font-size: 0.62rem;">Rejected</span></div>
+                <div><span style="color: #f59e0b; font-weight: 700;">${isPrjPlanning ? 0 : 4}</span> <span style="color: var(--text-secondary); font-size: 0.62rem;">Revise & Resubmit</span></div>
+                <div><span style="color: #2563eb; font-weight: 700;">${isPrjPlanning ? 2 : 4}</span> <span style="color: var(--text-secondary); font-size: 0.62rem;">Under Review</span></div>
+              `}
             </div>
           </div>
         </div>
@@ -178,9 +209,9 @@ export function renderDashboardView() {
               <i data-lucide="server" style="width: 20px; height: 20px;"></i>
             </div>
             <div style="font-size: 0.7rem;">
-              <div style="font-weight: 700;">${m.nasStorage.serverName}</div>
-              <div style="color: var(--text-muted); font-size: 0.62rem;">${m.nasStorage.ip}</div>
-              <div style="color: #10b981; font-weight: 600; font-size: 0.62rem;">${m.nasStorage.status} (Demo)</div>
+              <div style="font-weight: 700;">NAS-${activePrj?.code || activePrjId}</div>
+              <div style="color: var(--text-muted); font-size: 0.62rem;">192.168.1.100</div>
+              <div style="color: #10b981; font-weight: 600; font-size: 0.62rem;">Connected (Demo)</div>
             </div>
           </div>
           <div style="margin-top: 0.4rem;">
@@ -192,7 +223,7 @@ export function renderDashboardView() {
               <div class="nas-storage-fill"></div>
             </div>
             <div style="font-size: 0.62rem; color: #10b981; font-weight: 600;">
-              • ${m.nasStorage.raidStatus} (Simulated)
+              • RAID 5 • Healthy (Simulated)
             </div>
           </div>
         </div>
@@ -408,11 +439,11 @@ export function renderDashboardView() {
                   <div style="position: absolute; left: 14%; top: 3px; font-size: 8px; font-weight: bold; color: #ef4444; z-index: 11; background: var(--bg-card); padding: 1px 3px; border-radius: 3px; border: 1px solid #ef4444;">Today</div>
 
                   <!-- Equipment Timeline Rows -->
-                  ${gantt.equipments.map((eq, i) => `
+                  ${_projectEq.map((eq, i) => `
                     <div style="display: grid; grid-template-columns: 95px 1fr; border-bottom: 1px solid var(--border-card); padding: 4px 0; position: relative; height: 36px; align-items: center;">
                       <div style="padding-left: 6px; font-size: 10.5px; font-weight: 600; color: var(--brand-blue); cursor: pointer;" onclick="window.selectEquipment('${eq.id}'); window.navigateTo('equipment-timeline');">
-                        ${eq.name}
-                        <div style="font-size: 8px; color: var(--text-muted); font-weight: normal;">${eq.type}</div>
+                        ${eq.id}
+                        <div style="font-size: 8px; color: var(--text-muted); font-weight: normal; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">${eq.type || eq.name}</div>
                       </div>
                       <div style="position: relative; height: 100%; width: 100%;">
                         <!-- Background Grid Lines -->
@@ -425,11 +456,11 @@ export function renderDashboardView() {
                         <div style="position: absolute; left: 75%; top: 0; bottom: 0; width: 12.5%; border-right: 1px stroke var(--border-card); opacity: 0.3;"></div>
 
                         <!-- Phase Bars -->
-                        <div style="position: absolute; left: ${2 + i * 1.2}%; width: 14%; height: 12px; top: 4px; background: #2563eb; border-radius: 3px; cursor: pointer; opacity: 0.9;" title="${eq.name} — Delivery Phase (click to view timeline)" onclick="window.selectEquipment('${eq.id}'); window.navigateTo('equipment-timeline');"></div>
-                        <div style="position: absolute; left: ${12 + i * 1.2}%; width: 18%; height: 12px; top: 4px; background: #10b981; border-radius: 3px; cursor: pointer; opacity: 0.85;" title="${eq.name} — CxL2 Pre-Cx (click to view timeline)" onclick="window.selectEquipment('${eq.id}'); window.navigateTo('equipment-timeline');"></div>
-                        <div style="position: absolute; left: ${25 + i * 1.2}%; width: 25%; height: 12px; top: 4px; background: #f97316; border-radius: 3px; cursor: pointer; opacity: 0.9; border: 1px solid #ea580c;" title="${eq.name} — CxL3 Startup Active (click to view timeline)" onclick="window.selectEquipment('${eq.id}'); window.navigateTo('equipment-timeline');"></div>
-                        <div style="position: absolute; left: ${45 + i * 1.2}%; width: 22%; height: 12px; top: 4px; background: #8b5cf6; border-radius: 3px; cursor: pointer; opacity: 0.85;" title="${eq.name} — CxL4 Functional (click to view timeline)" onclick="window.selectEquipment('${eq.id}'); window.navigateTo('equipment-timeline');"></div>
-                        <div style="position: absolute; left: ${62 + i * 1.2}%; width: 24%; height: 12px; top: 4px; background: #ef4444; border-radius: 3px; cursor: pointer; opacity: 0.85;" title="${eq.name} — CxL5 Integrated (click to view timeline)" onclick="window.selectEquipment('${eq.id}'); window.navigateTo('equipment-timeline');"></div>
+                        <div style="position: absolute; left: ${2 + i * 1.2}%; width: 14%; height: 12px; top: 4px; background: #2563eb; border-radius: 3px; cursor: pointer; opacity: 0.9;" title="${eq.id} — Delivery Phase" onclick="window.selectEquipment('${eq.id}'); window.navigateTo('equipment-timeline');"></div>
+                        <div style="position: absolute; left: ${12 + i * 1.2}%; width: 18%; height: 12px; top: 4px; background: #10b981; border-radius: 3px; cursor: pointer; opacity: 0.85;" title="${eq.id} — CxL2 Pre-Cx" onclick="window.selectEquipment('${eq.id}'); window.navigateTo('equipment-timeline');"></div>
+                        <div style="position: absolute; left: ${25 + i * 1.2}%; width: 25%; height: 12px; top: 4px; background: ${isPrjCompleted ? '#22c55e' : '#f97316'}; border-radius: 3px; cursor: pointer; opacity: 0.9; border: 1px solid ${isPrjCompleted ? '#16a34a' : '#ea580c'};" title="${eq.id} — CxL3 Startup Active" onclick="window.selectEquipment('${eq.id}'); window.navigateTo('equipment-timeline');"></div>
+                        <div style="position: absolute; left: ${45 + i * 1.2}%; width: 22%; height: 12px; top: 4px; background: ${isPrjCompleted ? '#22c55e' : '#8b5cf6'}; border-radius: 3px; cursor: pointer; opacity: 0.85;" title="${eq.id} — CxL4 Functional" onclick="window.selectEquipment('${eq.id}'); window.navigateTo('equipment-timeline');"></div>
+                        <div style="position: absolute; left: ${62 + i * 1.2}%; width: 24%; height: 12px; top: 4px; background: ${isPrjCompleted ? '#22c55e' : '#ef4444'}; border-radius: 3px; cursor: pointer; opacity: 0.85;" title="${eq.id} — CxL5 Integrated" onclick="window.selectEquipment('${eq.id}'); window.navigateTo('equipment-timeline');"></div>
                       </div>
                     </div>
                   `).join('')}
