@@ -348,6 +348,16 @@ body.dark-mode ::-webkit-scrollbar-thumb {
   padding-left: 0.25rem;
 }
 
+/* Multi-Project Sub-bab Navigation Styling */
+.menu-project-subbab {
+  margin: 0.25rem 0 0.2rem 0.4rem;
+  border-left: 2px solid var(--brand-blue);
+}
+
+.menu-item.sub-menu-item {
+  padding-left: 1.6rem !important;
+}
+
 .menu-item {
   display: flex;
   align-items: center;

@@ -51,7 +51,13 @@ export function renderHeader(pageTitle = 'Dashboard') {
       <div class="header-left-wrap header-desktop-left">
         <div class="header-title-area">
           <div class="header-title">${pageTitle}</div>
-          <div class="header-date-sub">Reporting Week: 03–08 Aug 2026</div>
+          <div class="header-date-sub" style="display:flex;align-items:center;gap:0.4rem;flex-wrap:nowrap;">
+            <span class="header-project-badge" style="display:inline-flex;align-items:center;gap:0.25rem;background:rgba(37,99,235,0.1);color:var(--brand-blue);padding:0.1rem 0.45rem;border-radius:4px;font-weight:700;font-size:0.7rem;">
+              <i data-lucide="briefcase" style="width:11px;height:11px;"></i>
+              ${(window.appState && window.appState.selectedProjectId === 'PRJ-02') ? 'Project 2 — Data Center' : 'Project 1 — HVAC & Plant'}
+            </span>
+            <span>• &nbsp;Reporting Week: 03–08 Aug 2026</span>
+          </div>
         </div>
       </div>
 

@@ -185,6 +185,7 @@ function _buildInitialState() {
     ],
 
     // ── SELECTION STATE ─────────────────────────────────────────
+    selectedProjectId: 'PRJ-01',
     selectedEquipment: 'AHU-001',
     selectedBuilding:  null,
     selectedRoom:      null,
@@ -277,6 +278,7 @@ window.persistState = function() {
       auditLog: (s.auditLog || []).slice(0, _MAX_AUDIT_LOG),
       checklistState: s.checklistState,
       phaseApprovalState: s.phaseApprovalState,
+      selectedProjectId: s.selectedProjectId || 'PRJ-01',
       selectedEquipment: s.selectedEquipment,
       selectedCxlPhase: s.selectedCxlPhase,
       ganttFilters: s.ganttFilters,
@@ -325,6 +327,13 @@ window.resetDemoData = function() {
   });
 };
 
+window.switchProject = function(projectId) {
+  if (!window.appState) return;
+  window.appState.selectedProjectId = projectId;
+  showToast(`Switched active context to ${projectId === 'PRJ-02' ? 'Project 2 — Data Center Substation' : 'Project 1 — HVAC & Plant Baseline'}`, 'info', 3000);
+  renderApp();
+};
+
 // ================================================================
 // STATE INITIALIZATION — restore from localStorage if available
 // ================================================================
@@ -345,6 +354,7 @@ if (!window.appState || !window.appState._initialized) {
     if (_saved.auditLog && _saved.auditLog.length > 0) _b.auditLog = _saved.auditLog;
     if (_saved.checklistState) _b.checklistState = _saved.checklistState;
     if (_saved.phaseApprovalState) _b.phaseApprovalState = _saved.phaseApprovalState;
+    if (_saved.selectedProjectId) _b.selectedProjectId = _saved.selectedProjectId;
     if (_saved.selectedEquipment) _b.selectedEquipment = _saved.selectedEquipment;
     if (_saved.selectedCxlPhase) _b.selectedCxlPhase = _saved.selectedCxlPhase;
     if (_saved.ganttFilters) _b.ganttFilters = _saved.ganttFilters;

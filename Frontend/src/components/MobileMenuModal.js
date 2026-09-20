@@ -47,46 +47,101 @@ export function renderMobileMenuPortal() {
             </div>
           </div>
 
-          <!-- Section 2: Operasi Lapangan & CxL -->
+          <!-- Section 2: Activity Management (Multi-Project) -->
           <div class="menu-group-section">
-            <div class="menu-group-title">
-              <i data-lucide="calendar" style="color:#10b981;"></i> Operasi Lapangan &amp; CxL
+            <div class="menu-group-title" style="display:flex;justify-content:space-between;align-items:center;">
+              <div><i data-lucide="clipboard-list" style="color:#10b981;"></i> Activity Management</div>
+              <div style="font-size:0.65rem;color:var(--brand-blue);font-weight:700;text-transform:uppercase;"><i data-lucide="folder-git-2" style="width:11px;height:11px;vertical-align:-1px;"></i> Project 1</div>
             </div>
             <div class="mobile-app-tiles-grid">
               <div class="app-tile tile-emerald" onclick="window.navigateTo('daily-activity');window.closeMobileSidebar();">
                 <div class="tile-header">
-                  <div class="tile-icon-glow icon-emerald-glow"><i data-lucide="clock"></i></div>
+                  <div class="tile-icon-glow icon-emerald-glow"><i data-lucide="calendar"></i></div>
                   <span class="tile-badge badge-emerald">Daily</span>
                 </div>
-                <div class="tile-title">Aktivitas Harian</div>
-                <div class="tile-desc">Log proyek &amp; target</div>
+                <div class="tile-title">Daily Activity</div>
+                <div class="tile-desc">Input &amp; log harian</div>
               </div>
 
-              <div class="app-tile tile-orange" onclick="window.navigateTo('phase-progress');window.closeMobileSidebar();">
+              <div class="app-tile tile-blue" onclick="window.navigateTo('weekly-activity');window.closeMobileSidebar();">
                 <div class="tile-header">
-                  <div class="tile-icon-glow icon-orange-glow"><i data-lucide="shield-check"></i></div>
-                  <span class="tile-badge badge-orange">Checklists</span>
+                  <div class="tile-icon-glow icon-blue-glow"><i data-lucide="calendar-range"></i></div>
+                  <span class="tile-badge badge-blue">Weekly</span>
                 </div>
-                <div class="tile-title">CxL Phase Gate</div>
-                <div class="tile-desc">Persetujuan Digital</div>
+                <div class="tile-title">Weekly Activity</div>
+                <div class="tile-desc">Agregasi mingguan</div>
+              </div>
+
+              <div class="app-tile tile-sky" onclick="window.navigateTo('activity-progress');window.closeMobileSidebar();">
+                <div class="tile-header">
+                  <div class="tile-icon-glow icon-sky-glow"><i data-lucide="trending-up"></i></div>
+                  <span class="tile-badge badge-sky">Progress</span>
+                </div>
+                <div class="tile-title">Activity Progress</div>
+                <div class="tile-desc">Monitoring % target</div>
+              </div>
+
+              <div class="app-tile tile-purple" onclick="window.navigateTo('activity-status');window.closeMobileSidebar();">
+                <div class="tile-header">
+                  <div class="tile-icon-glow icon-purple-glow"><i data-lucide="check-circle-2"></i></div>
+                  <span class="tile-badge badge-purple">Status</span>
+                </div>
+                <div class="tile-title">Activity Status</div>
+                <div class="tile-desc">Tracking status</div>
+              </div>
+
+              <div class="app-tile tile-orange" onclick="window.navigateTo('activity-history');window.closeMobileSidebar();">
+                <div class="tile-header">
+                  <div class="tile-icon-glow icon-orange-glow"><i data-lucide="history"></i></div>
+                  <span class="tile-badge badge-orange">History</span>
+                </div>
+                <div class="tile-title">Activity History</div>
+                <div class="tile-desc">Log riwayat revisi</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Section 3: Project Timeline (Multi-Project) -->
+          <div class="menu-group-section">
+            <div class="menu-group-title" style="display:flex;justify-content:space-between;align-items:center;">
+              <div><i data-lucide="gantt-chart-square" style="color:#2563eb;"></i> Project Timeline</div>
+              <div style="font-size:0.65rem;color:var(--brand-blue);font-weight:700;text-transform:uppercase;"><i data-lucide="folder-git-2" style="width:11px;height:11px;vertical-align:-1px;"></i> Project 1</div>
+            </div>
+            <div class="mobile-app-tiles-grid">
+              <div class="app-tile tile-blue" onclick="window.navigateTo('gantt');window.closeMobileSidebar();">
+                <div class="tile-header">
+                  <div class="tile-icon-glow icon-blue-glow"><i data-lucide="gantt-chart-square"></i></div>
+                  <span class="tile-badge badge-blue">Gantt</span>
+                </div>
+                <div class="tile-title">Timeline Overview</div>
+                <div class="tile-desc">Grafik Gantt proyek</div>
               </div>
 
               <div class="app-tile tile-sky" onclick="window.navigateTo('equipment-timeline');window.closeMobileSidebar();">
                 <div class="tile-header">
-                  <div class="tile-icon-glow icon-sky-glow"><i data-lucide="layers"></i></div>
-                  <span class="tile-badge badge-sky">AHUs &amp; Pumps</span>
+                  <div class="tile-icon-glow icon-sky-glow"><i data-lucide="hard-drive"></i></div>
+                  <span class="tile-badge badge-sky">Units</span>
                 </div>
-                <div class="tile-title">Equipment Grid</div>
-                <div class="tile-desc">Jadwal Sub-unit</div>
+                <div class="tile-title">Equipment Timeline</div>
+                <div class="tile-desc">Timeline per peralatan</div>
+              </div>
+
+              <div class="app-tile tile-orange" onclick="window.navigateTo('phase-progress');window.closeMobileSidebar();">
+                <div class="tile-header">
+                  <div class="tile-icon-glow icon-orange-glow"><i data-lucide="workflow"></i></div>
+                  <span class="tile-badge badge-orange">CxL Gates</span>
+                </div>
+                <div class="tile-title">Phase Progress</div>
+                <div class="tile-desc">Delivery → CxL5</div>
               </div>
 
               <div class="app-tile tile-indigo" onclick="window.navigateTo('duration-analysis');window.closeMobileSidebar();">
                 <div class="tile-header">
-                  <div class="tile-icon-glow icon-indigo-glow"><i data-lucide="timer"></i></div>
+                  <div class="tile-icon-glow icon-indigo-glow"><i data-lucide="clock"></i></div>
                   <span class="tile-badge badge-indigo">Analisis</span>
                 </div>
-                <div class="tile-title">Durasi &amp; Keterlambatan</div>
-                <div class="tile-desc">Variansi fase komisioning</div>
+                <div class="tile-title">Duration Analysis</div>
+                <div class="tile-desc">Analisis durasi &amp; delay</div>
               </div>
             </div>
           </div>

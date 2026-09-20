@@ -11,6 +11,11 @@ export const projectIdentity = {
   endDate: "31 Mar 2027"
 };
 
+export const availableProjects = [
+  { id: 'PRJ-01', code: 'PRJ-01', name: 'Project 1 — HVAC & Plant Baseline', status: 'Active', client: 'PT. Global Adimitra Nusaabadi' },
+  { id: 'PRJ-02', code: 'PRJ-02', name: 'Project 2 — Data Center Substation', status: 'Active', client: 'PT. Global Adimitra Nusaabadi' }
+];
+
 export const dashboardHeaderInfo = {
   title: "Dashboard",
   dateRange: "Reporting Week: 03–08 Aug 2026",

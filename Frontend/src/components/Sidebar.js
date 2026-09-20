@@ -109,10 +109,26 @@ export function renderSidebar(activeRoute = 'dashboard') {
           <span>Dashboard</span>
         </a>
 
+        <!-- Multi-Project Switcher Header -->
+        <div class="sidebar-project-selector" style="padding: 0.5rem 0.75rem; margin: 0.35rem 0.75rem 0.5rem; background: var(--bg-card); border: 1px solid var(--border-card); border-radius: 8px; display: flex; align-items: center; justify-content: space-between;">
+          <div style="display:flex;align-items:center;gap:0.45rem;overflow:hidden;width:100%;">
+            <i data-lucide="briefcase" style="width:14px;height:14px;color:var(--brand-blue);flex-shrink:0;"></i>
+            <select class="project-select-input" onchange="window.switchProject(this.value)" style="background:transparent;border:none;color:var(--text-main);font-size:0.74rem;font-weight:700;outline:none;cursor:pointer;width:100%;text-overflow:ellipsis;" title="Select Active Project">
+              <option value="PRJ-01" ${(window.appState && window.appState.selectedProjectId === 'PRJ-01') ? 'selected' : ''}>Project 1 — HVAC &amp; Plant</option>
+              <option value="PRJ-02" ${(window.appState && window.appState.selectedProjectId === 'PRJ-02') ? 'selected' : ''}>Project 2 — Data Center</option>
+            </select>
+          </div>
+        </div>
+
         <!-- Collapsible Menu Sections -->
         ${menuSections.map(section => {
-    const isExpanded = expandedSections.has(section.id);
-    return `
+          const isExpanded = expandedSections.has(section.id);
+          const isMultiProjectSection = section.id === 'activity-management' || section.id === 'project-timeline';
+          const currentProjectName = (window.appState && window.appState.selectedProjectId === 'PRJ-02') 
+            ? 'Project 2 — Data Center Substation' 
+            : 'Project 1 — HVAC & Plant Baseline';
+
+          return `
             <div class="menu-section ${isExpanded ? 'expanded' : 'collapsed'}">
               <div class="menu-category" data-section="${section.id}">
                 <div class="menu-category-left">
@@ -122,8 +138,14 @@ export function renderSidebar(activeRoute = 'dashboard') {
                 <i data-lucide="chevron-down" class="menu-chevron"></i>
               </div>
               <div class="menu-section-items" ${!isExpanded ? 'style="display: none;"' : ''}>
+                ${isMultiProjectSection ? `
+                  <div class="menu-project-subbab" style="padding: 0.35rem 0.85rem 0.25rem 2rem; font-size: 0.68rem; font-weight: 700; color: var(--brand-blue); text-transform: uppercase; letter-spacing: 0.04em; display: flex; align-items: center; gap: 0.35rem; opacity: 0.9;">
+                    <i data-lucide="folder-git-2" style="width: 12px; height: 12px; flex-shrink: 0;"></i>
+                    <span style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">${currentProjectName}</span>
+                  </div>
+                ` : ''}
                 ${section.items.map(item => `
-                  <a class="menu-item ${activeRoute === item.id ? 'active' : ''}" data-route="${item.id}">
+                  <a class="menu-item ${isMultiProjectSection ? 'sub-menu-item' : ''} ${activeRoute === item.id ? 'active' : ''}" data-route="${item.id}">
                     <i data-lucide="${item.icon}" class="menu-icon"></i>
                     <span>${item.label}</span>
                   </a>
@@ -131,7 +153,7 @@ export function renderSidebar(activeRoute = 'dashboard') {
               </div>
             </div>
           `;
-  }).join('')}
+        }).join('')}
       </div>
 
       <!-- Footer -->
