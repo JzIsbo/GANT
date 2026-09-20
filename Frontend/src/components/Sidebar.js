@@ -41,7 +41,9 @@ const menuSections = [
     title: 'Document Management',
     icon: 'folder-open',
     items: [
-      { id: 'documents', label: 'Documents', icon: 'file-text' },
+      { id: 'documents-report', label: 'Report', icon: 'file-bar-chart' },
+      { id: 'documents-timesheet', label: 'Timesheet', icon: 'clock' },
+      { id: 'documents-calibration', label: 'Equipment Tools Calibration', icon: 'award' },
       { id: 'nas-files', label: 'NAS File Manager', icon: 'server' },
       { id: 'shared-files', label: 'Shared Files', icon: 'share-2' },
       { id: 'import-documents', label: 'Import Documents', icon: 'file-up' }
@@ -86,7 +88,7 @@ export function getExpandedSections() {
 export function renderSidebar(activeRoute = 'dashboard') {
   // Auto-expand the section that contains the active route
   menuSections.forEach(section => {
-    const hasActiveChild = section.items.some(item => item.id === activeRoute);
+    const hasActiveChild = section.items.some(item => item.id === activeRoute || (activeRoute.startsWith('documents') && item.id.startsWith('documents')));
     if (hasActiveChild) {
       expandedSections.add(section.id);
     }
@@ -123,7 +125,7 @@ export function renderSidebar(activeRoute = 'dashboard') {
         <!-- Collapsible Menu Sections -->
         ${menuSections.map(section => {
           const isExpanded = expandedSections.has(section.id);
-          const isMultiProjectSection = section.id === 'activity-management' || section.id === 'project-timeline';
+          const isMultiProjectSection = ['activity-management', 'project-timeline', 'master-data', 'document-management'].includes(section.id);
           const currentProjectName = (window.appState && window.appState.selectedProjectId === 'PRJ-02') 
             ? 'Project 2 — Data Center Substation' 
             : 'Project 1 — HVAC & Plant Baseline';

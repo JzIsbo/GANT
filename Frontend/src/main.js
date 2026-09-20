@@ -114,6 +114,10 @@ function _buildInitialState() {
     _initialized: true,
 
     // ── ENTITY COLLECTIONS ──────────────────────────────────────
+    projects: [
+      { id: 'PRJ-01', code: 'PRJ-01', name: 'Project 1 — HVAC & Plant Baseline', client: 'PT. Global Adimitra Nusaabadi', status: 'Active', createdAt: '01 Aug 2026', updatedAt: '01 Aug 2026' },
+      { id: 'PRJ-02', code: 'PRJ-02', name: 'Project 2 — Data Center Substation', client: 'PT. Global Adimitra Nusaabadi', status: 'Active', createdAt: '01 Aug 2026', updatedAt: '01 Aug 2026' }
+    ],
     buildings: [
       { id: 'BLDG-A', code: 'BLD-A', name: 'Building A', location: 'Zone A - North Block', type: 'Main Facility', description: 'Primary mechanical and HVAC zone', status: 'Active', createdAt: '01 Aug 2026', updatedAt: '01 Aug 2026' },
       { id: 'BLDG-B', code: 'BLD-B', name: 'Building B', location: 'Zone B - South Block', type: 'Annex',         description: 'Secondary equipment annex and support systems', status: 'Active', createdAt: '01 Aug 2026', updatedAt: '01 Aug 2026' },
@@ -266,6 +270,7 @@ window.persistState = function() {
     const payload = {
       _savedAt: new Date().toISOString(),
       _version: 1,
+      projects: s.projects || [],
       buildings: s.buildings,
       rooms: s.rooms,
       equipment: s.equipment,
@@ -342,6 +347,7 @@ if (!window.appState || !window.appState._initialized) {
   if (_saved) {
     window.appState = _buildInitialState();
     const _b = window.appState;
+    if (_saved.projects && _saved.projects.length > 0) _b.projects = _saved.projects;
     if (_saved.buildings && _saved.buildings.length > 0) _b.buildings = _saved.buildings;
     if (_saved.rooms) _b.rooms = _saved.rooms;
     if (_saved.equipment && _saved.equipment.length > 0) _b.equipment = _saved.equipment;
@@ -406,6 +412,60 @@ window.addAuditLog = function(actor, action, entity, entityId, desc) {
     id: window.generateId('AUD'),
     ts, actor, action, entity, entityId, desc
   });
+};
+
+// ================================================================
+// PROJECT CRUD (MULTI-PROJECT ARCHITECTURE)
+// ================================================================
+window.createProject = function(data) {
+  const s = window.appState;
+  const nameNorm = (data.name || '').trim();
+  const codeNorm = (data.code || '').trim().toUpperCase();
+  if (!nameNorm) return { ok: false, error: 'Project Name is required.' };
+  if (!codeNorm) return { ok: false, error: 'Project Code is required.' };
+  if (s.projects.find(p => p.code.toUpperCase() === codeNorm)) return { ok: false, error: `Project Code "${codeNorm}" already exists.` };
+  if (s.projects.find(p => p.name.toLowerCase() === nameNorm.toLowerCase())) return { ok: false, error: `Project Name "${nameNorm}" already exists.` };
+
+  const now = new Date().toLocaleDateString('en-GB', { day:'2-digit', month:'short', year:'numeric' });
+  const project = {
+    id: window.generateId('PRJ'),
+    code: codeNorm,
+    name: nameNorm,
+    client: (data.client || 'PT. Global Adimitra Nusaabadi').trim(),
+    status: data.status || 'Active',
+    createdAt: now,
+    updatedAt: now
+  };
+  s.projects.push(project);
+  window.addAuditLog('Admin', 'CREATE', 'Project', project.id, `Created Project "${project.name}" (${project.code})`);
+  return { ok: true, project };
+};
+
+window.updateProject = function(id, data) {
+  const s = window.appState;
+  const idx = s.projects.findIndex(p => p.id === id);
+  if (idx === -1) return { ok: false, error: 'Project not found.' };
+  const nameNorm = (data.name || '').trim();
+  if (!nameNorm) return { ok: false, error: 'Project Name is required.' };
+
+  const now = new Date().toLocaleDateString('en-GB', { day:'2-digit', month:'short', year:'numeric' });
+  const oldName = s.projects[idx].name;
+  s.projects[idx] = { ...s.projects[idx], name: nameNorm, client: (data.client || s.projects[idx].client).trim(), status: data.status || s.projects[idx].status, updatedAt: now };
+  window.addAuditLog('Admin', 'UPDATE', 'Project', id, `Updated Project "${oldName}" → "${nameNorm}"`);
+  return { ok: true };
+};
+
+window.deleteProject = function(id) {
+  const s = window.appState;
+  if (s.projects.length <= 1) return { ok: false, error: 'Cannot delete the primary active project.' };
+  const prj = s.projects.find(p => p.id === id);
+  if (!prj) return { ok: false, error: 'Project not found.' };
+  s.projects = s.projects.filter(p => p.id !== id);
+  if (s.selectedProjectId === id) {
+    s.selectedProjectId = s.projects[0].id;
+  }
+  window.addAuditLog('Admin', 'DELETE', 'Project', id, `Deleted Project "${prj.name}"`);
+  return { ok: true };
 };
 
 // ================================================================

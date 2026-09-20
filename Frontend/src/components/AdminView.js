@@ -633,15 +633,21 @@ function renderUserManagement() {
 // User modal helpers
 window._openAddUserModal = function() {
   openModal({
-    title: 'Create System User',
+    title: 'Create System User & Login Authorization',
     bodyHtml: `
-      <div class="form-row"><label>Full Name <span style="color:#ef4444;">*</span></label><input id="nu-name" type="text" placeholder="John Doe" style="width:100%;padding:0.5rem;border:1px solid var(--border-card);border-radius:4px;background:var(--bg-card-secondary);color:var(--text-main);"></div>
-      <div class="form-row"><label>Email Address <span style="color:#ef4444;">*</span></label><input id="nu-email" type="email" placeholder="user@company.com" style="width:100%;padding:0.5rem;border:1px solid var(--border-card);border-radius:4px;background:var(--bg-card-secondary);color:var(--text-main);"></div>
-      <div class="form-row"><label>Role</label><select id="nu-role" style="width:100%;padding:0.5rem;border:1px solid var(--border-card);border-radius:4px;background:var(--bg-card-secondary);color:var(--text-main);">
-        <option>Viewer</option><option>Engineer</option><option>Inspector</option><option>Project Manager</option><option>Admin</option>
+      <div class="form-row"><label>Full Name <span style="color:#ef4444;">*</span></label><input id="nu-name" type="text" placeholder="e.g. Budi Santoso" style="width:100%;padding:0.5rem;border:1px solid var(--border-card);border-radius:4px;background:var(--bg-card-secondary);color:var(--text-main);"></div>
+      <div class="form-row"><label>Email Address <span style="color:#ef4444;">*</span></label><input id="nu-email" type="email" placeholder="budi@gan.co.id" style="width:100%;padding:0.5rem;border:1px solid var(--border-card);border-radius:4px;background:var(--bg-card-secondary);color:var(--text-main);"></div>
+      <div class="form-row"><label>Username / Login ID</label><input id="nu-username" type="text" placeholder="e.g. budi.s" style="width:100%;padding:0.5rem;border:1px solid var(--border-card);border-radius:4px;background:var(--bg-card-secondary);color:var(--text-main);"></div>
+      <div class="form-row"><label>Initial Password</label><input id="nu-password" type="password" placeholder="••••••••" style="width:100%;padding:0.5rem;border:1px solid var(--border-card);border-radius:4px;background:var(--bg-card-secondary);color:var(--text-main);"></div>
+      <div class="form-row"><label>Role <span style="color:#ef4444;">*</span></label><select id="nu-role" style="width:100%;padding:0.5rem;border:1px solid var(--border-card);border-radius:4px;background:var(--bg-card-secondary);color:var(--text-main);">
+        <option>Engineer</option><option>Project Manager</option><option>Inspector</option><option>Viewer</option><option>Admin</option>
       </select></div>
-      <div class="form-row"><label>Department</label><input id="nu-dept" type="text" placeholder="Engineering" style="width:100%;padding:0.5rem;border:1px solid var(--border-card);border-radius:4px;background:var(--bg-card-secondary);color:var(--text-main);"></div>`,
-    confirmText: 'Create User',
+      <div class="form-row"><label>Department</label><input id="nu-dept" type="text" placeholder="Mechanical / Electrical" style="width:100%;padding:0.5rem;border:1px solid var(--border-card);border-radius:4px;background:var(--bg-card-secondary);color:var(--text-main);"></div>
+      <div style="margin-top:0.75rem;padding:0.6rem;background:rgba(37,99,235,0.08);border:1px solid rgba(37,99,235,0.2);border-radius:6px;font-size:0.78rem;color:var(--text-secondary);">
+        <i data-lucide="shield-check" style="width:13px;height:13px;display:inline;vertical-align:-2px;color:var(--brand-blue);"></i>
+        Users created with role <strong>Engineer</strong> or <strong>Project Manager</strong> are automatically granted active login credentials.
+      </div>`,
+    confirmText: 'Create User & Issue Credentials',
     onConfirm: (overlay) => {
       const name  = overlay.querySelector('#nu-name')?.value?.trim();
       const email = overlay.querySelector('#nu-email')?.value?.trim();
@@ -649,7 +655,7 @@ window._openAddUserModal = function() {
       const dept  = overlay.querySelector('#nu-dept')?.value?.trim();
       const result = window.createUser({ name, email, role, dept });
       if (!result.ok) { _showFormError(overlay, result.error); return false; }
-      showToast(`User "${name}" created successfully.`, 'success');
+      showToast(`User "${name}" (${role}) created & credentials authorized.`, 'success');
       window.renderApp();
     }
   });
@@ -696,6 +702,73 @@ window._confirmDeleteUser = function(userId) {
   });
 };
 
+// Project Modal Helpers
+window._openAddProjectModal = function() {
+  openModal({
+    title: 'Add New Project',
+    bodyHtml: `
+      <div class="form-row"><label>Project Code <span style="color:#ef4444;">*</span></label><input id="np-code" type="text" placeholder="e.g. PRJ-03" style="width:100%;padding:0.5rem;border:1px solid var(--border-card);border-radius:4px;background:var(--bg-card-secondary);color:var(--text-main);"></div>
+      <div class="form-row"><label>Project Name <span style="color:#ef4444;">*</span></label><input id="np-name" type="text" placeholder="e.g. Project 3 — Substation Expansion" style="width:100%;padding:0.5rem;border:1px solid var(--border-card);border-radius:4px;background:var(--bg-card-secondary);color:var(--text-main);"></div>
+      <div class="form-row"><label>Client Name</label><input id="np-client" type="text" value="PT. Global Adimitra Nusaabadi" style="width:100%;padding:0.5rem;border:1px solid var(--border-card);border-radius:4px;background:var(--bg-card-secondary);color:var(--text-main);"></div>
+      <div class="form-row"><label>Status</label><select id="np-status" style="width:100%;padding:0.5rem;border:1px solid var(--border-card);border-radius:4px;background:var(--bg-card-secondary);color:var(--text-main);">
+        <option>Active</option><option>Planning</option><option>Completed</option>
+      </select></div>`,
+    confirmText: 'Add Project',
+    onConfirm: (overlay) => {
+      const code   = overlay.querySelector('#np-code')?.value?.trim();
+      const name   = overlay.querySelector('#np-name')?.value?.trim();
+      const client = overlay.querySelector('#np-client')?.value?.trim();
+      const status = overlay.querySelector('#np-status')?.value;
+      const result = window.createProject({ code, name, client, status });
+      if (!result.ok) { _showFormError(overlay, result.error); return false; }
+      showToast(`Project "${name}" created successfully.`, 'success');
+      window.renderApp();
+    }
+  });
+};
+
+window._openEditProjectModal = function(projectId) {
+  const prj = window.appState.projects.find(p => p.id === projectId);
+  if (!prj) return showToast('Project not found.', 'danger');
+  openModal({
+    title: `Edit Project: ${prj.name}`,
+    bodyHtml: `
+      <div class="form-row"><label>Project Code</label><input type="text" value="${prj.code}" readonly style="width:100%;padding:0.5rem;border:1px solid var(--border-card);border-radius:4px;background:var(--bg-card-secondary);color:var(--text-muted);cursor:not-allowed;"></div>
+      <div class="form-row"><label>Project Name <span style="color:#ef4444;">*</span></label><input id="ep-name" type="text" value="${prj.name}" style="width:100%;padding:0.5rem;border:1px solid var(--border-card);border-radius:4px;background:var(--bg-card-secondary);color:var(--text-main);"></div>
+      <div class="form-row"><label>Client Name</label><input id="ep-client" type="text" value="${prj.client}" style="width:100%;padding:0.5rem;border:1px solid var(--border-card);border-radius:4px;background:var(--bg-card-secondary);color:var(--text-main);"></div>
+      <div class="form-row"><label>Status</label><select id="ep-status" style="width:100%;padding:0.5rem;border:1px solid var(--border-card);border-radius:4px;background:var(--bg-card-secondary);color:var(--text-main);">
+        ${['Active','Planning','Completed'].map(s => `<option ${s === prj.status ? 'selected' : ''}>${s}</option>`).join('')}
+      </select></div>`,
+    confirmText: 'Save Changes',
+    onConfirm: (overlay) => {
+      const name   = overlay.querySelector('#ep-name')?.value?.trim();
+      const client = overlay.querySelector('#ep-client')?.value?.trim();
+      const status = overlay.querySelector('#ep-status')?.value;
+      const result = window.updateProject(projectId, { name, client, status });
+      if (!result.ok) { _showFormError(overlay, result.error); return false; }
+      showToast('Project updated successfully.', 'success');
+      window.renderApp();
+    }
+  });
+};
+
+window._confirmDeleteProject = function(projectId) {
+  const prj = window.appState.projects.find(p => p.id === projectId);
+  if (!prj) return showToast('Project not found.', 'danger');
+  openModal({
+    title: `Delete Project: ${prj.name}`,
+    bodyHtml: `<div style="padding:1rem;background:rgba(239,68,68,0.08);border:1px solid rgba(239,68,68,0.3);border-radius:6px;"><p style="margin:0;font-size:0.9rem;color:var(--text-main);">Are you sure you want to delete project <strong>${prj.name}</strong> (${prj.code})?</p><p style="margin:0.5rem 0 0;font-size:0.8rem;color:var(--text-muted);">This action cannot be undone.</p></div>`,
+    confirmText: 'Delete Project',
+    confirmClass: 'btn-danger',
+    onConfirm: () => {
+      const result = window.deleteProject(projectId);
+      if (!result.ok) { showToast(result.error, 'danger'); return false; }
+      showToast(`Project "${prj.name}" deleted.`, 'success');
+      window.renderApp();
+    }
+  });
+};
+
 // ================================================================
 // PROJECT SETTINGS (read-only display of locked KPI + CxL definitions)
 // ================================================================
@@ -727,7 +800,47 @@ function renderProjectSettings() {
           </button>
         </div>
       </div>
+      <!-- Project CRUD & Multi-Project Directory Card -->
       <div class="dashboard-card">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:1rem;border-bottom:1px solid var(--border-card);padding-bottom:0.5rem;flex-wrap:wrap;gap:0.5rem;">
+          <h2 class="card-top-title" style="margin:0;">Project Directory &amp; Management (CRUD)</h2>
+          <button class="btn btn-primary" style="display:flex;align-items:center;gap:0.4rem;" onclick="window._openAddProjectModal()">
+            <i data-lucide="plus" style="width:14px;height:14px;"></i> Add Project
+          </button>
+        </div>
+        <div class="table-responsive-wrapper">
+          <table class="summary-table" style="width:100%;text-align:left;border-collapse:collapse;">
+            <thead>
+              <tr style="border-bottom:1px solid var(--border-card);background:var(--bg-card-secondary);">
+                <th style="padding:0.65rem;color:var(--text-secondary);">Code</th>
+                <th style="padding:0.65rem;color:var(--text-secondary);">Project Name</th>
+                <th style="padding:0.65rem;color:var(--text-secondary);">Client</th>
+                <th style="padding:0.65rem;color:var(--text-secondary);">Status</th>
+                <th style="padding:0.65rem;color:var(--text-secondary);">Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              ${(window.appState.projects || []).map(prj => `
+                <tr style="border-bottom:1px solid var(--border-card);">
+                  <td style="padding:0.65rem;font-weight:700;color:var(--brand-blue);font-size:0.82rem;">${prj.code}</td>
+                  <td style="padding:0.65rem;font-weight:600;color:var(--text-main);font-size:0.85rem;">
+                    ${prj.name}
+                    ${window.appState.selectedProjectId === prj.id ? '<span class="status-badge badge-blue" style="margin-left:0.4rem;font-size:0.68rem;">Active Context</span>' : ''}
+                  </td>
+                  <td style="padding:0.65rem;color:var(--text-secondary);font-size:0.82rem;">${prj.client}</td>
+                  <td style="padding:0.65rem;">${_statusBadge(prj.status || 'Active')}</td>
+                  <td style="padding:0.65rem;">
+                    <div style="display:flex;gap:0.4rem;">
+                      <button class="btn" style="padding:0.2rem 0.4rem;font-size:0.72rem;background:var(--bg-card-secondary);" title="Edit project" onclick="window._openEditProjectModal('${prj.id}')"><i data-lucide="edit-2" style="width:11px;height:11px;"></i></button>
+                      <button class="btn" style="padding:0.2rem 0.4rem;font-size:0.72rem;background:rgba(239,68,68,0.1);color:#ef4444;border-color:rgba(239,68,68,0.3);" title="Delete project" onclick="window._confirmDeleteProject('${prj.id}')"><i data-lucide="trash-2" style="width:11px;height:11px;"></i></button>
+                    </div>
+                  </td>
+                </tr>
+              `).join('')}
+            </tbody>
+          </table>
+        </div>
+      </div>
         <h2 class="card-top-title" style="margin-bottom:1rem;border-bottom:1px solid var(--border-card);padding-bottom:0.5rem;">CxL Phase Definitions</h2>
         <div class="table-responsive-wrapper">
           <table class="summary-table" style="width:100%;text-align:left;border-collapse:collapse;">

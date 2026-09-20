@@ -32,7 +32,19 @@ export function renderDocumentsView(subRoute = 'documents') {
   };
 
   let content = '';
-  if (activeTab === 'documents')        content = renderDocumentsTab(s, statusBadge);
+  if (subRoute === 'documents-report') {
+    s.documentFilters = s.documentFilters || {};
+    s.documentFilters.type = 'Report';
+    content = renderDocumentsTab(s, statusBadge);
+  } else if (subRoute === 'documents-timesheet') {
+    s.documentFilters = s.documentFilters || {};
+    s.documentFilters.type = 'Timesheet';
+    content = renderDocumentsTab(s, statusBadge);
+  } else if (subRoute === 'documents-calibration') {
+    s.documentFilters = s.documentFilters || {};
+    s.documentFilters.type = 'Calibration';
+    content = renderDocumentsTab(s, statusBadge);
+  } else if (activeTab === 'documents')        content = renderDocumentsTab(s, statusBadge);
   else if (activeTab === 'nas-files')   content = renderNasFilesTab();
   else if (activeTab === 'shared-files') content = renderSharedFilesTab(s);
   else if (activeTab === 'import-documents') content = renderImportTab(s);

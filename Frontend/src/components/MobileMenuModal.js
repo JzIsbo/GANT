@@ -146,63 +146,74 @@ export function renderMobileMenuPortal() {
             </div>
           </div>
 
-          <!-- Section 3: Dokumen & Storage NAS -->
+          <!-- Section 4: Document Management (Multi-Project) -->
           <div class="menu-group-section">
-            <div class="menu-group-title">
-              <i data-lucide="hard-drive" style="color:#8b5cf6;"></i> Manajemen Dokumen &amp; NAS
+            <div class="menu-group-title" style="display:flex;justify-content:space-between;align-items:center;">
+              <div><i data-lucide="folder-open" style="color:#8b5cf6;"></i> Document Management</div>
+              <div style="font-size:0.65rem;color:var(--brand-blue);font-weight:700;text-transform:uppercase;"><i data-lucide="folder-git-2" style="width:11px;height:11px;vertical-align:-1px;"></i> Project 1</div>
             </div>
             <div class="mobile-app-tiles-grid">
-              <div class="app-tile tile-purple" onclick="window.navigateTo('documents');window.closeMobileSidebar();">
+              <div class="app-tile tile-purple" onclick="window.navigateTo('documents-report');window.closeMobileSidebar();">
                 <div class="tile-header">
-                  <div class="tile-icon-glow icon-purple-glow"><i data-lucide="file-text"></i></div>
-                  <span class="tile-badge badge-purple">Docs</span>
+                  <div class="tile-icon-glow icon-purple-glow"><i data-lucide="file-bar-chart"></i></div>
+                  <span class="tile-badge badge-purple">Report</span>
                 </div>
-                <div class="tile-title">Repositori Dokumen</div>
-                <div class="tile-desc">PDF, XLSX &amp; Berkas</div>
+                <div class="tile-title">Project Reports</div>
+                <div class="tile-desc">Laporan mingguan &amp; bulanan</div>
               </div>
 
-              <div class="app-tile tile-blue" onclick="window.navigateTo('nas-files');window.closeMobileSidebar();">
+              <div class="app-tile tile-blue" onclick="window.navigateTo('documents-timesheet');window.closeMobileSidebar();">
                 <div class="tile-header">
-                  <div class="tile-icon-glow icon-blue-glow"><i data-lucide="server"></i></div>
-                  <span class="tile-badge badge-blue">RAID 5</span>
+                  <div class="tile-icon-glow icon-blue-glow"><i data-lucide="clock"></i></div>
+                  <span class="tile-badge badge-blue">Timesheet</span>
                 </div>
-                <div class="tile-title">NAS Storage Manager</div>
-                <div class="tile-desc">16 TB RAID 5 Terhubung</div>
+                <div class="tile-title">Manpower Timesheet</div>
+                <div class="tile-desc">Jam kerja teknisi</div>
               </div>
 
-              <div class="app-tile tile-emerald" onclick="window.navigateTo('import-documents');window.closeMobileSidebar();">
+              <div class="app-tile tile-emerald" onclick="window.navigateTo('documents-calibration');window.closeMobileSidebar();">
                 <div class="tile-header">
-                  <div class="tile-icon-glow icon-emerald-glow"><i data-lucide="upload-cloud"></i></div>
-                  <span class="tile-badge badge-emerald">Batch</span>
+                  <div class="tile-icon-glow icon-emerald-glow"><i data-lucide="award"></i></div>
+                  <span class="tile-badge badge-emerald">Kalibrasi</span>
                 </div>
-                <div class="tile-title">Import Dokumen</div>
-                <div class="tile-desc">Batch Upload Paket</div>
+                <div class="tile-title">Tools Calibration</div>
+                <div class="tile-desc">Sertifikat alat ukur</div>
               </div>
 
-              <div class="app-tile tile-sky" onclick="window.navigateTo('shared-files');window.closeMobileSidebar();">
+              <div class="app-tile tile-sky" onclick="window.navigateTo('nas-files');window.closeMobileSidebar();">
                 <div class="tile-header">
-                  <div class="tile-icon-glow icon-sky-glow"><i data-lucide="share-2"></i></div>
-                  <span class="tile-badge badge-sky">Share</span>
+                  <div class="tile-icon-glow icon-sky-glow"><i data-lucide="server"></i></div>
+                  <span class="tile-badge badge-sky">NAS</span>
                 </div>
-                <div class="tile-title">Tautan Berbagi</div>
-                <div class="tile-desc">Akses Klien &amp; Inspektur</div>
+                <div class="tile-title">NAS File Manager</div>
+                <div class="tile-desc">RAID 5 Storage</div>
+              </div>
+
+              <div class="app-tile tile-orange" onclick="window.navigateTo('import-documents');window.closeMobileSidebar();">
+                <div class="tile-header">
+                  <div class="tile-icon-glow icon-orange-glow"><i data-lucide="upload-cloud"></i></div>
+                  <span class="tile-badge badge-orange">Import</span>
+                </div>
+                <div class="tile-title">Import / Export</div>
+                <div class="tile-desc">Isolasi per project</div>
               </div>
             </div>
           </div>
 
-          <!-- Section 4: Master Data & Laporan -->
+          <!-- Section 5: Master Data & System Access (Multi-Project) -->
           <div class="menu-group-section">
-            <div class="menu-group-title">
-              <i data-lucide="database" style="color:#f59e0b;"></i> Master Data &amp; Laporan
+            <div class="menu-group-title" style="display:flex;justify-content:space-between;align-items:center;">
+              <div><i data-lucide="database" style="color:#f59e0b;"></i> Master Data</div>
+              <div style="font-size:0.65rem;color:var(--brand-blue);font-weight:700;text-transform:uppercase;"><i data-lucide="folder-git-2" style="width:11px;height:11px;vertical-align:-1px;"></i> Project 1</div>
             </div>
             <div class="mobile-app-tiles-grid">
               <div class="app-tile tile-orange" onclick="window.navigateTo('equipment-list');window.closeMobileSidebar();">
                 <div class="tile-header">
-                  <div class="tile-icon-glow icon-orange-glow"><i data-lucide="box"></i></div>
-                  <span class="tile-badge badge-orange">333 Units</span>
+                  <div class="tile-icon-glow icon-orange-glow"><i data-lucide="cpu"></i></div>
+                  <span class="tile-badge badge-orange">Peralatan</span>
                 </div>
-                <div class="tile-title">Registri Peralatan</div>
-                <div class="tile-desc">Master Equipment</div>
+                <div class="tile-title">Equipment List</div>
+                <div class="tile-desc">Registri per project</div>
               </div>
 
               <div class="app-tile tile-emerald" onclick="window.navigateTo('room-building');window.closeMobileSidebar();">
@@ -210,26 +221,26 @@ export function renderMobileMenuPortal() {
                   <div class="tile-icon-glow icon-emerald-glow"><i data-lucide="building-2"></i></div>
                   <span class="tile-badge badge-emerald">Spasial</span>
                 </div>
-                <div class="tile-title">Gedung &amp; Ruangan</div>
-                <div class="tile-desc">Hierarki Lokasi</div>
-              </div>
-
-              <div class="app-tile tile-blue" onclick="window.navigateTo('weekly-report');window.closeMobileSidebar();">
-                <div class="tile-header">
-                  <div class="tile-icon-glow icon-blue-glow"><i data-lucide="bar-chart-3"></i></div>
-                  <span class="tile-badge badge-blue">Laporan</span>
-                </div>
-                <div class="tile-title">Pusat Laporan</div>
-                <div class="tile-desc">Ekspor Mingguan &amp; Bulanan</div>
+                <div class="tile-title">Building / Floor / Room</div>
+                <div class="tile-desc">Hierarki fisik lokasi</div>
               </div>
 
               <div class="app-tile tile-purple" onclick="window.navigateTo('user-management');window.closeMobileSidebar();">
                 <div class="tile-header">
                   <div class="tile-icon-glow icon-purple-glow"><i data-lucide="users"></i></div>
-                  <span class="tile-badge badge-purple">Akses</span>
+                  <span class="tile-badge badge-purple">Auth</span>
                 </div>
-                <div class="tile-title">Pengguna &amp; Peran</div>
-                <div class="tile-desc">Manajemen Izin Akses</div>
+                <div class="tile-title">User Management</div>
+                <div class="tile-desc">Otorisasi &amp; Kredensial</div>
+              </div>
+
+              <div class="app-tile tile-blue" onclick="window.navigateTo('project-settings');window.closeMobileSidebar();">
+                <div class="tile-header">
+                  <div class="tile-icon-glow icon-blue-glow"><i data-lucide="folder-plus"></i></div>
+                  <span class="tile-badge badge-blue">CRUD</span>
+                </div>
+                <div class="tile-title">Kelola Project</div>
+                <div class="tile-desc">Tambah/Edit/Hapus Project</div>
               </div>
             </div>
           </div>
