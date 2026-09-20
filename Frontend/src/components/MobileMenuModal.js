@@ -41,7 +41,7 @@ export function renderMobileMenuPortal() {
                   <div class="tile-icon-glow icon-purple-glow"><i data-lucide="gantt-chart-square"></i></div>
                   <span class="tile-badge badge-purple">5 Phases</span>
                 </div>
-                <div class="tile-title">GANT Timeline</div>
+                <div class="tile-title">GAN Timeline</div>
                 <div class="tile-desc">Delivery → CxL5 gates</div>
               </div>
             </div>

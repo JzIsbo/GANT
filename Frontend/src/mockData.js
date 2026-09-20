@@ -4,8 +4,8 @@
  */
 
 export const projectIdentity = {
-  name: "GANT",
-  fullName: "GANT — Project Progress, Activity & Commissioning System",
+  name: "GAN",
+  fullName: "GAN — Project Progress, Activity & Commissioning System",
   client: "PT. Global Adimitra Nusaabadi",
   startDate: "01 Aug 2026",
   endDate: "31 Mar 2027"

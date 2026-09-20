@@ -23,17 +23,17 @@ export function renderLoginView() {
           <div class="login-brand-logo-row" style="display:flex;align-items:center;gap:0.75rem;">
             <img src="/logo.png" alt="Logo" class="login-brand-icon" style="width: 44px; height: 44px; object-fit: contain; flex-shrink: 0;" />
             <div style="display:flex;flex-direction:column;justify-content:center;overflow:hidden;">
-              <span class="login-gant-text">GANT</span>
-              <span class="login-brand-sub" style="font-size: 0.72rem; white-space: nowrap;">Project &amp; Commissioning Tracker</span>
+              <span class="login-gant-text">GAN</span>
+              <div class="login-gant-sub">Project &amp; Commissioning Tracker</div>
             </div>
           </div>
           <div class="login-brand-tagline">Project Progress, Activity<br>&amp; Commissioning Tracker</div>
 
-          <div class="login-feature-list">
+          <div class="login-features">
             <div class="login-feature-item">
-              <div class="login-feature-icon"><i data-lucide="gantt-chart-square"></i></div>
+              <div class="login-feature-icon"><i data-lucide="layout-dashboard"></i></div>
               <div>
-                <div class="login-feature-title">Visual GANT Timeline</div>
+                <div class="login-feature-title">Visual GAN Timeline</div>
                 <div class="login-feature-sub">Track all phases from Delivery → CxL5 in real-time</div>
               </div>
             </div>
@@ -86,7 +86,7 @@ export function renderLoginView() {
               <i data-lucide="lock-keyhole"></i>
             </div>
             <h1 class="login-card-title">Sign In</h1>
-            <p class="login-card-subtitle">Access your GANT workspace</p>
+            <p class="login-card-subtitle">Access your GAN workspace</p>
           </div>
 
           <!-- Form -->

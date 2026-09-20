@@ -108,7 +108,7 @@ export function renderLandingWelcomeView() {
             <div class="landing-card-icon-wrap icon-blue">
               <i data-lucide="gantt-chart-square"></i>
             </div>
-            <h3>Interactive GANT Timelines</h3>
+            <h3>Interactive GAN Timelines</h3>
             <p>Multi-phase timeline charts tracking AHUs, Chillers &amp; Pumps from Factory Delivery through CxL5 Integrated Testing with delay impact analysis.</p>
           </div>
 
@@ -175,13 +175,13 @@ export function renderLandingWelcomeView() {
         </div>
       </section>
 
-      <!-- Dedicated About GANT Section -->
+      <!-- Dedicated About GAN Section -->
       <section class="landing-section" id="landing-about" style="padding-top: 2rem; padding-bottom: 3rem;">
         <div class="landing-section-header">
           <div class="landing-badge">
-            <i data-lucide="info" style="width: 14px; height: 14px; color: #2563eb;"></i> Tentang Aplikasi GANT
+            <i data-lucide="info" style="width: 14px; height: 14px; color: #2563eb;"></i> Tentang Aplikasi GAN
           </div>
-          <h2 class="landing-section-title">GANT — Global Adimitra Nusaabadi Tracker</h2>
+          <h2 class="landing-section-title">GAN — Global Adimitra Nusaabadi Tracker</h2>
           <p class="landing-section-sub">
             Sistem Informasi Terintegrasi untuk Monitoring Progres Proyek, Aktivitas Harian, &amp; Manajemen Komisioning Peralatan Industri.
           </p>
@@ -195,11 +195,11 @@ export function renderLandingWelcomeView() {
             </div>
             <h3 style="font-size: 1.2rem; font-weight: 700; margin-bottom: 0.75rem;">Fungsi Utama Aplikasi</h3>
             <p style="font-size: 0.88rem; line-height: 1.6; margin-bottom: 1rem;">
-              GANT berfungsi sebagai pusat kendali (*control tower*) proyek yang mengintegrasikan seluruh tahapan komisioning peralatan industri.
+              GAN berfungsi sebagai pusat kendali (*control tower*) proyek yang mengintegrasikan seluruh tahapan komisioning peralatan industri.
             </p>
             <ul style="padding-left: 1.2rem; line-height: 1.8; font-size: 0.85rem; margin: 0;">
               <li><strong>Monitoring Aktivitas Harian &amp; Mingguan</strong>: Pelacakan progres pekerjaan proyek di lapangan secara real-time.</li>
-              <li><strong>Visual GANT Timeline</strong>: Grafik GANT Chart interaktif dari tahap Delivery hingga CxL5 Integrated System.</li>
+              <li><strong>Visual GAN Timeline</strong>: Grafik GAN Chart interaktif dari tahap Delivery hingga CxL5 Integrated System.</li>
               <li><strong>Verifikasi Digital CxL Phase Gate</strong>: Sign-off persetujuan komisioning peralatan berbasis checklist terenkripsi.</li>
               <li><strong>Hub Dokumen NAS RAID 5 Repository</strong>: Manajemen dokumen komisioning terintegrasi dengan jaringan NAS lokal.</li>
             </ul>
@@ -210,7 +210,7 @@ export function renderLandingWelcomeView() {
             <div style="display: inline-flex; align-items: center; justify-content: center; width: 48px; height: 48px; background: rgba(16,185,129,0.12); border-radius: 12px; color: #10b981; margin-bottom: 1.25rem;">
               <i data-lucide="compass" style="width: 24px; height: 24px;"></i>
             </div>
-            <h3 style="font-size: 1.2rem; font-weight: 700; margin-bottom: 0.75rem;">Tujuan Pembuatan GANT</h3>
+            <h3 style="font-size: 1.2rem; font-weight: 700; margin-bottom: 0.75rem;">Tujuan Pembuatan GAN</h3>
             <p style="font-size: 0.88rem; line-height: 1.6; margin-bottom: 1rem;">
               Dikembangkan khusus untuk <strong>PT. Global Adimitra Nusaabadi</strong> dalam menjamin keberhasilan proyek secara tepat waktu dan memenuhi standar kualitas.
             </p>
@@ -233,7 +233,7 @@ export function renderLandingWelcomeView() {
               <span style="font-weight: 700; color: #fff; font-size: 1rem;">PT. Global Adimitra Nusaabadi</span>
             </div>
             <p style="font-size: 0.8rem; color: rgba(255,255,255,0.4); max-width: 400px; line-height: 1.5;">
-              GANT (Global Adimitra Nusaabadi Tracker) — Integrated Project Activity, Timeline &amp; Commissioning Management System.
+              GAN (Global Adimitra Nusaabadi Tracker) — Integrated Project Activity, Timeline &amp; Commissioning Management System.
             </p>
           </div>
           <div style="text-align: right;">

@@ -41,7 +41,7 @@ export function renderWelcomeView() {
               </button>
               <button class="btn" style="background: var(--bg-card); border: 1px solid var(--border-card); color: var(--text-main); padding: 0.75rem 1.25rem; font-weight: 600; display: flex; align-items: center; gap: 0.5rem;" onclick="openModal({
                 title: '${p.name} System Interactive Tour',
-                bodyHtml: '<div class=\\'info-banner\\'><i data-lucide=\\'info\\'></i> Quick Guide to ${p.name} System Modules:</div><ol style=\\'padding-left:1.2rem;line-height:1.8;font-size:0.9rem;\\'><li><strong>Dashboard</strong>: Real-time progress, completion chart &amp; equipment status.</li><li><strong>Activity Management</strong>: Daily logs, weekly schedules &amp; status updates.</li><li><strong>Project Timeline</strong>: Interactive GANT chart (Delivery to CxL5) &amp; duration analysis.</li><li><strong>Document Management</strong>: NAS File Manager &amp; Batch Document Import.</li><li><strong>Master Data</strong>: Master Equipment, Room/Building hierarchy &amp; User Access.</li></ol>',
+                bodyHtml: '<div class=\\'info-banner\\'><i data-lucide=\\'info\\'></i> Quick Guide to ${p.name} System Modules:</div><ol style=\\'padding-left:1.2rem;line-height:1.8;font-size:0.9rem;\\'><li><strong>Dashboard</strong>: Real-time progress, completion chart &amp; equipment status.</li><li><strong>Activity Management</strong>: Daily logs, weekly schedules &amp; status updates.</li><li><strong>Project Timeline</strong>: Interactive GAN chart (Delivery to CxL5) &amp; duration analysis.</li><li><strong>Document Management</strong>: NAS File Manager &amp; Batch Document Import.</li><li><strong>Master Data</strong>: Master Equipment, Room/Building hierarchy &amp; User Access.</li></ol>',
                 confirmText: 'Got It!',
                 onConfirm: () => showToast('Welcome tour complete!', 'success')
               })">
@@ -120,9 +120,9 @@ export function renderWelcomeView() {
           <div style="width: 44px; height: 44px; border-radius: 10px; background: rgba(249,115,22,0.1); color: #f97316; display: flex; align-items: center; justify-content: center; margin-bottom: 1rem;">
             <i data-lucide="gantt-chart-square" style="width: 22px; height: 22px;"></i>
           </div>
-          <h3 style="font-size: 1.05rem; font-weight: 700; color: var(--text-main); margin-bottom: 0.4rem;">Project Timeline &amp; GANT</h3>
+          <h3 style="font-size: 1.05rem; font-weight: 700; color: var(--text-main); margin-bottom: 0.4rem;">Project Timeline &amp; GAN</h3>
           <p style="font-size: 0.85rem; color: var(--text-secondary); line-height: 1.5; margin-bottom: 1rem;">
-            Visual GANT schedule, equipment execution timelines &amp; duration delay analysis.
+            Visual GAN schedule, equipment execution timelines &amp; duration delay analysis.
           </p>
           <div style="display: flex; align-items: center; gap: 0.3rem; font-size: 0.8rem; font-weight: 600; color: #f97316;">
             View Timeline <i data-lucide="arrow-right" style="width: 14px; height: 14px;"></i>
@@ -134,12 +134,12 @@ export function renderWelcomeView() {
           <div style="width: 44px; height: 44px; border-radius: 10px; background: rgba(139,92,246,0.1); color: #8b5cf6; display: flex; align-items: center; justify-content: center; margin-bottom: 1rem;">
             <i data-lucide="folder-open" style="width: 22px; height: 22px;"></i>
           </div>
-          <h3 style="font-size: 1.05rem; font-weight: 700; color: var(--text-main); margin-bottom: 0.4rem;">Documents &amp; NAS Hub</h3>
+          <h3 style="font-size: 1.05rem; font-weight: 700; color: var(--text-main); margin-bottom: 0.4rem;">Document Management</h3>
           <p style="font-size: 0.85rem; color: var(--text-secondary); line-height: 1.5; margin-bottom: 1rem;">
-            Central repository, NAS File Manager, shared folders &amp; batch document import.
+            NAS RAID 5 File Manager, batch document import &amp; public share link creation.
           </p>
           <div style="display: flex; align-items: center; gap: 0.3rem; font-size: 0.8rem; font-weight: 600; color: #8b5cf6;">
-            Access Documents <i data-lucide="arrow-right" style="width: 14px; height: 14px;"></i>
+            Manage Documents <i data-lucide="arrow-right" style="width: 14px; height: 14px;"></i>
           </div>
         </div>
 
@@ -150,34 +150,36 @@ export function renderWelcomeView() {
           </div>
           <h3 style="font-size: 1.05rem; font-weight: 700; color: var(--text-main); margin-bottom: 0.4rem;">Master Data</h3>
           <p style="font-size: 0.85rem; color: var(--text-secondary); line-height: 1.5; margin-bottom: 1rem;">
-            Master equipment database, building &amp; room hierarchy, user access management.
+            Master Equipment registry (333 units), Building/Room hierarchy &amp; User Access.
           </p>
           <div style="display: flex; align-items: center; gap: 0.3rem; font-size: 0.8rem; font-weight: 600; color: #0ea5e9;">
-            Manage Equipment <i data-lucide="arrow-right" style="width: 14px; height: 14px;"></i>
+            Manage Master Data <i data-lucide="arrow-right" style="width: 14px; height: 14px;"></i>
           </div>
         </div>
 
-        <!-- Card 6: Reports -->
+        <!-- Card 6: Reports & Analytics -->
         <div class="dashboard-card welcome-module-card" onclick="window.navigateTo('weekly-report')" style="padding: 1.5rem; border-radius: 12px; cursor: pointer; transition: transform 0.2s, box-shadow 0.2s, border-color 0.2s;">
-          <div style="width: 44px; height: 44px; border-radius: 10px; background: rgba(236,72,153,0.1); color: #ec4899; display: flex; align-items: center; justify-content: center; margin-bottom: 1rem;">
-            <i data-lucide="bar-chart-3" style="width: 22px; height: 22px;"></i>
+          <div style="width: 44px; height: 44px; border-radius: 10px; background: rgba(99,102,241,0.1); color: #6366f1; display: flex; align-items: center; justify-content: center; margin-bottom: 1rem;">
+            <i data-lucide="bar-chart-2" style="width: 22px; height: 22px;"></i>
           </div>
           <h3 style="font-size: 1.05rem; font-weight: 700; color: var(--text-main); margin-bottom: 0.4rem;">Reports &amp; Analytics</h3>
           <p style="font-size: 0.85rem; color: var(--text-secondary); line-height: 1.5; margin-bottom: 1rem;">
-            Weekly progress reports, monthly executive summaries &amp; multi-format exports.
+            Weekly progress summaries, monthly executive reports &amp; CSV export center.
           </p>
-          <div style="display: flex; align-items: center; gap: 0.3rem; font-size: 0.8rem; font-weight: 600; color: #ec4899;">
+          <div style="display: flex; align-items: center; gap: 0.3rem; font-size: 0.8rem; font-weight: 600; color: #6366f1;">
             Generate Reports <i data-lucide="arrow-right" style="width: 14px; height: 14px;"></i>
           </div>
         </div>
-      <!-- Dedicated About GANT System Card -->
+      </div>
+
+      <!-- Dedicated About GAN System Card -->
       <div class="dashboard-card" style="padding: 1.75rem; border-radius: 14px; margin-bottom: 2rem; background: var(--bg-card); border: 1px solid var(--border-card);">
         <div style="display: flex; align-items: center; gap: 0.75rem; margin-bottom: 1rem;">
           <div style="width: 36px; height: 36px; border-radius: 10px; background: rgba(37,99,235,0.1); color: var(--brand-blue); display: flex; align-items: center; justify-content: center;">
             <i data-lucide="info" style="width: 20px; height: 20px;"></i>
           </div>
           <div>
-            <h3 style="font-size: 1.15rem; font-weight: 700; color: var(--text-main); margin: 0;">Tentang GANT (Global Adimitra Nusaabadi Tracker)</h3>
+            <h3 style="font-size: 1.15rem; font-weight: 700; color: var(--text-main); margin: 0;">Tentang GAN (Global Adimitra Nusaabadi Tracker)</h3>
             <p style="font-size: 0.82rem; color: var(--text-secondary); margin: 2px 0 0;">Fungsi dan Tujuan Sistem Manajemen Komisioning Terintegrasi</p>
           </div>
         </div>
@@ -188,7 +190,7 @@ export function renderWelcomeView() {
               <i data-lucide="target" style="width: 16px; height: 16px;"></i> Fungsi Utama
             </div>
             <p style="font-size: 0.85rem; color: var(--text-secondary); line-height: 1.6; margin: 0;">
-              Aplikasi web GANT berfungsi sebagai pusat monitoring progres pekerjaan proyek harian/mingguan, grafik GANT timeline komisioning (Delivery → CxL5), sign-off verifikasi digital phase gate, serta repository dokumen komisioning terintegrasi jaringan NAS RAID 5.
+              Aplikasi web GAN berfungsi sebagai pusat monitoring progres pekerjaan proyek harian/mingguan, grafik GAN timeline komisioning (Delivery → CxL5), sign-off verifikasi digital phase gate, serta repository dokumen komisioning terintegrasi jaringan NAS RAID 5.
             </p>
           </div>
 

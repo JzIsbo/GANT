@@ -176,7 +176,7 @@ function _buildInitialState() {
       { id: 'IMP-006', name: 'Electrical_Megger_Test_RawData.xlsx', size: '620 KB', eq: 'Unmapped', phase: 'CxL1', status: 'Mapping Error', time: 'Just now' }
     ],
     auditLog: [
-      { id: 'AUD-001', ts: '01 Aug 2026 08:00', actor: 'System',     action: 'CREATE',        entity: 'Project',   entityId: 'GANT',   desc: 'Project state initialized' },
+      { id: 'AUD-001', ts: '01 Aug 2026 08:00', actor: 'System',     action: 'CREATE',        entity: 'Project',   entityId: 'GAN',    desc: 'Project state initialized' },
       { id: 'AUD-002', ts: '01 Aug 2026 09:00', actor: 'S. Jenkins', action: 'APPROVE',       entity: 'PhaseGate', entityId: 'CxL1',   desc: 'CxL1 Gate Sign-off Complete — All 5 requirements passed' },
       { id: 'AUD-003', ts: '15 Aug 2026 10:30', actor: 'D. Chen',    action: 'APPROVE',       entity: 'PhaseGate', entityId: 'CxL2',   desc: 'CxL2 Pre-Commissioning Approved — Hydrostatic & Megger tests verified' },
       { id: 'AUD-004', ts: '01 Oct 2026 08:00', actor: 'M. Ross',    action: 'STATUS_CHANGE', entity: 'PhaseGate', entityId: 'CxL3',   desc: 'CxL3 Startup Phase Initiated — Pre-Cx handover complete' },
@@ -290,7 +290,7 @@ window.persistState = function() {
     };
     localStorage.setItem(_STORAGE_KEY, JSON.stringify(payload));
   } catch (e) {
-    console.warn('[GANT] State persistence failed:', e);
+    console.warn('[GAN] State persistence failed:', e);
   }
 };
 
@@ -303,7 +303,7 @@ function _loadSavedState() {
     if (!Array.isArray(saved.buildings) || !Array.isArray(saved.equipment) || !Array.isArray(saved.activities)) return null;
     return saved;
   } catch (e) {
-    console.warn('[GANT] Could not load saved state:', e);
+    console.warn('[GAN] Could not load saved state:', e);
     return null;
   }
 }
@@ -851,7 +851,7 @@ window.exportReportCsv = function() {
   const url = URL.createObjectURL(blob);
   const a = document.createElement('a');
   a.href = url;
-  a.download = 'GANT_Report_' + new Date().toISOString().slice(0, 10) + '.csv';
+  a.download = 'GAN_Report_' + new Date().toISOString().slice(0, 10) + '.csv';
   document.body.appendChild(a);
   a.click();
   document.body.removeChild(a);
@@ -912,7 +912,7 @@ window._exportDurationCsv = function() {
   const url = URL.createObjectURL(blob);
   const a = document.createElement('a');
   a.href = url;
-  a.download = 'GANT_Duration_Analysis_' + new Date().toISOString().slice(0,10) + '.csv';
+  a.download = 'GAN_Duration_Analysis_' + new Date().toISOString().slice(0,10) + '.csv';
   document.body.appendChild(a);
   a.click();
   document.body.removeChild(a);

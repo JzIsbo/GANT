@@ -327,9 +327,9 @@ export function renderDashboardView() {
           <!-- Card 1A: Project Timeline Overview (Gantt View) -->
           <div class="dashboard-card" style="flex: initial;">
             <div class="card-top-title" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.65rem;">
-              <span>Project Timeline Overview (GANT View)</span>
+              <span>Project Timeline Overview (GAN View)</span>
               <button class="btn btn-primary" onclick="window.navigateTo('gantt')" style="font-size: 0.72rem; padding: 0.25rem 0.5rem;">
-                Full GANT View
+                Full GAN View
               </button>
             </div>
 

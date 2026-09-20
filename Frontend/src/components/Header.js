@@ -55,11 +55,11 @@ export function renderHeader(pageTitle = 'Dashboard') {
         </div>
       </div>
 
-      <!-- Mobile Header Left: Brand Logo + GANT + Subtitle -->
-      <div class="header-left-wrap header-mobile-brand" onclick="window.navigateTo('dashboard')" title="GANT Workspace">
+      <!-- Mobile Header Left: Brand Logo + GAN + Subtitle -->
+      <div class="header-left-wrap header-mobile-brand" onclick="window.navigateTo('dashboard')" title="GAN Workspace">
         <img src="/logo.png" alt="Logo" class="header-mobile-logo" style="width:30px;height:30px;object-fit:contain;flex-shrink:0;" />
         <div class="header-title-area" style="display:flex;flex-direction:column;justify-content:center;">
-          <div class="header-brand-title" style="font-weight:800;font-size:1rem;color:var(--brand-blue);letter-spacing:-0.02em;font-family:var(--font-heading);line-height:1.1;">GANT</div>
+          <div class="header-brand-title" style="font-weight:800;font-size:1rem;color:var(--brand-blue);letter-spacing:-0.02em;font-family:var(--font-heading);line-height:1.1;">GAN</div>
           <div class="header-brand-sub" style="font-size:0.65rem;color:var(--text-secondary);white-space:nowrap;line-height:1.1;margin-top:1px;">Project &amp; Commissioning Tracker</div>
         </div>
       </div>

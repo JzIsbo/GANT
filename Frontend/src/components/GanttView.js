@@ -114,7 +114,7 @@ export function renderGanttView(subRoute = 'gantt') {
             <div class="dashboard-card">
                 <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; flex-wrap: wrap; gap: 10px;">
                     <div>
-                        <h2 class="card-top-title" style="margin: 0;">Project Timeline &amp; Commissioning GANT</h2>
+                        <h2 class="card-top-title" style="margin: 0;">Project Timeline &amp; Commissioning GAN</h2>
                         <div style="font-size: 12px; color: var(--text-muted); margin-top: 2px;">
                             Project: <strong>${p.name}</strong> &nbsp;•&nbsp; Schedule: <strong>${p.startDate} – ${p.endDate}</strong> &nbsp;•&nbsp; Active Phase: <strong style="color: #f97316;">${m.currentPhase.phase}</strong> &nbsp;•&nbsp; <span style="color: var(--text-muted); font-size: 11px;">Showing ${filteredEquipment.length} of ${equipmentSource.length} equipment</span>
                         </div>
@@ -685,10 +685,10 @@ window._ganttExportCsv = function() {
   const url = URL.createObjectURL(blob);
   const a = document.createElement('a');
   a.href = url;
-  a.download = 'GANT_Export_' + new Date().toISOString().slice(0,10) + '.csv';
+  a.download = 'GAN_Export_' + new Date().toISOString().slice(0,10) + '.csv';
   document.body.appendChild(a);
   a.click();
   document.body.removeChild(a);
   URL.revokeObjectURL(url);
-  showToast('GANT Schedule exported as CSV (' + filtered.length + ' equipment rows).', 'success');
+  showToast('GAN Schedule exported as CSV (' + filtered.length + ' equipment rows).', 'success');
 };

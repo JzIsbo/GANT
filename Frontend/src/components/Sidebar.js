@@ -97,7 +97,7 @@ export function renderSidebar(activeRoute = 'dashboard') {
       <div class="sidebar-brand">
         <img src="/logo.png" alt="Logo" style="width: 32px; height: 32px; object-fit: contain; flex-shrink: 0;" />
         <div style="display:flex;flex-direction:column;justify-content:center;overflow:hidden;">
-          <span class="brand-gant-text">GANT</span>
+          <span class="brand-gant-text">GAN</span>
           <div class="brand-sub" style="white-space: nowrap; font-size: 0.6rem;">Project &amp; Commissioning Tracker</div>
         </div>
       </div>

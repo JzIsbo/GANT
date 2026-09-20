@@ -576,7 +576,7 @@ window._downloadImportTemplate = function() {
   const url = URL.createObjectURL(blob);
   const a = document.createElement('a');
   a.href = url;
-  a.download = 'GANT_Import_Template.csv';
+  a.download = 'GAN_Import_Template.csv';
   document.body.appendChild(a);
   a.click();
   document.body.removeChild(a);

@@ -1,6 +1,6 @@
 import { test, expect } from '@playwright/test';
 
-test.describe('GANT Frontend Production-Like E2E Test Suite', () => {
+test.describe('GAN Frontend Production-Like E2E Test Suite', () => {
   test.beforeEach(async ({ page }) => {
     await page.addInitScript(() => {
       window.sessionStorage.setItem(
