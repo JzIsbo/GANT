@@ -45,6 +45,19 @@ export function renderHeader(pageTitle = 'Dashboard') {
     ? `<img src="${user.avatarUrl}" alt="${window.escapeHtml(user.name)}" class="user-avatar-img" />`
     : `<div class="user-avatar-img">${initials}</div>`;
 
+  const selectedId = window.appState?.selectedProjectId;
+  const activePrj = (window.appState?.projects || []).find(p => p.id === selectedId);
+  const prjName = activePrj ? activePrj.name : 'Project 1 — HVAC & Plant';
+  const prjStatus = activePrj ? (activePrj.status || 'Active') : 'Active';
+
+  const statusColors = {
+    'Completed':   { bg: 'rgba(34,197,94,0.15)',  text: '#22c55e', border: 'rgba(34,197,94,0.3)' },
+    'Active':      { bg: 'rgba(37,99,235,0.15)',  text: 'var(--brand-blue)', border: 'rgba(37,99,235,0.3)' },
+    'Planning':    { bg: 'rgba(245,158,11,0.15)', text: '#f59e0b', border: 'rgba(245,158,11,0.3)' },
+    'In Progress': { bg: 'rgba(14,165,233,0.15)', text: '#0ea5e9', border: 'rgba(14,165,233,0.3)' }
+  };
+  const sc = statusColors[prjStatus] || statusColors['Active'];
+
   return `
     <header class="app-header">
       <!-- Desktop Header Left: Active Page Title + Date Subtitle -->
@@ -52,9 +65,10 @@ export function renderHeader(pageTitle = 'Dashboard') {
         <div class="header-title-area">
           <div class="header-title">${pageTitle}</div>
           <div class="header-date-sub" style="display:flex;align-items:center;gap:0.4rem;flex-wrap:nowrap;">
-            <span class="header-project-badge" style="display:inline-flex;align-items:center;gap:0.25rem;background:rgba(37,99,235,0.1);color:var(--brand-blue);padding:0.1rem 0.45rem;border-radius:4px;font-weight:700;font-size:0.7rem;">
+            <span class="header-project-badge" style="display:inline-flex;align-items:center;gap:0.3rem;background:${sc.bg};color:${sc.text};border:1px solid ${sc.border};padding:0.12rem 0.5rem;border-radius:4px;font-weight:700;font-size:0.7rem;">
               <i data-lucide="briefcase" style="width:11px;height:11px;"></i>
-              ${(window.appState && window.appState.selectedProjectId === 'PRJ-02') ? 'Project 2 — Data Center' : 'Project 1 — HVAC & Plant'}
+              ${window.escapeHtml(prjName)}
+              <span style="display:inline-block;padding:0.05rem 0.35rem;border-radius:3px;font-size:0.62rem;font-weight:800;background:rgba(255,255,255,0.18);margin-left:0.15rem;text-transform:uppercase;">${prjStatus}</span>
             </span>
             <span>• &nbsp;Reporting Week: 03–08 Aug 2026</span>
           </div>

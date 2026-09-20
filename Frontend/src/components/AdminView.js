@@ -14,18 +14,21 @@ function _showFormError(overlay, msg) {
 }
 
 // ── Status badge helper ───────────────────────────────────────────
-function _statusBadge(status, map) {
+function _statusBadge(status) {
   const colors = {
-    'Active':      { bg: 'rgba(34,197,94,0.1)',  border: '#22c55e', text: '#22c55e'  },
-    'Inactive':    { bg: 'rgba(156,163,175,0.1)', border: '#9ca3af', text: '#9ca3af' },
-    'Ready':       { bg: 'rgba(34,197,94,0.1)',  border: '#22c55e', text: '#22c55e'  },
-    'In Progress': { bg: 'rgba(245,158,11,0.1)', border: '#f59e0b', text: '#f59e0b'  },
-    'Not Started': { bg: 'rgba(156,163,175,0.1)', border: '#9ca3af', text: '#9ca3af' },
-    'Issue':       { bg: 'rgba(239,68,68,0.1)',  border: '#ef4444', text: '#ef4444'  },
-    'Pending':     { bg: 'rgba(245,158,11,0.1)', border: '#f59e0b', text: '#f59e0b'  }
+    'Completed':   { bg: 'rgba(34,197,94,0.15)',  border: '#22c55e', text: '#22c55e'  },
+    'Active':      { bg: 'rgba(37,99,235,0.15)',  border: '#2563eb', text: '#2563eb'  },
+    'Planning':    { bg: 'rgba(245,158,11,0.15)', border: '#f59e0b', text: '#f59e0b'  },
+    'In Progress': { bg: 'rgba(14,165,233,0.15)', border: '#0ea5e9', text: '#0ea5e9'  },
+    'Ready':       { bg: 'rgba(34,197,94,0.15)',  border: '#22c55e', text: '#22c55e'  },
+    'Inactive':    { bg: 'rgba(148,163,184,0.15)', border: '#94a3b8', text: '#94a3b8' },
+    'Not Started': { bg: 'rgba(148,163,184,0.15)', border: '#94a3b8', text: '#94a3b8' },
+    'Issue':       { bg: 'rgba(239,68,68,0.15)',  border: '#ef4444', text: '#ef4444'  },
+    'Blocked':     { bg: 'rgba(239,68,68,0.15)',  border: '#ef4444', text: '#ef4444'  },
+    'Pending':     { bg: 'rgba(245,158,11,0.15)', border: '#f59e0b', text: '#f59e0b'  }
   };
-  const c = colors[status] || colors['Not Started'];
-  return `<span style="padding:0.25rem 0.5rem;border-radius:12px;font-size:0.78rem;background:${c.bg};color:${c.text};border:1px solid ${c.border};">${status}</span>`;
+  const c = colors[status] || colors['Active'];
+  return `<span style="padding:0.22rem 0.6rem;border-radius:12px;font-size:0.76rem;font-weight:700;background:${c.bg};color:${c.text};border:1px solid ${c.border};">${status}</span>`;
 }
 
 export function renderAdminView(subRoute = 'equipment-list') {

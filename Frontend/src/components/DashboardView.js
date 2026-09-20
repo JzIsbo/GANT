@@ -37,24 +37,54 @@ export function renderDashboardView() {
   const _selEqLocation = _selEqObj ? `${_selEqObj.buildingName || ''} — ${_selEqObj.room || 'Room unknown'}` : ahu.header.location;
   const _selEqPhase = _selEqObj ? (_selEqObj.phase || ahu.header.activePhase) : ahu.header.activePhase;
 
+  // Live active project context from appState
+  const activePrjId = window.appState?.selectedProjectId;
+  const activePrj = (window.appState?.projects || []).find(p => p.id === activePrjId);
+  const activePrjName = activePrj ? activePrj.name : p.name;
+  const activePrjClient = activePrj ? activePrj.client : p.client;
+  const activePrjStatus = activePrj ? (activePrj.status || 'Active') : 'Active';
+
+  const isPrjCompleted = activePrjStatus === 'Completed';
+  const isPrjPlanning  = activePrjStatus === 'Planning';
+
+  const displayOverallPct = isPrjCompleted ? 100 : m.overallProgress.percentage;
+  const displayPlannedPct = isPrjCompleted ? 100 : m.overallProgress.plannedPct;
+  const displayVariance   = isPrjCompleted ? '0%' : m.overallProgress.variance;
+
+  let statusBadgeHtml = '';
+  if (isPrjCompleted) {
+    statusBadgeHtml = `
+      <span class="status-badge badge-green" style="padding: 0.4rem 0.8rem; font-size: 0.75rem; font-weight: 700; background: rgba(34,197,94,0.15); color: #22c55e; border: 1px solid rgba(34,197,94,0.3);">
+        <i data-lucide="check-circle-2" style="width: 14px; height: 14px; display: inline; vertical-align: middle;"></i> COMPLETED
+      </span>`;
+  } else if (isPrjPlanning) {
+    statusBadgeHtml = `
+      <span class="status-badge" style="padding: 0.4rem 0.8rem; font-size: 0.75rem; font-weight: 700; background: rgba(245,158,11,0.15); color: #f59e0b; border: 1px solid rgba(245,158,11,0.3);">
+        <i data-lucide="clock" style="width: 14px; height: 14px; display: inline; vertical-align: middle;"></i> PLANNING
+      </span>`;
+  } else {
+    statusBadgeHtml = `
+      <span class="status-badge badge-blue" style="padding: 0.4rem 0.8rem; font-size: 0.75rem; font-weight: 700; background: rgba(37,99,235,0.15); color: #2563eb; border: 1px solid rgba(37,99,235,0.3);">
+        <i data-lucide="check-circle-2" style="width: 14px; height: 14px; display: inline; vertical-align: middle;"></i> ACTIVE / ON TRACK
+      </span>`;
+  }
+
   return `
       <!-- LEVEL 1: PROJECT CONTEXT HEADER -->
       <div class="dashboard-card" style="padding: 1rem 1.25rem; margin-bottom: 1.25rem; border-radius: 12px; background: var(--bg-card); border: 1px solid var(--border-card); display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem;">
         <div>
           <div style="font-size: 0.72rem; font-weight: 700; color: var(--brand-blue); text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 0.2rem;">
-            ${p.name} • Executive Overview
+            ${window.escapeHtml(activePrjName)} • Executive Overview
           </div>
           <h1 style="font-size: 1.25rem; font-weight: 800; color: var(--text-main); margin: 0; font-family: var(--font-heading);">
-            ${p.fullName}
+            ${window.escapeHtml(activePrjName)}
           </h1>
           <div style="font-size: 0.8rem; color: var(--text-secondary); margin-top: 0.2rem;">
-            Client: <strong>${p.client}</strong> &nbsp;•&nbsp; Schedule: <strong>${p.startDate} – ${p.endDate}</strong>
+            Client: <strong>${window.escapeHtml(activePrjClient)}</strong> &nbsp;•&nbsp; Schedule: <strong>${p.startDate} – ${p.endDate}</strong>
           </div>
         </div>
         <div style="display: flex; gap: 0.75rem; align-items: center;">
-          <span class="status-badge badge-green" style="padding: 0.4rem 0.8rem; font-size: 0.75rem; font-weight: 700;">
-            <i data-lucide="check-circle-2" style="width: 14px; height: 14px; display: inline; vertical-align: middle;"></i> ON TRACK
-          </span>
+          ${statusBadgeHtml}
           <button class="btn btn-primary" onclick="window.navigateTo('gantt')" style="padding: 0.45rem 0.9rem; font-size: 0.8rem; font-weight: 600; display: flex; align-items: center; gap: 0.4rem;">
             <i data-lucide="gantt-chart-square" style="width: 14px; height: 14px;"></i> View Timeline
           </button>
@@ -69,14 +99,14 @@ export function renderDashboardView() {
         <!-- Card 1: Overall Project Progress -->
         <div class="metric-card overall-progress-card">
           <div class="metric-card-title">Overall Project Progress</div>
-          <div class="metric-big-num">${m.overallProgress.percentage}%</div>
+          <div class="metric-big-num">${displayOverallPct}%</div>
           <div>
             <div class="overall-mini-footer">
-              <span>Planned ${m.overallProgress.plannedPct}%</span>
-              <span class="variance-negative">Variance ${m.overallProgress.variancePct}%</span>
+              <span>Planned ${displayPlannedPct}%</span>
+              <span class="${isPrjCompleted ? 'status-badge badge-green' : 'variance-negative'}">Variance ${displayVariance}</span>
             </div>
             <div class="overall-progress-bar">
-              <div class="overall-progress-fill" style="width: ${m.overallProgress.percentage}%;"></div>
+              <div class="overall-progress-fill" style="width: ${displayOverallPct}%; background: ${isPrjCompleted ? '#22c55e' : 'var(--brand-blue)'};"></div>
             </div>
           </div>
         </div>
