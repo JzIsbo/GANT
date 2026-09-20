@@ -116,8 +116,12 @@ export function renderSidebar(activeRoute = 'dashboard') {
           <div style="display:flex;align-items:center;gap:0.45rem;overflow:hidden;width:100%;">
             <i data-lucide="briefcase" style="width:14px;height:14px;color:var(--brand-blue);flex-shrink:0;"></i>
             <select class="project-select-input" onchange="window.switchProject(this.value)" style="background:transparent;border:none;color:var(--text-main);font-size:0.74rem;font-weight:700;outline:none;cursor:pointer;width:100%;text-overflow:ellipsis;" title="Select Active Project">
-              <option value="PRJ-01" ${(window.appState && window.appState.selectedProjectId === 'PRJ-01') ? 'selected' : ''}>Project 1 — HVAC &amp; Plant</option>
-              <option value="PRJ-02" ${(window.appState && window.appState.selectedProjectId === 'PRJ-02') ? 'selected' : ''}>Project 2 — Data Center</option>
+              ${(window.appState?.projects || [
+                { id: 'PRJ-01', name: 'Project 1 — HVAC & Plant' },
+                { id: 'PRJ-02', name: 'Project 2 — Data Center' }
+              ]).map(p => `
+                <option value="${p.id}" ${window.appState?.selectedProjectId === p.id ? 'selected' : ''}>${window.escapeHtml(p.name)}</option>
+              `).join('')}
             </select>
           </div>
         </div>
@@ -126,9 +130,8 @@ export function renderSidebar(activeRoute = 'dashboard') {
         ${menuSections.map(section => {
           const isExpanded = expandedSections.has(section.id);
           const isMultiProjectSection = ['activity-management', 'project-timeline', 'master-data', 'document-management'].includes(section.id);
-          const currentProjectName = (window.appState && window.appState.selectedProjectId === 'PRJ-02') 
-            ? 'Project 2 — Data Center Substation' 
-            : 'Project 1 — HVAC & Plant Baseline';
+          const activePrj = (window.appState?.projects || []).find(p => p.id === window.appState?.selectedProjectId);
+          const currentProjectName = activePrj ? activePrj.name : 'Project 1 — HVAC & Plant Baseline';
 
           return `
             <div class="menu-section ${isExpanded ? 'expanded' : 'collapsed'}">

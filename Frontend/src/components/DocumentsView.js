@@ -2,6 +2,12 @@ export function renderDocumentsView(subRoute = 'documents') {
   const activeTab = subRoute || 'documents';
   const s = window.appState;
 
+  // Resolve document type filter from sub-route WITHOUT mutating appState
+  const docTypeOverride = subRoute === 'documents-report'      ? 'Report'
+                        : subRoute === 'documents-timesheet'   ? 'Timesheet'
+                        : subRoute === 'documents-calibration' ? 'Calibration'
+                        : null;
+
   const tabs = [
     { id: 'documents',         label: 'Documents',       icon: 'file-text' },
     { id: 'nas-files',         label: 'NAS File Manager', icon: 'hard-drive' },
@@ -32,23 +38,21 @@ export function renderDocumentsView(subRoute = 'documents') {
   };
 
   let content = '';
-  if (subRoute === 'documents-report') {
-    s.documentFilters = s.documentFilters || {};
-    s.documentFilters.type = 'Report';
-    content = renderDocumentsTab(s, statusBadge);
-  } else if (subRoute === 'documents-timesheet') {
-    s.documentFilters = s.documentFilters || {};
-    s.documentFilters.type = 'Timesheet';
-    content = renderDocumentsTab(s, statusBadge);
-  } else if (subRoute === 'documents-calibration') {
-    s.documentFilters = s.documentFilters || {};
-    s.documentFilters.type = 'Calibration';
-    content = renderDocumentsTab(s, statusBadge);
-  } else if (activeTab === 'documents')        content = renderDocumentsTab(s, statusBadge);
+  if (docTypeOverride) {
+    content = renderDocumentsTab(s, statusBadge, docTypeOverride);
+  } else if (activeTab === 'documents')        content = renderDocumentsTab(s, statusBadge, null);
   else if (activeTab === 'nas-files')   content = renderNasFilesTab();
   else if (activeTab === 'shared-files') content = renderSharedFilesTab(s);
   else if (activeTab === 'import-documents') content = renderImportTab(s);
-  else content = renderDocumentsTab(s, statusBadge);
+  else content = renderDocumentsTab(s, statusBadge, null);
+
+  // Sub-route header badge for typed document views
+  const docTypeBadge = docTypeOverride ? `
+    <div style="display:flex;align-items:center;gap:0.5rem;margin-bottom:1rem;padding:0.5rem 0.75rem;background:rgba(37,99,235,0.08);border:1px solid rgba(37,99,235,0.2);border-radius:6px;">
+      <i data-lucide="filter" style="width:13px;height:13px;color:var(--brand-blue);"></i>
+      <span style="font-size:0.78rem;color:var(--brand-blue);font-weight:700;">Filtered by type: ${docTypeOverride}</span>
+      <a data-route="documents" style="margin-left:auto;font-size:0.72rem;color:var(--text-muted);cursor:pointer;text-decoration:underline;">View All Documents</a>
+    </div>` : '';
 
   return `
     <div class="documents-view-container" style="animation:fadeIn 0.3s ease-in-out;">
@@ -63,7 +67,7 @@ export function renderDocumentsView(subRoute = 'documents') {
           </button>
         </div>
       </div>
-      ${tabsHtml}
+      ${docTypeOverride ? docTypeBadge : tabsHtml}
       <div class="tab-content">${content}</div>
     </div>`;
 }
@@ -133,7 +137,7 @@ window._openUploadDocModal = function() {
 // ================================================================
 // DOCUMENTS TAB — reads from appState.documents
 // ================================================================
-function renderDocumentsTab(s, statusBadge) {
+function renderDocumentsTab(s, statusBadge, docTypeOverride = null) {
   const df = s.documentFilters || { type: 'all', status: 'all', equipment: 'all', search: '' };
   const docs = s.documents;
 
@@ -141,8 +145,10 @@ function renderDocumentsTab(s, statusBadge) {
   const allTypes = [...new Set(docs.map(d => d.type).filter(Boolean))].sort();
   const allEquip = [...new Set(docs.map(d => d.equipment).filter(Boolean))].sort();
 
+  const activeTypeFilter = docTypeOverride || df.type;
+
   const filtered = docs.filter(d => {
-    const typeOk  = df.type === 'all' || d.type === df.type;
+    const typeOk  = activeTypeFilter === 'all' || (activeTypeFilter ? (d.type || '').toLowerCase() === activeTypeFilter.toLowerCase() : true);
     const statOk  = df.status === 'all' || d.status === df.status;
     const eqOk    = df.equipment === 'all' || d.equipment === df.equipment;
     const searchOk = !df.search || d.name.toLowerCase().includes(df.search.toLowerCase()) || (d.equipment || '').toLowerCase().includes(df.search.toLowerCase()) || d.id.toLowerCase().includes(df.search.toLowerCase());

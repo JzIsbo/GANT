@@ -841,6 +841,7 @@ function renderProjectSettings() {
           </table>
         </div>
       </div>
+      <div class="dashboard-card">
         <h2 class="card-top-title" style="margin-bottom:1rem;border-bottom:1px solid var(--border-card);padding-bottom:0.5rem;">CxL Phase Definitions</h2>
         <div class="table-responsive-wrapper">
           <table class="summary-table" style="width:100%;text-align:left;border-collapse:collapse;">

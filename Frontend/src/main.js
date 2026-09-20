@@ -335,7 +335,8 @@ window.resetDemoData = function() {
 window.switchProject = function(projectId) {
   if (!window.appState) return;
   window.appState.selectedProjectId = projectId;
-  showToast(`Switched active context to ${projectId === 'PRJ-02' ? 'Project 2 — Data Center Substation' : 'Project 1 — HVAC & Plant Baseline'}`, 'info', 3000);
+  const prj = (window.appState.projects || []).find(p => p.id === projectId);
+  showToast(`Switched active context to ${prj ? prj.name : projectId}`, 'info', 3000);
   renderApp();
 };
 
@@ -1186,7 +1187,8 @@ function getPageTitle(route) {
     'duration-analysis':'Duration Analysis','cxl':'CxL Overview',
     'weekly-report':'Weekly Report','monthly-report':'Monthly Report','export-report':'Export Report',
     'documents':'Documents','nas-files':'NAS File Manager','shared-files':'Shared Files','import-documents':'Import Documents',
-    'equipment-list':'Equipment List','room-building':'Room / Building','user-management':'User Management',
+    'documents-report':'Project Reports','documents-timesheet':'Manpower Timesheet','documents-calibration':'Equipment Tools Calibration',
+    'equipment-list':'Equipment List','room-building':'Building / Floor / Room','user-management':'User Management',
     'project-settings':'Project Settings','account-settings':'Account Settings'
   };
   return titles[route] || 'Dashboard';
@@ -1204,6 +1206,7 @@ function getViewForRoute(route) {
     case 'weekly-report': case 'monthly-report': case 'export-report':
       return renderReportsView(route);
     case 'documents': case 'nas-files': case 'shared-files': case 'import-documents':
+    case 'documents-report': case 'documents-timesheet': case 'documents-calibration':
       return renderDocumentsView(route);
     case 'equipment-list': case 'room-building': case 'user-management': case 'project-settings': case 'account-settings':
       return renderAdminView(route);
@@ -1261,7 +1264,8 @@ window.closeMobileSidebar = function() {
 function renderMobileBottomNav(activeRoute = 'dashboard') {
   const isDashboard = activeRoute === 'dashboard';
   const isActivities = ['daily-activity','weekly-activity','activity-progress','activity-status','activity-history'].includes(activeRoute);
-  const isDocuments = ['documents','nas-files','shared-files','import-documents'].includes(activeRoute);
+  const isDocuments = ['documents','nas-files','shared-files','import-documents',
+    'documents-report','documents-timesheet','documents-calibration'].includes(activeRoute);
   const isReports = ['weekly-report','monthly-report','export-report'].includes(activeRoute);
 
   return `
