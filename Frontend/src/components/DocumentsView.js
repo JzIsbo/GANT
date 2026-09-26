@@ -1,3 +1,138 @@
+// ── Document Management Sub-bab & Project Folder Directory ──────────
+function renderDocumentManagementProjectFolders(subRoute) {
+  const s = window.appState;
+  const projects = s.projects || [];
+  const selectedPrjId = s.selectedProjectId || 'PRJ-01';
+
+  return `
+    <div class="dashboard-card document-folders-overview" style="margin-bottom:1.5rem;border-top:3px solid var(--brand-blue);background:var(--bg-card);padding:1.25rem;">
+      
+      <!-- Top Bar: Title & Actions -->
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:1.15rem;flex-wrap:wrap;gap:0.75rem;">
+        <div>
+          <h2 style="margin:0;font-size:1.1rem;font-weight:800;color:var(--text-main);display:flex;align-items:center;gap:0.5rem;">
+            <i data-lucide="folder-tree" style="width:20px;height:20px;color:var(--brand-blue);"></i>
+            Document Management Projects &amp; Sub-bab Folders
+          </h2>
+          <div style="font-size:0.78rem;color:var(--text-secondary);margin-top:0.25rem;">
+            Pusat dokumen per project. Akses sub-bab: <strong>(a) Report</strong>, <strong>(b) Timesheet</strong>, <strong>(c) Equipment Tools Calibration</strong>, serta Import &amp; Export dokumen masing-masing project.
+          </div>
+        </div>
+        <div style="display:flex;gap:0.5rem;flex-wrap:wrap;align-items:center;">
+          <button class="btn" onclick="window._openBatchImportModal()" style="display:flex;align-items:center;gap:0.4rem;font-weight:600;">
+            <i data-lucide="file-up" style="width:14px;height:14px;"></i> Import Batch
+          </button>
+          <button class="btn btn-primary" onclick="window._openUploadDocModal()" style="display:flex;align-items:center;gap:0.4rem;font-weight:700;">
+            <i data-lucide="plus" style="width:14px;height:14px;"></i> Upload Dokumen
+          </button>
+        </div>
+      </div>
+
+      <!-- Folders Grid -->
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));gap:1rem;">
+        ${projects.map(p => {
+          const isSelected = p.id === selectedPrjId;
+          const prjDocs = (s.documents || []).filter(d => d.projectId === p.id || (!d.projectId && p.id === 'PRJ-01'));
+          const reportCount = prjDocs.filter(d => (d.type || '').toLowerCase().includes('report')).length;
+          const timesheetCount = prjDocs.filter(d => (d.type || '').toLowerCase().includes('timesheet')).length;
+          const calibCount = prjDocs.filter(d => (d.type || '').toLowerCase().includes('calibration')).length;
+          
+          const statusColors = {
+            'Completed': { bg: 'rgba(34,197,94,0.15)', text: '#22c55e', border: '#22c55e' },
+            'Active':    { bg: 'rgba(37,99,235,0.15)', text: '#2563eb', border: '#2563eb' },
+            'Planning':  { bg: 'rgba(245,158,11,0.15)', text: '#f59e0b', border: '#f59e0b' }
+          };
+          const bColor = statusColors[p.status] || statusColors['Active'];
+
+          return `
+            <div class="project-folder-card" style="border-radius:8px;border:${isSelected ? '2px solid var(--brand-blue)' : '1px solid var(--border-card)'};background:${isSelected ? 'rgba(37,99,235,0.03)' : 'var(--bg-card-secondary)'};padding:1rem;display:flex;flex-direction:column;justify-content:space-between;box-shadow:${isSelected ? '0 4px 12px rgba(37,99,235,0.12)' : 'none'};">
+              
+              <div>
+                <!-- Card Header -->
+                <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:0.6rem;gap:0.5rem;">
+                  <div style="display:flex;align-items:center;gap:0.5rem;overflow:hidden;">
+                    <div style="width:34px;height:34px;border-radius:6px;background:${isSelected ? 'var(--brand-blue)' : 'rgba(37,99,235,0.12)'};color:${isSelected ? '#fff' : 'var(--brand-blue)'};display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+                      <i data-lucide="folder" style="width:18px;height:18px;"></i>
+                    </div>
+                    <div style="overflow:hidden;">
+                      <div style="font-weight:800;font-size:0.92rem;color:var(--text-main);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;" title="${window.escapeHtml(p.name)}">
+                        ${window.escapeHtml(p.name)}
+                      </div>
+                      <div style="font-size:0.72rem;color:var(--text-secondary);display:flex;align-items:center;gap:0.35rem;">
+                        <span style="font-weight:700;color:var(--brand-blue);">${p.code}</span> • <span>${prjDocs.length} Dokumen</span>
+                      </div>
+                    </div>
+                  </div>
+                  <div style="display:flex;flex-direction:column;align-items:flex-end;gap:0.25rem;">
+                    <span style="padding:0.18rem 0.5rem;border-radius:12px;font-size:0.7rem;font-weight:700;background:${bColor.bg};color:${bColor.text};border:1px solid ${bColor.border};">
+                      ${p.status || 'Active'}
+                    </span>
+                    ${isSelected ? `<span style="font-size:0.65rem;font-weight:800;color:var(--brand-blue);text-transform:uppercase;">● Active Context</span>` : ''}
+                  </div>
+                </div>
+
+                <!-- Action Bar for Project: Export & Import -->
+                <div style="display:flex;gap:0.4rem;margin-bottom:0.75rem;padding-bottom:0.6rem;border-bottom:1px solid var(--border-card);">
+                  <button class="btn" onclick="window._exportProjectDocuments('${p.id}')" style="flex:1;padding:0.25rem 0.5rem;font-size:0.72rem;background:var(--bg-card);display:flex;align-items:center;justify-content:center;gap:0.3rem;" title="Export Semua Dokumen Project ke CSV">
+                    <i data-lucide="download" style="width:11px;height:11px;"></i> Export CSV
+                  </button>
+                  <button class="btn" onclick="window.switchProjectFolder('${p.id}', 'import-documents')" style="flex:1;padding:0.25rem 0.5rem;font-size:0.72rem;background:var(--bg-card);display:flex;align-items:center;justify-content:center;gap:0.3rem;" title="Import Dokumen untuk Project Ini">
+                    <i data-lucide="file-up" style="width:11px;height:11px;"></i> Import Batch
+                  </button>
+                </div>
+              </div>
+
+              <!-- Sub-bab Document Types (a, b, c) -->
+              <div>
+                <div style="font-size:0.68rem;font-weight:700;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.04em;margin-bottom:0.45rem;">
+                  Sub-bab Document Types:
+                </div>
+                <div style="display:flex;flex-direction:column;gap:0.35rem;">
+                  
+                  <!-- (a) Report -->
+                  <div onclick="window.switchProjectFolder('${p.id}', 'documents-report')" class="subbab-btn-row ${isSelected && subRoute === 'documents-report' ? 'active' : ''}" style="cursor:pointer;padding:0.38rem 0.65rem;border-radius:6px;display:flex;align-items:center;justify-content:space-between;border:1px solid ${isSelected && subRoute === 'documents-report' ? 'var(--brand-blue)' : 'var(--border-card)'};background:${isSelected && subRoute === 'documents-report' ? 'var(--brand-blue)' : 'var(--bg-card)'};color:${isSelected && subRoute === 'documents-report' ? '#fff' : 'var(--text-main)'};">
+                    <div style="display:flex;align-items:center;gap:0.4rem;font-size:0.78rem;font-weight:600;">
+                      <i data-lucide="file-bar-chart" style="width:13px;height:13px;color:${isSelected && subRoute === 'documents-report' ? '#fff' : 'var(--brand-blue)'};"></i>
+                      <span>(a) Report</span>
+                    </div>
+                    <span style="font-size:0.7rem;font-weight:700;padding:0.1rem 0.4rem;border-radius:10px;background:${isSelected && subRoute === 'documents-report' ? 'rgba(255,255,255,0.2)' : 'var(--bg-card-secondary)'};color:${isSelected && subRoute === 'documents-report' ? '#fff' : 'var(--text-secondary)'};">
+                      ${reportCount} files
+                    </span>
+                  </div>
+
+                  <!-- (b) Timesheet -->
+                  <div onclick="window.switchProjectFolder('${p.id}', 'documents-timesheet')" class="subbab-btn-row ${isSelected && subRoute === 'documents-timesheet' ? 'active' : ''}" style="cursor:pointer;padding:0.38rem 0.65rem;border-radius:6px;display:flex;align-items:center;justify-content:space-between;border:1px solid ${isSelected && subRoute === 'documents-timesheet' ? 'var(--brand-blue)' : 'var(--border-card)'};background:${isSelected && subRoute === 'documents-timesheet' ? 'var(--brand-blue)' : 'var(--bg-card)'};color:${isSelected && subRoute === 'documents-timesheet' ? '#fff' : 'var(--text-main)'};">
+                    <div style="display:flex;align-items:center;gap:0.4rem;font-size:0.78rem;font-weight:600;">
+                      <i data-lucide="clock" style="width:13px;height:13px;color:${isSelected && subRoute === 'documents-timesheet' ? '#fff' : '#10b981'};"></i>
+                      <span>(b) Timesheet</span>
+                    </div>
+                    <span style="font-size:0.7rem;font-weight:700;padding:0.1rem 0.4rem;border-radius:10px;background:${isSelected && subRoute === 'documents-timesheet' ? 'rgba(255,255,255,0.2)' : 'var(--bg-card-secondary)'};color:${isSelected && subRoute === 'documents-timesheet' ? '#fff' : 'var(--text-secondary)'};">
+                      ${timesheetCount} files
+                    </span>
+                  </div>
+
+                  <!-- (c) Equipment Tools Calibration -->
+                  <div onclick="window.switchProjectFolder('${p.id}', 'documents-calibration')" class="subbab-btn-row ${isSelected && subRoute === 'documents-calibration' ? 'active' : ''}" style="cursor:pointer;padding:0.38rem 0.65rem;border-radius:6px;display:flex;align-items:center;justify-content:space-between;border:1px solid ${isSelected && subRoute === 'documents-calibration' ? 'var(--brand-blue)' : 'var(--border-card)'};background:${isSelected && subRoute === 'documents-calibration' ? 'var(--brand-blue)' : 'var(--bg-card)'};color:${isSelected && subRoute === 'documents-calibration' ? '#fff' : 'var(--text-main)'};">
+                    <div style="display:flex;align-items:center;gap:0.4rem;font-size:0.78rem;font-weight:600;">
+                      <i data-lucide="award" style="width:13px;height:13px;color:${isSelected && subRoute === 'documents-calibration' ? '#fff' : '#f59e0b'};"></i>
+                      <span>(c) Equipment Tools Calibration</span>
+                    </div>
+                    <span style="font-size:0.7rem;font-weight:700;padding:0.1rem 0.4rem;border-radius:10px;background:${isSelected && subRoute === 'documents-calibration' ? 'rgba(255,255,255,0.2)' : 'var(--bg-card-secondary)'};color:${isSelected && subRoute === 'documents-calibration' ? '#fff' : 'var(--text-secondary)'};">
+                      ${calibCount} files
+                    </span>
+                  </div>
+
+                </div>
+              </div>
+
+            </div>
+          `;
+        }).join('')}
+      </div>
+    </div>
+  `;
+}
+
 export function renderDocumentsView(subRoute = 'documents') {
   const activeTab = subRoute || 'documents';
   const s = window.appState;
@@ -47,11 +182,13 @@ export function renderDocumentsView(subRoute = 'documents') {
   else content = renderDocumentsTab(s, statusBadge, null);
 
   // Sub-route header badge for typed document views
+  const currentPrj = (s.projects || []).find(p => p.id === (s.selectedProjectId || 'PRJ-01')) || { name: 'Project 1' };
   const docTypeBadge = docTypeOverride ? `
-    <div style="display:flex;align-items:center;gap:0.5rem;margin-bottom:1rem;padding:0.5rem 0.75rem;background:rgba(37,99,235,0.08);border:1px solid rgba(37,99,235,0.2);border-radius:6px;">
+    <div style="display:flex;align-items:center;gap:0.5rem;margin-bottom:1rem;padding:0.5rem 0.75rem;background:rgba(37,99,235,0.08);border:1px solid rgba(37,99,235,0.2);border-radius:6px;flex-wrap:wrap;">
       <i data-lucide="filter" style="width:13px;height:13px;color:var(--brand-blue);"></i>
-      <span style="font-size:0.78rem;color:var(--brand-blue);font-weight:700;">Filtered by type: ${docTypeOverride}</span>
-      <a data-route="documents" style="margin-left:auto;font-size:0.72rem;color:var(--text-muted);cursor:pointer;text-decoration:underline;">View All Documents</a>
+      <span style="font-size:0.78rem;color:var(--brand-blue);font-weight:700;">Sub-bab Document Type: <strong>( ${docTypeOverride} )</strong></span>
+      <span style="font-size:0.74rem;color:var(--text-secondary);margin-left:0.25rem;">— Project: <strong>${window.escapeHtml(currentPrj.name)}</strong></span>
+      <a data-route="documents" onclick="window.navigateTo('documents')" style="margin-left:auto;font-size:0.72rem;color:var(--brand-blue);cursor:pointer;text-decoration:underline;font-weight:600;">Lihat Semua Dokumen Repository</a>
     </div>` : '';
 
   return `
@@ -67,6 +204,7 @@ export function renderDocumentsView(subRoute = 'documents') {
           </button>
         </div>
       </div>
+      ${renderDocumentManagementProjectFolders(subRoute)}
       ${docTypeOverride ? docTypeBadge : tabsHtml}
       <div class="tab-content">${content}</div>
     </div>`;
@@ -74,10 +212,20 @@ export function renderDocumentsView(subRoute = 'documents') {
 
 // ── Upload Document Modal ─────────────────────────────────────────
 window._openUploadDocModal = function() {
-  const eqOpts = (window.appState.equipment || []).slice(0, 30).map(e => `<option value="${e.id}">${e.id}</option>`).join('');
+  const s = window.appState;
+  const currentPrjId = s.selectedProjectId || 'PRJ-01';
+  const currentPrj = (s.projects || []).find(p => p.id === currentPrjId) || { id: currentPrjId, name: currentPrjId };
+  const prjEq = (s.equipment || []).filter(e => e.projectId === currentPrjId || (!e.projectId && currentPrjId === 'PRJ-01'));
+  const eqList = prjEq.length > 0 ? prjEq : (s.equipment || []);
+  const eqOpts = eqList.slice(0, 30).map(e => `<option value="${e.id}">${e.id} — ${window.escapeHtml(e.name || '')}</option>`).join('');
+
   openModal({
-    title: 'Upload Commissioning Document',
+    title: `Upload Commissioning Document — ${window.escapeHtml(currentPrj.name)}`,
     bodyHtml: `
+      <div style="padding:0.45rem 0.75rem;background:rgba(37,99,235,0.08);border:1px solid rgba(37,99,235,0.2);border-radius:6px;margin-bottom:0.85rem;font-size:0.78rem;color:var(--brand-blue);font-weight:600;display:flex;align-items:center;gap:0.4rem;">
+        <i data-lucide="briefcase" style="width:13px;height:13px;"></i>
+        <span>Target Project: <strong>${window.escapeHtml(currentPrj.name)}</strong></span>
+      </div>
       <div class="form-row"><label>Document Title <span style="color:#ef4444;">*</span></label>
         <input id="ud-title" type="text" placeholder="e.g. CxL3 Functional Test Report" style="width:100%;padding:0.5rem;border:1px solid var(--border-card);border-radius:4px;background:var(--bg-card-secondary);color:var(--text-main);">
       </div>
@@ -88,10 +236,17 @@ window._openUploadDocModal = function() {
           <option value="Multiple">Multiple / General</option>
         </select>
       </div>
-      <div class="form-row"><label>Document Type</label>
+      <div class="form-row"><label>Document Type / Sub-bab</label>
         <select id="ud-type" style="width:100%;padding:0.5rem;border:1px solid var(--border-card);border-radius:4px;background:var(--bg-card-secondary);color:var(--text-main);">
-          <option>Test Procedure</option><option>FAT Report</option><option>Checklist</option>
-          <option>Manual</option><option>Protocol</option><option>Report</option><option>Archive</option>
+          <option value="Report">(a) Report</option>
+          <option value="Timesheet">(b) Timesheet</option>
+          <option value="Calibration">(c) Equipment Tools Calibration</option>
+          <option value="Test Procedure">Test Procedure</option>
+          <option value="FAT Report">FAT Report</option>
+          <option value="Checklist">Checklist</option>
+          <option value="Protocol">Protocol</option>
+          <option value="Manual">Manual</option>
+          <option value="Archive">Archive</option>
         </select>
       </div>
       <div class="form-row"><label>Notes</label>
@@ -121,6 +276,7 @@ window._openUploadDocModal = function() {
         return false;
       }
       const result = window.createDocument({
+        projectId: currentPrjId,
         name: title,
         type,
         equipment: eq,
@@ -138,17 +294,27 @@ window._openUploadDocModal = function() {
 // DOCUMENTS TAB — reads from appState.documents
 // ================================================================
 function renderDocumentsTab(s, statusBadge, docTypeOverride = null) {
-  const df = s.documentFilters || { type: 'all', status: 'all', equipment: 'all', search: '' };
-  const docs = s.documents;
+  const df = s.documentFilters || { type: 'all', status: 'all', equipment: 'all', search: '', project: 'all' };
+  const docs = s.documents || [];
+  const selectedPrjId = s.selectedProjectId || 'PRJ-01';
+  const projects = s.projects || [];
+  const currentPrj = projects.find(p => p.id === selectedPrjId) || { id: selectedPrjId, name: selectedPrjId };
+
+  // Project filtering: if df.project is set and !== 'all', use that; else default to selectedPrjId
+  const prjFilter = (df.project !== undefined && df.project !== 'all') ? df.project : selectedPrjId;
+  const projectScopedDocs = docs.filter(d => {
+    if (df.project === 'all') return true;
+    return d.projectId === prjFilter || (!d.projectId && prjFilter === 'PRJ-01');
+  });
 
   // Derive unique types and equipment from live state
   const allTypes = [...new Set(docs.map(d => d.type).filter(Boolean))].sort();
-  const allEquip = [...new Set(docs.map(d => d.equipment).filter(Boolean))].sort();
+  const allEquip = [...new Set(projectScopedDocs.map(d => d.equipment).filter(Boolean))].sort();
 
   const activeTypeFilter = docTypeOverride || df.type;
 
-  const filtered = docs.filter(d => {
-    const typeOk  = activeTypeFilter === 'all' || (activeTypeFilter ? (d.type || '').toLowerCase() === activeTypeFilter.toLowerCase() : true);
+  const filtered = projectScopedDocs.filter(d => {
+    const typeOk  = activeTypeFilter === 'all' || (activeTypeFilter ? (d.type || '').toLowerCase().includes(activeTypeFilter.toLowerCase()) : true);
     const statOk  = df.status === 'all' || d.status === df.status;
     const eqOk    = df.equipment === 'all' || d.equipment === df.equipment;
     const searchOk = !df.search || d.name.toLowerCase().includes(df.search.toLowerCase()) || (d.equipment || '').toLowerCase().includes(df.search.toLowerCase()) || d.id.toLowerCase().includes(df.search.toLowerCase());
@@ -159,16 +325,16 @@ function renderDocumentsTab(s, statusBadge, docTypeOverride = null) {
   const pageSize = 8;
   const paginated = filtered.slice((currentPage - 1) * pageSize, currentPage * pageSize);
 
-  // Derive stat counts from appState
-  const statApproved = docs.filter(d => d.status === 'Approved').length;
-  const statPending  = docs.filter(d => d.status === 'Pending Review' || d.status === 'Pending').length;
-  const statRejected = docs.filter(d => d.status === 'Rejected').length;
-  const statRevise   = docs.filter(d => d.status === 'Revise & Resubmit').length;
+  // Derive stat counts from projectScopedDocs
+  const statApproved = projectScopedDocs.filter(d => d.status === 'Approved').length;
+  const statPending  = projectScopedDocs.filter(d => d.status === 'Pending Review' || d.status === 'Pending').length;
+  const statRejected = projectScopedDocs.filter(d => d.status === 'Rejected').length;
+  const statRevise   = projectScopedDocs.filter(d => d.status === 'Revise & Resubmit').length;
 
   return `
     <div class="five-stat-boxes" style="margin-bottom:1.5rem;">
       ${[
-        { label:'Total Documents', value: docs.length, color:'var(--text-main)' },
+        { label:`Total Docs (${currentPrj.name.split('—')[0].trim()})`, value: projectScopedDocs.length, color:'var(--text-main)' },
         { label:'Approved', value: statApproved, color:'#10b981' },
         { label:'Pending Review', value: statPending, color:'#3b82f6' },
         { label:'Rejected', value: statRejected, color:'#ef4444' },
@@ -182,7 +348,15 @@ function renderDocumentsTab(s, statusBadge, docTypeOverride = null) {
 
     <div class="dashboard-card" style="padding:20px;border-radius:8px;">
       <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px;flex-wrap:wrap;gap:0.75rem;">
-        <h3 class="card-top-title" style="margin:0;">Document Repository — ${filtered.length} of ${docs.length}</h3>
+        <div>
+          <h3 class="card-top-title" style="margin:0;">
+            Document Repository — ${filtered.length} of ${projectScopedDocs.length}
+            <span style="font-size:0.78rem;font-weight:600;color:var(--brand-blue);margin-left:0.5rem;">[${window.escapeHtml(currentPrj.name)}]</span>
+          </h3>
+          <div style="font-size:0.73rem;color:var(--text-secondary);margin-top:0.2rem;">
+            Daftar berkas commissioning terisolasi per folder project aktif.
+          </div>
+        </div>
         <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center;">
           <div style="position:relative;">
             <i data-lucide="search" style="position:absolute;left:8px;top:50%;transform:translateY(-50%);width:13px;height:13px;color:var(--text-muted);pointer-events:none;"></i>
@@ -190,6 +364,10 @@ function renderDocumentsTab(s, statusBadge, docTypeOverride = null) {
               style="padding:0.4rem 0.5rem 0.4rem 1.8rem;border:1px solid var(--border-card);border-radius:4px;background:var(--bg-card-secondary);color:var(--text-main);width:160px;"
               oninput="window.setDocumentFilter('search', this.value)">
           </div>
+          <select class="filter-select" onchange="window.setDocumentFilter('project', this.value); if(this.value!=='all') window.switchProject(this.value);">
+            <option value="all" ${df.project === 'all' ? 'selected' : ''}>All Projects</option>
+            ${projects.map(p => `<option value="${p.id}" ${prjFilter === p.id && df.project !== 'all' ? 'selected' : ''}>${window.escapeHtml(p.name)}</option>`).join('')}
+          </select>
           <select class="filter-select" onchange="window.setDocumentFilter('type', this.value === 'All Types' ? 'all' : this.value)">
             <option value="all" ${df.type === 'all' ? 'selected' : ''}>All Types</option>
             ${allTypes.map(t => `<option value="${t}" ${df.type === t ? 'selected' : ''}>${t}</option>`).join('')}
@@ -205,6 +383,9 @@ function renderDocumentsTab(s, statusBadge, docTypeOverride = null) {
             <option value="all" ${df.equipment === 'all' ? 'selected' : ''}>All Equipment</option>
             ${allEquip.map(e => `<option value="${e}" ${df.equipment === e ? 'selected' : ''}>${e}</option>`).join('')}
           </select>
+          <button class="btn" style="display:flex;align-items:center;gap:0.4rem;" onclick="window._exportProjectDocuments('${selectedPrjId}')" title="Export Semua Dokumen Project ke CSV">
+            <i data-lucide="download" style="width:14px;height:14px;"></i> Export CSV
+          </button>
           <button class="btn btn-primary" style="display:flex;align-items:center;gap:0.4rem;" onclick="window._openUploadDocModal()">
             <i data-lucide="upload" style="width:14px;height:14px;"></i> Upload Document
           </button>
@@ -411,24 +592,32 @@ function renderSharedFilesTab(s) {
     </div>`;
 }
 
-// ================================================================
+// // ================================================================
 // IMPORT DOCUMENTS TAB — reads from appState.importQueue
 // ================================================================
 function renderImportTab(s) {
+  const currentPrjId = s.selectedProjectId || 'PRJ-01';
+  const currentPrj = (s.projects || []).find(p => p.id === currentPrjId) || { id: currentPrjId, name: currentPrjId };
   const queue = s.importQueue || [];
   const validated   = queue.filter(i => i.status === 'Validated').length;
   const errors      = queue.filter(i => i.status === 'Mapping Error').length;
   const parsing     = queue.filter(i => i.status === 'Parsing').length;
 
-  const eqOpts = (s.equipment || []).slice(0, 30).map(e => `<option value="${e.id}">${e.id}</option>`).join('');
-
   return `
+    <div style="padding:0.75rem 1rem;background:rgba(37,99,235,0.08);border:1px solid rgba(37,99,235,0.2);border-radius:8px;margin-bottom:1.25rem;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:0.5rem;">
+      <div style="display:flex;align-items:center;gap:0.5rem;">
+        <i data-lucide="briefcase" style="width:16px;height:16px;color:var(--brand-blue);"></i>
+        <span style="font-size:0.85rem;color:var(--text-main);">Target Batch Import Project: <strong style="color:var(--brand-blue);">${window.escapeHtml(currentPrj.name)}</strong></span>
+      </div>
+      <span style="font-size:0.72rem;color:var(--text-secondary);">Semua file terverifikasi akan diimpor ke context project ini.</span>
+    </div>
+
     <div class="four-stat-boxes" style="margin-bottom:1.5rem;">
       ${[
         { label:'In Queue', value: queue.length, color:'var(--brand-blue)' },
         { label:'Validated', value: validated, color:'#10b981' },
         { label:'Mapping Errors', value: errors, color:'#ef4444' },
-        { label:'Committed (Session)', value: s.documents.filter(d=>d.type==='Imported').length, color:'var(--text-main)' }
+        { label:`Committed (${currentPrj.name.split('—')[0].trim()})`, value: s.documents.filter(d=> (d.projectId === currentPrjId || (!d.projectId && currentPrjId === 'PRJ-01')) && d.type==='Imported').length, color:'var(--text-main)' }
       ].map(stat => `
         <div class="dashboard-card" style="padding:16px;">
           <div style="color:var(--text-secondary);font-size:13px;margin-bottom:8px;">${stat.label}</div>
@@ -524,10 +713,20 @@ function renderImportTab(s) {
 
 // ── Batch Import Helpers ──────────────────────────────────────────
 window._openBatchImportModal = function() {
-  const eqOpts = (window.appState.equipment || []).slice(0,30).map(e => `<option value="${e.id}">${e.id}</option>`).join('');
+  const s = window.appState;
+  const currentPrjId = s.selectedProjectId || 'PRJ-01';
+  const currentPrj = (s.projects || []).find(p => p.id === currentPrjId) || { id: currentPrjId, name: currentPrjId };
+  const prjEq = (s.equipment || []).filter(e => e.projectId === currentPrjId || (!e.projectId && currentPrjId === 'PRJ-01'));
+  const eqList = prjEq.length > 0 ? prjEq : (s.equipment || []);
+  const eqOpts = eqList.slice(0,30).map(e => `<option value="${e.id}">${e.id} — ${window.escapeHtml(e.name || '')}</option>`).join('');
+
   openModal({
-    title: 'Batch Document Import',
+    title: `Batch Document Import — ${window.escapeHtml(currentPrj.name)}`,
     bodyHtml: `
+      <div style="padding:0.45rem 0.75rem;background:rgba(37,99,235,0.08);border:1px solid rgba(37,99,235,0.2);border-radius:6px;margin-bottom:0.85rem;font-size:0.78rem;color:var(--brand-blue);font-weight:600;display:flex;align-items:center;gap:0.4rem;">
+        <i data-lucide="briefcase" style="width:13px;height:13px;"></i>
+        <span>Target Project: <strong>${window.escapeHtml(currentPrj.name)}</strong></span>
+      </div>
       <div class="form-row"><label>Target Equipment</label>
         <select id="bi-eq" style="width:100%;padding:0.5rem;border:1px solid var(--border-card);border-radius:4px;background:var(--bg-card-secondary);color:var(--text-main);">
           <option value="Auto">Auto-Detect from Filename</option>
@@ -554,10 +753,10 @@ window._openBatchImportModal = function() {
       Array.from(files).forEach(file => {
         const id = window.generateId('IMP');
         const sizeKb = file.size > 1048576 ? (file.size/1048576).toFixed(1)+' MB' : Math.round(file.size/1024)+' KB';
-        window.appState.importQueue.push({ id, name: file.name, size: sizeKb, eq: eq === 'Auto' ? 'Auto-Detect' : eq, phase: phase, status: 'Validated', time: 'Just now' });
+        window.appState.importQueue.push({ id, projectId: currentPrjId, name: file.name, size: sizeKb, eq: eq === 'Auto' ? 'Auto-Detect' : eq, phase: phase, status: 'Validated', time: 'Just now' });
       });
-      window.addAuditLog('Admin', 'CREATE', 'ImportQueue', 'BATCH', `${files.length} file(s) added to import queue`);
-      showToast(`${files.length} file(s) added to import queue.`, 'success');
+      window.addAuditLog('Admin', 'CREATE', 'ImportQueue', 'BATCH', `${files.length} file(s) added to import queue for ${currentPrj.name}`);
+      showToast(`${files.length} file(s) added to import queue for ${currentPrj.name}.`, 'success');
       window.navigateTo('import-documents');
     }
   });

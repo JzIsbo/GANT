@@ -170,11 +170,20 @@ function _buildInitialState() {
       { id: 'USR-006', name: 'Fiona Gallagher', email: 'fiona.g@example.com',   role: 'Viewer',          dept: 'Client',     status: 'Active',   lastLogin: 'Just now',    createdAt: '01 Aug 2026' }
     ],
     documents: [
-      { id: 'DOC-001', name: 'CxL3_Startup_Testing_Protocol_v2.pdf', type: 'Protocol', status: 'Approved', equipment: 'AHU-001', size: '2.4 MB', date: '01 Aug 2026', notes: 'Phase 3 protocol' },
-      { id: 'DOC-002', name: 'Equipment_Megger_Calibration_Logs.xlsx', type: 'Report', status: 'Under Review', equipment: 'MCC-001', size: '1.1 MB', date: '05 Aug 2026', notes: 'Calibration records' },
-      { id: 'DOC-003', name: 'Mfr_Startup_Reports_Batch1.zip', type: 'Archive', status: 'Pending', equipment: 'Multiple', size: '15.6 MB', date: '10 Aug 2026', notes: 'Manufacturer startup packages' },
-      { id: 'DOC-004', name: 'FAT_Report_AHU001.pdf', type: 'Report', status: 'Approved', equipment: 'AHU-001', size: '3.2 MB', date: '15 Jul 2026', notes: 'Factory acceptance test' },
-      { id: 'DOC-005', name: 'Pre_Cx_Checklist_PMP101.docx', type: 'Checklist', status: 'Approved', equipment: 'PMP-101', size: '0.8 MB', date: '20 Jul 2026', notes: 'Pre-commissioning checklist' }
+      { id: 'DOC-001', projectId: 'PRJ-01', name: 'CxL3_Startup_Testing_Protocol_v2.pdf', type: 'Protocol', status: 'Approved', equipment: 'AHU-001', size: '2.4 MB', date: '01 Aug 2026', notes: 'Phase 3 protocol' },
+      { id: 'DOC-002', projectId: 'PRJ-01', name: 'Equipment_Megger_Calibration_Logs.xlsx', type: 'Calibration', status: 'Under Review', equipment: 'MCC-001', size: '1.1 MB', date: '05 Aug 2026', notes: 'Calibration records' },
+      { id: 'DOC-003', projectId: 'PRJ-01', name: 'Mfr_Startup_Reports_Batch1.zip', type: 'Archive', status: 'Pending', equipment: 'Multiple', size: '15.6 MB', date: '10 Aug 2026', notes: 'Manufacturer startup packages' },
+      { id: 'DOC-004', projectId: 'PRJ-01', name: 'FAT_Report_AHU001.pdf', type: 'Report', status: 'Approved', equipment: 'AHU-001', size: '3.2 MB', date: '15 Jul 2026', notes: 'Factory acceptance test' },
+      { id: 'DOC-005', projectId: 'PRJ-01', name: 'Pre_Cx_Checklist_PMP101.docx', type: 'Checklist', status: 'Approved', equipment: 'PMP-101', size: '0.8 MB', date: '20 Jul 2026', notes: 'Pre-commissioning checklist' },
+      { id: 'DOC-006', projectId: 'PRJ-01', name: 'HVAC_Commissioning_Timesheet_W32.xlsx', type: 'Timesheet', status: 'Approved', equipment: 'AHU-001', size: '520 KB', date: '08 Aug 2026', notes: 'HVAC technician timesheet' },
+      { id: 'DOC-007', projectId: 'PRJ-01', name: 'Fluke_Multimeter_Calibration_Cert.pdf', type: 'Calibration', status: 'Approved', equipment: 'MCC-001', size: '1.2 MB', date: '03 Aug 2026', notes: 'Annual calibration certificate' },
+
+      // Project 2 (Data Center Substation)
+      { id: 'DOC-201', projectId: 'PRJ-02', name: 'Substation_Switchgear_FAT_Report.pdf', type: 'Report', status: 'Approved', equipment: 'SWG-201', size: '4.1 MB', date: '02 Aug 2026', notes: 'Substation switchgear FAT report' },
+      { id: 'DOC-202', projectId: 'PRJ-02', name: 'Weekly_Electrical_Timesheet_W32.xlsx', type: 'Timesheet', status: 'Approved', equipment: 'TRF-101', size: '640 KB', date: '08 Aug 2026', notes: 'Electrical team timesheet' },
+      { id: 'DOC-203', projectId: 'PRJ-02', name: 'Relay_Protection_Calibration_Cert.pdf', type: 'Calibration', status: 'Approved', equipment: 'SWG-201', size: '1.8 MB', date: '05 Aug 2026', notes: 'Protection relay calibration' },
+      { id: 'DOC-204', projectId: 'PRJ-02', name: 'UPS_Battery_Discharge_Test_Report.pdf', type: 'Report', status: 'Under Review', equipment: 'UPS-301', size: '2.9 MB', date: '10 Aug 2026', notes: 'Battery discharge curve report' },
+      { id: 'DOC-205', projectId: 'PRJ-02', name: 'Torque_Wrench_Calibration_Sheet.pdf', type: 'Calibration', status: 'Approved', equipment: 'SWG-201', size: '750 KB', date: '04 Aug 2026', notes: 'Digital torque wrench calibration log' }
     ],
     sharedLinks: [
       { id: 'SL-001', name: 'CxL3 Startup Protocol', docId: 'DOC-001', sharedWith: 'client@gan.co.id', createdAt: '01 Aug 2026', expiresAt: '31 Aug 2026' },
@@ -596,6 +605,9 @@ window.switchProjectFolder = function(projectId, route = 'equipment-list') {
     if (window.expandedProjectFolders) {
       window.expandedProjectFolders.add(projectId);
     }
+    if (window.expandedDocProjectFolders) {
+      window.expandedDocProjectFolders.add(projectId);
+    }
   }
   if (route) {
     window.navigateTo(route);
@@ -906,10 +918,59 @@ window.createDocument = function(data) {
   const name = (data.name || '').trim();
   if (!name) return { ok: false, error: 'Document Name is required.' };
   const now = new Date().toLocaleDateString('en-GB', { day:'2-digit', month:'short', year:'numeric' });
-  const doc = { id: window.generateId('DOC'), name, type: data.type || 'Document', status: 'Pending', equipment: (data.equipment || 'General').trim(), size: data.size || '—', date: now, notes: (data.notes || '').trim() };
+  const doc = {
+    id: window.generateId('DOC'),
+    projectId: data.projectId || s.selectedProjectId || 'PRJ-01',
+    name,
+    type: data.type || 'Document',
+    status: 'Pending',
+    equipment: (data.equipment || 'General').trim(),
+    size: data.size || '—',
+    date: now,
+    notes: (data.notes || '').trim()
+  };
   s.documents.push(doc);
   window.addAuditLog('Admin', 'CREATE', 'Document', doc.id, `Added Document "${name}"`);
   return { ok: true, doc };
+};
+
+window._exportProjectDocuments = function(projectId) {
+  const s = window.appState;
+  const prj = (s.projects || []).find(p => p.id === projectId) || { id: projectId, name: projectId };
+  const docs = (s.documents || []).filter(d => d.projectId === projectId || (!d.projectId && projectId === 'PRJ-01'));
+  
+  if (docs.length === 0) {
+    showToast(`Tidak ada dokumen untuk diekspor pada project "${prj.name}".`, 'info');
+    return;
+  }
+  
+  const headers = ['Doc ID', 'Document Name', 'Project ID', 'Equipment', 'Type', 'Status', 'Date', 'Size', 'Notes'];
+  const rows = docs.map(d => [
+    `"${d.id || ''}"`,
+    `"${(d.name || '').replace(/"/g, '""')}"`,
+    `"${d.projectId || prj.id}"`,
+    `"${(d.equipment || '').replace(/"/g, '""')}"`,
+    `"${(d.type || '').replace(/"/g, '""')}"`,
+    `"${(d.status || '').replace(/"/g, '""')}"`,
+    `"${(d.date || '').replace(/"/g, '""')}"`,
+    `"${(d.size || '').replace(/"/g, '""')}"`,
+    `"${(d.notes || '').replace(/"/g, '""')}"`
+  ]);
+  
+  const csvContent = [headers.join(','), ...rows.map(r => r.join(','))].join('\n');
+  const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  const safePrjName = prj.name.replace(/[^a-zA-Z0-9_-]/g, '_');
+  a.download = `${safePrjName}_Documents_Export.csv`;
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  URL.revokeObjectURL(url);
+  
+  window.addAuditLog('Admin', 'EXPORT', 'Documents', prj.id, `Exported ${docs.length} documents for ${prj.name}`);
+  showToast(`Berhasil mengekspor ${docs.length} dokumen (${prj.name}) ke file CSV.`, 'success');
 };
 
 window.deleteDocument = function(id) {
@@ -1002,6 +1063,7 @@ window.commitImportBatch = function() {
   validated.forEach(item => {
     const doc = {
       id: window.generateId('DOC'),
+      projectId: item.projectId || s.selectedProjectId || 'PRJ-01',
       name: item.name,
       type: 'Imported',
       status: 'Pending Review',

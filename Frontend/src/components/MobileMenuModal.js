@@ -150,52 +150,52 @@ export function renderMobileMenuPortal() {
           <div class="menu-group-section">
             <div class="menu-group-title" style="display:flex;justify-content:space-between;align-items:center;">
               <div><i data-lucide="folder-open" style="color:#8b5cf6;"></i> Document Management</div>
-              <div style="font-size:0.65rem;color:var(--brand-blue);font-weight:700;text-transform:uppercase;"><i data-lucide="folder-git-2" style="width:11px;height:11px;vertical-align:-1px;"></i> Project 1</div>
+              <div style="font-size:0.65rem;color:var(--brand-blue);font-weight:700;text-transform:uppercase;"><i data-lucide="folder-git-2" style="width:11px;height:11px;vertical-align:-1px;"></i> ${(window.appState?.projects || []).find(p => p.id === window.appState?.selectedProjectId)?.name || 'Project 1'}</div>
             </div>
             <div class="mobile-app-tiles-grid">
               <div class="app-tile tile-purple" onclick="window.navigateTo('documents-report');window.closeMobileSidebar();">
                 <div class="tile-header">
                   <div class="tile-icon-glow icon-purple-glow"><i data-lucide="file-bar-chart"></i></div>
-                  <span class="tile-badge badge-purple">Report</span>
+                  <span class="tile-badge badge-purple">(a) Rep</span>
                 </div>
-                <div class="tile-title">Project Reports</div>
-                <div class="tile-desc">Laporan mingguan &amp; bulanan</div>
+                <div class="tile-title">(a) Report</div>
+                <div class="tile-desc">Laporan proyek</div>
               </div>
 
               <div class="app-tile tile-blue" onclick="window.navigateTo('documents-timesheet');window.closeMobileSidebar();">
                 <div class="tile-header">
                   <div class="tile-icon-glow icon-blue-glow"><i data-lucide="clock"></i></div>
-                  <span class="tile-badge badge-blue">Timesheet</span>
+                  <span class="tile-badge badge-blue">(b) Time</span>
                 </div>
-                <div class="tile-title">Manpower Timesheet</div>
+                <div class="tile-title">(b) Timesheet</div>
                 <div class="tile-desc">Jam kerja teknisi</div>
               </div>
 
               <div class="app-tile tile-emerald" onclick="window.navigateTo('documents-calibration');window.closeMobileSidebar();">
                 <div class="tile-header">
                   <div class="tile-icon-glow icon-emerald-glow"><i data-lucide="award"></i></div>
-                  <span class="tile-badge badge-emerald">Kalibrasi</span>
+                  <span class="tile-badge badge-emerald">(c) Calib</span>
                 </div>
-                <div class="tile-title">Tools Calibration</div>
-                <div class="tile-desc">Sertifikat alat ukur</div>
-              </div>
-
-              <div class="app-tile tile-sky" onclick="window.navigateTo('nas-files');window.closeMobileSidebar();">
-                <div class="tile-header">
-                  <div class="tile-icon-glow icon-sky-glow"><i data-lucide="server"></i></div>
-                  <span class="tile-badge badge-sky">NAS</span>
-                </div>
-                <div class="tile-title">NAS File Manager</div>
-                <div class="tile-desc">RAID 5 Storage</div>
+                <div class="tile-title">(c) Calibration</div>
+                <div class="tile-desc">Kalibrasi alat ukur</div>
               </div>
 
               <div class="app-tile tile-orange" onclick="window.navigateTo('import-documents');window.closeMobileSidebar();">
                 <div class="tile-header">
-                  <div class="tile-icon-glow icon-orange-glow"><i data-lucide="upload-cloud"></i></div>
-                  <span class="tile-badge badge-orange">Import</span>
+                  <div class="tile-icon-glow icon-orange-glow"><i data-lucide="file-up"></i></div>
+                  <span class="tile-badge badge-orange">(d) Imp</span>
                 </div>
-                <div class="tile-title">Import / Export</div>
+                <div class="tile-title">(d) Import Documents</div>
                 <div class="tile-desc">Isolasi per project</div>
+              </div>
+
+              <div class="app-tile tile-sky" onclick="window.navigateTo('documents');window.closeMobileSidebar();">
+                <div class="tile-header">
+                  <div class="tile-icon-glow icon-sky-glow"><i data-lucide="folder-open"></i></div>
+                  <span class="tile-badge badge-sky">Repo</span>
+                </div>
+                <div class="tile-title">All Documents</div>
+                <div class="tile-desc">Repository terpusat</div>
               </div>
             </div>
           </div>
