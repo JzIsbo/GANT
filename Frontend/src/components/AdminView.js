@@ -31,13 +31,144 @@ function _statusBadge(status) {
   return `<span style="padding:0.22rem 0.6rem;border-radius:12px;font-size:0.76rem;font-weight:700;background:${c.bg};color:${c.text};border:1px solid ${c.border};">${status}</span>`;
 }
 
+// ── Master Data Sub-bab & Project Folder Directory ────────────────
+function renderMasterDataProjectFolders(subRoute) {
+  const s = window.appState;
+  const projects = s.projects || [];
+  const selectedPrjId = s.selectedProjectId || 'PRJ-01';
+
+  return `
+    <div class="dashboard-card master-data-folders-overview" style="margin-bottom:1.5rem;border-top:3px solid var(--brand-blue);background:var(--bg-card);">
+      
+      <!-- Top Bar: Title & Add Project Action -->
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:1.15rem;flex-wrap:wrap;gap:0.75rem;">
+        <div>
+          <h2 style="margin:0;font-size:1.1rem;font-weight:800;color:var(--text-main);display:flex;align-items:center;gap:0.5rem;">
+            <i data-lucide="folder-tree" style="width:20px;height:20px;color:var(--brand-blue);"></i>
+            Master Data Projects &amp; Sub-bab Folders
+          </h2>
+          <div style="font-size:0.78rem;color:var(--text-secondary);margin-top:0.25rem;">
+            Kelola data terpusat per folder project. Tambah/hapus/edit nama project, lalu pilih sub-bab <strong>(a) Equipment List</strong>, <strong>(b) Building - Floor - Room</strong>, atau <strong>(c) User Management</strong>.
+          </div>
+        </div>
+        <button class="btn btn-primary" onclick="window._openAddProjectModal()" style="display:flex;align-items:center;gap:0.4rem;font-weight:700;">
+          <i data-lucide="folder-plus" style="width:15px;height:15px;"></i> + Tambah Project Baru
+        </button>
+      </div>
+
+      <!-- Folders Grid -->
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(310px,1fr));gap:1rem;">
+        ${projects.map(p => {
+          const isSelected = p.id === selectedPrjId;
+          const prjEq = (s.equipment || []).filter(eq => eq.projectId === p.id || (!eq.projectId && p.id === 'PRJ-01'));
+          const prjRooms = s.rooms || [];
+          const prjBldgs = s.buildings || [];
+          
+          const statusColors = {
+            'Completed': { bg: 'rgba(34,197,94,0.15)', text: '#22c55e', border: '#22c55e' },
+            'Active':    { bg: 'rgba(37,99,235,0.15)', text: '#2563eb', border: '#2563eb' },
+            'Planning':  { bg: 'rgba(245,158,11,0.15)', text: '#f59e0b', border: '#f59e0b' }
+          };
+          const bColor = statusColors[p.status] || statusColors['Active'];
+
+          return `
+            <div class="project-folder-card" style="border-radius:8px;border:${isSelected ? '2px solid var(--brand-blue)' : '1px solid var(--border-card)'};background:${isSelected ? 'rgba(37,99,235,0.03)' : 'var(--bg-card-secondary)'};padding:1rem;display:flex;flex-direction:column;justify-content:space-between;box-shadow:${isSelected ? '0 4px 12px rgba(37,99,235,0.12)' : 'none'};">
+              
+              <div>
+                <!-- Card Header -->
+                <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:0.6rem;gap:0.5rem;">
+                  <div style="display:flex;align-items:center;gap:0.5rem;overflow:hidden;">
+                    <div style="width:34px;height:34px;border-radius:6px;background:${isSelected ? 'var(--brand-blue)' : 'rgba(37,99,235,0.12)'};color:${isSelected ? '#fff' : 'var(--brand-blue)'};display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+                      <i data-lucide="folder" style="width:18px;height:18px;"></i>
+                    </div>
+                    <div style="overflow:hidden;">
+                      <div style="font-weight:800;font-size:0.92rem;color:var(--text-main);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;" title="${window.escapeHtml(p.name)}">
+                        ${window.escapeHtml(p.name)}
+                      </div>
+                      <div style="font-size:0.72rem;color:var(--text-secondary);display:flex;align-items:center;gap:0.35rem;">
+                        <span style="font-weight:700;color:var(--brand-blue);">${p.code}</span> • <span>${window.escapeHtml(p.client)}</span>
+                      </div>
+                    </div>
+                  </div>
+                  <div style="display:flex;flex-direction:column;align-items:flex-end;gap:0.25rem;">
+                    <span style="padding:0.18rem 0.5rem;border-radius:12px;font-size:0.7rem;font-weight:700;background:${bColor.bg};color:${bColor.text};border:1px solid ${bColor.border};">
+                      ${p.status || 'Active'}
+                    </span>
+                    ${isSelected ? `<span style="font-size:0.65rem;font-weight:800;color:var(--brand-blue);text-transform:uppercase;">● Active Context</span>` : ''}
+                  </div>
+                </div>
+
+                <!-- Action Bar for Project: Edit & Delete -->
+                <div style="display:flex;gap:0.4rem;margin-bottom:0.75rem;padding-bottom:0.6rem;border-bottom:1px solid var(--border-card);">
+                  <button class="btn" onclick="window._openEditProjectModal('${p.id}')" style="flex:1;padding:0.25rem 0.5rem;font-size:0.72rem;background:var(--bg-card);display:flex;align-items:center;justify-content:center;gap:0.3rem;" title="Edit Project">
+                    <i data-lucide="edit-2" style="width:11px;height:11px;"></i> Ubah Project
+                  </button>
+                  ${projects.length > 1 ? `
+                    <button class="btn" onclick="window._confirmDeleteProject('${p.id}')" style="padding:0.25rem 0.5rem;font-size:0.72rem;background:rgba(239,68,68,0.08);color:#ef4444;border-color:rgba(239,68,68,0.25);display:flex;align-items:center;justify-content:center;gap:0.3rem;" title="Hapus Project">
+                      <i data-lucide="trash-2" style="width:11px;height:11px;"></i> Hapus
+                    </button>
+                  ` : ''}
+                </div>
+              </div>
+
+              <!-- Sub-bab / Submenus (a, b, c) -->
+              <div>
+                <div style="font-size:0.68rem;font-weight:700;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.04em;margin-bottom:0.45rem;">
+                  Sub-bab Master Data:
+                </div>
+                <div style="display:flex;flex-direction:column;gap:0.35rem;">
+                  
+                  <!-- (a) Equipment List -->
+                  <div onclick="window.switchProjectFolder('${p.id}', 'equipment-list')" class="subbab-btn-row ${isSelected && subRoute === 'equipment-list' ? 'active' : ''}" style="cursor:pointer;padding:0.38rem 0.65rem;border-radius:6px;display:flex;align-items:center;justify-content:space-between;border:1px solid ${isSelected && subRoute === 'equipment-list' ? 'var(--brand-blue)' : 'var(--border-card)'};background:${isSelected && subRoute === 'equipment-list' ? 'var(--brand-blue)' : 'var(--bg-card)'};color:${isSelected && subRoute === 'equipment-list' ? '#fff' : 'var(--text-main)'};">
+                    <div style="display:flex;align-items:center;gap:0.4rem;font-size:0.78rem;font-weight:600;">
+                      <i data-lucide="cpu" style="width:13px;height:13px;color:${isSelected && subRoute === 'equipment-list' ? '#fff' : 'var(--brand-blue)'};"></i>
+                      <span>(a) Equipment List</span>
+                    </div>
+                    <span style="font-size:0.7rem;font-weight:700;padding:0.1rem 0.4rem;border-radius:10px;background:${isSelected && subRoute === 'equipment-list' ? 'rgba(255,255,255,0.2)' : 'var(--bg-card-secondary)'};color:${isSelected && subRoute === 'equipment-list' ? '#fff' : 'var(--text-secondary)'};">
+                      ${prjEq.length} items
+                    </span>
+                  </div>
+
+                  <!-- (b) Building - Floor - Room -->
+                  <div onclick="window.switchProjectFolder('${p.id}', 'room-building')" class="subbab-btn-row ${isSelected && subRoute === 'room-building' ? 'active' : ''}" style="cursor:pointer;padding:0.38rem 0.65rem;border-radius:6px;display:flex;align-items:center;justify-content:space-between;border:1px solid ${isSelected && subRoute === 'room-building' ? 'var(--brand-blue)' : 'var(--border-card)'};background:${isSelected && subRoute === 'room-building' ? 'var(--brand-blue)' : 'var(--bg-card)'};color:${isSelected && subRoute === 'room-building' ? '#fff' : 'var(--text-main)'};">
+                    <div style="display:flex;align-items:center;gap:0.4rem;font-size:0.78rem;font-weight:600;">
+                      <i data-lucide="building-2" style="width:13px;height:13px;color:${isSelected && subRoute === 'room-building' ? '#fff' : '#10b981'};"></i>
+                      <span>(b) Building - Floor - Room</span>
+                    </div>
+                    <span style="font-size:0.7rem;font-weight:700;padding:0.1rem 0.4rem;border-radius:10px;background:${isSelected && subRoute === 'room-building' ? 'rgba(255,255,255,0.2)' : 'var(--bg-card-secondary)'};color:${isSelected && subRoute === 'room-building' ? '#fff' : 'var(--text-secondary)'};">
+                      ${prjBldgs.length} Bldgs • ${prjRooms.length} Rms
+                    </span>
+                  </div>
+
+                  <!-- (c) User Management -->
+                  <div onclick="window.switchProjectFolder('${p.id}', 'user-management')" class="subbab-btn-row ${isSelected && subRoute === 'user-management' ? 'active' : ''}" style="cursor:pointer;padding:0.38rem 0.65rem;border-radius:6px;display:flex;align-items:center;justify-content:space-between;border:1px solid ${isSelected && subRoute === 'user-management' ? 'var(--brand-blue)' : 'var(--border-card)'};background:${isSelected && subRoute === 'user-management' ? 'var(--brand-blue)' : 'var(--bg-card)'};color:${isSelected && subRoute === 'user-management' ? '#fff' : 'var(--text-main)'};">
+                    <div style="display:flex;align-items:center;gap:0.4rem;font-size:0.78rem;font-weight:600;">
+                      <i data-lucide="users" style="width:13px;height:13px;color:${isSelected && subRoute === 'user-management' ? '#fff' : '#8b5cf6'};"></i>
+                      <span>(c) User Management</span>
+                    </div>
+                    <span style="font-size:0.7rem;font-weight:700;padding:0.1rem 0.4rem;border-radius:10px;background:${isSelected && subRoute === 'user-management' ? 'rgba(255,255,255,0.2)' : 'var(--bg-card-secondary)'};color:${isSelected && subRoute === 'user-management' ? '#fff' : 'var(--text-secondary)'};">
+                      ${(s.users || []).length} users
+                    </span>
+                  </div>
+
+                </div>
+              </div>
+
+            </div>
+          `;
+        }).join('')}
+      </div>
+    </div>
+  `;
+}
+
 export function renderAdminView(subRoute = 'equipment-list') {
   const isSettings = ['project-settings', 'account-settings'].includes(subRoute);
 
   const masterDataTabs = [
-    { id: 'equipment-list', label: 'Equipment List', icon: 'server' },
-    { id: 'room-building',  label: 'Room / Building', icon: 'building' },
-    { id: 'user-management', label: 'User Management', icon: 'users' }
+    { id: 'equipment-list', label: 'Equipment List (a)', icon: 'cpu' },
+    { id: 'room-building',  label: 'Building - Floor - Room (b)', icon: 'building-2' },
+    { id: 'user-management', label: 'User Management (c)', icon: 'users' }
   ];
   const settingsTabs = [
     { id: 'project-settings', label: 'Project Settings', icon: 'settings' },
@@ -63,7 +194,9 @@ export function renderAdminView(subRoute = 'equipment-list') {
     default: content = renderEquipmentList();
   }
 
-  return `<div class="admin-view">${tabsHtml}<div class="admin-content">${content}</div></div>`;
+  const projectFoldersHtml = !isSettings ? renderMasterDataProjectFolders(subRoute) : '';
+
+  return `<div class="admin-view">${projectFoldersHtml}${tabsHtml}<div class="admin-content">${content}</div></div>`;
 }
 
 // ================================================================
@@ -356,15 +489,18 @@ function renderRoomBuilding() {
             <button class="btn btn-primary" style="display:flex;align-items:center;gap:0.4rem;" onclick="window._openAddRoomModal()">
               <i data-lucide="plus" style="width:14px;height:14px;"></i> Add Room
             </button>
+            <button class="btn" style="display:flex;align-items:center;gap:0.4rem;background:rgba(16,185,129,0.12);color:#10b981;border:1px solid rgba(16,185,129,0.3);font-weight:700;" onclick="window._openAddBuildingFloorRoomModal()" title="Tambah Building, Floor & Room sekaligus">
+              <i data-lucide="layers" style="width:14px;height:14px;"></i> Add Building - Floor - Room
+            </button>
           </div>
         </div>
         <div class="table-responsive-wrapper">
           <table class="summary-table" style="width:100%;text-align:left;border-collapse:collapse;">
             <thead>
               <tr style="border-bottom:1px solid var(--border-card);background:var(--bg-card-secondary);">
-                <th style="padding:0.65rem;font-weight:bold;color:var(--text-secondary);">Room No</th>
-                <th style="padding:0.65rem;font-weight:bold;color:var(--text-secondary);">Building</th>
-                <th style="padding:0.65rem;font-weight:bold;color:var(--text-secondary);">Floor</th>
+                <th style="padding:0.65rem;font-weight:bold;color:var(--text-secondary);">Room Name / No</th>
+                <th style="padding:0.65rem;font-weight:bold;color:var(--text-secondary);">Building Name</th>
+                <th style="padding:0.65rem;font-weight:bold;color:var(--text-secondary);">Floor Name / Level</th>
                 <th style="padding:0.65rem;font-weight:bold;color:var(--text-secondary);">Area (m²)</th>
                 <th style="padding:0.65rem;font-weight:bold;color:var(--text-secondary);">Equipment</th>
                 <th style="padding:0.65rem;font-weight:bold;color:var(--text-secondary);">Status</th>
@@ -485,9 +621,9 @@ window._openAddRoomModal = function() {
   openModal({
     title: 'Add New Room',
     bodyHtml: `
-      <div class="form-row"><label>Room Number <span style="color:#ef4444;">*</span></label><input id="nr-no" type="text" placeholder="e.g. 203" style="width:100%;padding:0.5rem;border:1px solid var(--border-card);border-radius:4px;background:var(--bg-card-secondary);color:var(--text-main);"></div>
-      <div class="form-row"><label>Building <span style="color:#ef4444;">*</span></label><select id="nr-bldg" style="width:100%;padding:0.5rem;border:1px solid var(--border-card);border-radius:4px;background:var(--bg-card-secondary);color:var(--text-main);">${bldgOpts}</select></div>
-      <div class="form-row"><label>Floor</label><input id="nr-floor" type="text" placeholder="e.g. 1 or R (Roof)" style="width:100%;padding:0.5rem;border:1px solid var(--border-card);border-radius:4px;background:var(--bg-card-secondary);color:var(--text-main);"></div>
+      <div class="form-row"><label>Room Name / Number <span style="color:#ef4444;">*</span></label><input id="nr-no" type="text" placeholder="e.g. 203 or Server Room" style="width:100%;padding:0.5rem;border:1px solid var(--border-card);border-radius:4px;background:var(--bg-card-secondary);color:var(--text-main);"></div>
+      <div class="form-row"><label>Building Name <span style="color:#ef4444;">*</span></label><select id="nr-bldg" style="width:100%;padding:0.5rem;border:1px solid var(--border-card);border-radius:4px;background:var(--bg-card-secondary);color:var(--text-main);">${bldgOpts}</select></div>
+      <div class="form-row"><label>Floor Name / Level</label><input id="nr-floor" type="text" placeholder="e.g. Floor 1, Lantai 2, R (Roof)" style="width:100%;padding:0.5rem;border:1px solid var(--border-card);border-radius:4px;background:var(--bg-card-secondary);color:var(--text-main);"></div>
       <div class="form-row"><label>Area (m²)</label><input id="nr-area" type="number" placeholder="e.g. 120" style="width:100%;padding:0.5rem;border:1px solid var(--border-card);border-radius:4px;background:var(--bg-card-secondary);color:var(--text-main);"></div>
       <div class="form-row"><label>Status</label><select id="nr-status" style="width:100%;padding:0.5rem;border:1px solid var(--border-card);border-radius:4px;background:var(--bg-card-secondary);color:var(--text-main);">
         <option>Not Started</option><option>In Progress</option><option>Ready</option>
@@ -507,14 +643,81 @@ window._openAddRoomModal = function() {
   });
 };
 
+window._openAddBuildingFloorRoomModal = function() {
+  const buildings = window.appState.buildings || [];
+
+  openModal({
+    title: 'Add Building - Floor - Room (Setup Lengkap)',
+    bodyHtml: `
+      <div style="padding:0.75rem;background:rgba(37,99,235,0.06);border:1px solid rgba(37,99,235,0.2);border-radius:6px;margin-bottom:1rem;font-size:0.8rem;color:var(--text-secondary);">
+        Kelola dan tambahkan <strong>Building Name</strong>, <strong>Floor Name</strong>, dan <strong>Room Name</strong> untuk project master data.
+      </div>
+      <div class="form-row">
+        <label>Building Name <span style="color:#ef4444;">*</span></label>
+        <input id="nbfr-bldg-name" list="existing-bldgs-list" type="text" placeholder="e.g. Building A or Data Center Hub" style="width:100%;padding:0.5rem;border:1px solid var(--border-card);border-radius:4px;background:var(--bg-card-secondary);color:var(--text-main);">
+        <datalist id="existing-bldgs-list">
+          ${buildings.map(b => `<option value="${b.name}">`).join('')}
+        </datalist>
+      </div>
+      <div class="form-row">
+        <label>Floor Name / Level <span style="color:#ef4444;">*</span></label>
+        <input id="nbfr-floor-name" type="text" placeholder="e.g. Floor 1, Lantai 2, Ground Floor, Roof" style="width:100%;padding:0.5rem;border:1px solid var(--border-card);border-radius:4px;background:var(--bg-card-secondary);color:var(--text-main);">
+      </div>
+      <div class="form-row">
+        <label>Room Name / Number <span style="color:#ef4444;">*</span></label>
+        <input id="nbfr-room-name" type="text" placeholder="e.g. Rm 101, AHU Mechanical Room, Server Room" style="width:100%;padding:0.5rem;border:1px solid var(--border-card);border-radius:4px;background:var(--bg-card-secondary);color:var(--text-main);">
+      </div>
+      <div class="form-row">
+        <label>Area (m²)</label>
+        <input id="nbfr-area" type="number" value="120" placeholder="e.g. 120" style="width:100%;padding:0.5rem;border:1px solid var(--border-card);border-radius:4px;background:var(--bg-card-secondary);color:var(--text-main);">
+      </div>
+      <div class="form-row">
+        <label>Status</label>
+        <select id="nbfr-status" style="width:100%;padding:0.5rem;border:1px solid var(--border-card);border-radius:4px;background:var(--bg-card-secondary);color:var(--text-main);">
+          <option value="Ready" selected>Ready</option>
+          <option value="In Progress">In Progress</option>
+          <option value="Not Started">Not Started</option>
+        </select>
+      </div>`,
+    confirmText: 'Tambah Building, Floor & Room',
+    onConfirm: (overlay) => {
+      const bldgName = overlay.querySelector('#nbfr-bldg-name')?.value?.trim();
+      const floorName = overlay.querySelector('#nbfr-floor-name')?.value?.trim();
+      const roomName = overlay.querySelector('#nbfr-room-name')?.value?.trim();
+      const area = overlay.querySelector('#nbfr-area')?.value?.trim() || '100';
+      const status = overlay.querySelector('#nbfr-status')?.value || 'Ready';
+
+      if (!bldgName) { _showFormError(overlay, 'Building Name is required.'); return false; }
+      if (!floorName) { _showFormError(overlay, 'Floor Name / Level is required.'); return false; }
+      if (!roomName) { _showFormError(overlay, 'Room Name / Number is required.'); return false; }
+
+      // Check if building exists or create new
+      let bldg = window.appState.buildings.find(b => b.name.toLowerCase() === bldgName.toLowerCase());
+      if (!bldg) {
+        const nextCode = 'BLD-' + String.fromCharCode(65 + (window.appState.buildings.length % 26));
+        const bRes = window.createBuilding({ code: nextCode, name: bldgName, location: `Zone ${bldgName}`, type: 'Main Facility' });
+        if (!bRes.ok) { _showFormError(overlay, bRes.error); return false; }
+        bldg = bRes.building;
+      }
+
+      // Create room
+      const rRes = window.createRoom({ roomNo: roomName, buildingId: bldg.id, floor: floorName, area, status });
+      if (!rRes.ok) { _showFormError(overlay, rRes.error); return false; }
+
+      showToast(`Building "${bldgName}", Floor "${floorName}", Room "${roomName}" berhasil ditambahkan!`, 'success', 4000);
+      window.renderApp();
+    }
+  });
+};
+
 window._openEditRoomModal = function(roomId) {
   const r = window.appState.rooms.find(r => r.id === roomId);
   if (!r) return showToast('Room not found.', 'danger');
   openModal({
     title: `Edit Room ${r.roomNo}`,
     bodyHtml: `
-      <div class="form-row"><label>Room Number</label><input id="er-no" type="text" value="${r.roomNo}" style="width:100%;padding:0.5rem;border:1px solid var(--border-card);border-radius:4px;background:var(--bg-card-secondary);color:var(--text-main);"></div>
-      <div class="form-row"><label>Floor</label><input id="er-floor" type="text" value="${r.floor}" style="width:100%;padding:0.5rem;border:1px solid var(--border-card);border-radius:4px;background:var(--bg-card-secondary);color:var(--text-main);"></div>
+      <div class="form-row"><label>Room Name / Number</label><input id="er-no" type="text" value="${r.roomNo}" style="width:100%;padding:0.5rem;border:1px solid var(--border-card);border-radius:4px;background:var(--bg-card-secondary);color:var(--text-main);"></div>
+      <div class="form-row"><label>Floor Name / Level</label><input id="er-floor" type="text" value="${r.floor}" style="width:100%;padding:0.5rem;border:1px solid var(--border-card);border-radius:4px;background:var(--bg-card-secondary);color:var(--text-main);"></div>
       <div class="form-row"><label>Area (m²)</label><input id="er-area" type="number" value="${r.area}" style="width:100%;padding:0.5rem;border:1px solid var(--border-card);border-radius:4px;background:var(--bg-card-secondary);color:var(--text-main);"></div>
       <div class="form-row"><label>Status</label><select id="er-status" style="width:100%;padding:0.5rem;border:1px solid var(--border-card);border-radius:4px;background:var(--bg-card-secondary);color:var(--text-main);">
         ${['Not Started','In Progress','Ready'].map(s => `<option ${s === r.status ? 'selected' : ''}>${s}</option>`).join('')}

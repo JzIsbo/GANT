@@ -4935,3 +4935,46 @@ body.mobile-menu-open .dashboard-container {
   border-color: rgba(239, 68, 68, 0.3);
   background: rgba(239, 68, 68, 0.08);
 }
+
+/* ==========================================================================
+   MASTER DATA — HIERARCHICAL PROJECT FOLDERS & SUB-BAB STYLING
+   ========================================================================== */
+.master-data-sidebar-tree {
+  padding-bottom: 0.5rem;
+}
+
+.project-folder-row:hover {
+  background: var(--bg-card-secondary);
+}
+
+body.dark-mode .project-folder-row:hover {
+  background: rgba(255, 255, 255, 0.05);
+}
+
+.subbab-btn-row {
+  transition: all 0.15s ease-in-out;
+}
+
+.subbab-btn-row:hover {
+  transform: translateX(2px);
+  filter: brightness(1.05);
+}
+
+.project-folder-card {
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+.project-folder-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.08);
+}
+
+body.dark-mode .project-folder-card {
+  background: #1e1e2d;
+  border-color: #2b2b40;
+}
+
+body.dark-mode .project-folder-card:hover {
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.35);
+}
+

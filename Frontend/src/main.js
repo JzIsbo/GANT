@@ -562,6 +562,48 @@ window._openEditProjectModal = function(projectId) {
   });
 };
 
+window._confirmDeleteProject = function(projectId) {
+  const prj = (window.appState.projects || []).find(p => p.id === projectId);
+  if (!prj) return showToast('Project tidak ditemukan.', 'danger');
+  if ((window.appState.projects || []).length <= 1) {
+    showToast('Tidak dapat menghapus project utama / satu-satunya.', 'warning');
+    return;
+  }
+  openModal({
+    title: `Hapus Project: ${prj.name}`,
+    bodyHtml: `
+      <div style="padding:1rem;background:rgba(239,68,68,0.08);border:1px solid rgba(239,68,68,0.3);border-radius:6px;">
+        <p style="margin:0;font-size:0.9rem;color:var(--text-main);font-weight:600;">Apakah Anda yakin ingin menghapus project <strong>${window.escapeHtml(prj.name)}</strong> (${prj.code})?</p>
+        <p style="margin:0.5rem 0 0;font-size:0.8rem;color:var(--text-muted);">Semua konfigurasi folder sub-bab project ini akan dihapus. Tindakan ini tidak dapat dibatalkan.</p>
+      </div>`,
+    confirmText: 'Hapus Project',
+    confirmClass: 'btn-danger',
+    onConfirm: () => {
+      const result = window.deleteProject(projectId);
+      if (!result.ok) { showToast(result.error, 'danger'); return false; }
+      if (window.expandedProjectFolders) {
+        window.expandedProjectFolders.delete(projectId);
+      }
+      showToast(`Project "${prj.name}" berhasil dihapus.`, 'success');
+      window.renderApp();
+    }
+  });
+};
+
+window.switchProjectFolder = function(projectId, route = 'equipment-list') {
+  if (window.appState) {
+    window.appState.selectedProjectId = projectId;
+    if (window.expandedProjectFolders) {
+      window.expandedProjectFolders.add(projectId);
+    }
+  }
+  if (route) {
+    window.navigateTo(route);
+  } else {
+    window.renderApp();
+  }
+};
+
 // ================================================================
 // BUILDING CRUD
 // ================================================================

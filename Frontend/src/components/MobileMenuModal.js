@@ -203,44 +203,44 @@ export function renderMobileMenuPortal() {
           <!-- Section 5: Master Data & System Access (Multi-Project) -->
           <div class="menu-group-section">
             <div class="menu-group-title" style="display:flex;justify-content:space-between;align-items:center;">
-              <div><i data-lucide="database" style="color:#f59e0b;"></i> Master Data</div>
-              <div style="font-size:0.65rem;color:var(--brand-blue);font-weight:700;text-transform:uppercase;"><i data-lucide="folder-git-2" style="width:11px;height:11px;vertical-align:-1px;"></i> Project 1</div>
+              <div><i data-lucide="database" style="color:#f59e0b;"></i> Master Data (Folder Projects)</div>
+              <div style="font-size:0.65rem;color:var(--brand-blue);font-weight:700;text-transform:uppercase;"><i data-lucide="folder-git-2" style="width:11px;height:11px;vertical-align:-1px;"></i> ${(window.appState?.projects || []).find(p => p.id === window.appState?.selectedProjectId)?.name || 'Project 1'}</div>
             </div>
             <div class="mobile-app-tiles-grid">
               <div class="app-tile tile-orange" onclick="window.navigateTo('equipment-list');window.closeMobileSidebar();">
                 <div class="tile-header">
                   <div class="tile-icon-glow icon-orange-glow"><i data-lucide="cpu"></i></div>
-                  <span class="tile-badge badge-orange">Peralatan</span>
+                  <span class="tile-badge badge-orange">(a) Eqp</span>
                 </div>
-                <div class="tile-title">Equipment List</div>
-                <div class="tile-desc">Registri per project</div>
+                <div class="tile-title">(a) Equipment List</div>
+                <div class="tile-desc">Registri alat per project</div>
               </div>
 
               <div class="app-tile tile-emerald" onclick="window.navigateTo('room-building');window.closeMobileSidebar();">
                 <div class="tile-header">
                   <div class="tile-icon-glow icon-emerald-glow"><i data-lucide="building-2"></i></div>
-                  <span class="tile-badge badge-emerald">Spasial</span>
+                  <span class="tile-badge badge-emerald">(b) Spasial</span>
                 </div>
-                <div class="tile-title">Building / Floor / Room</div>
-                <div class="tile-desc">Hierarki fisik lokasi</div>
+                <div class="tile-title">(b) Building - Floor - Room</div>
+                <div class="tile-desc">Gedung, lantai &amp; ruangan</div>
               </div>
 
               <div class="app-tile tile-purple" onclick="window.navigateTo('user-management');window.closeMobileSidebar();">
                 <div class="tile-header">
                   <div class="tile-icon-glow icon-purple-glow"><i data-lucide="users"></i></div>
-                  <span class="tile-badge badge-purple">Auth</span>
+                  <span class="tile-badge badge-purple">(c) Auth</span>
                 </div>
-                <div class="tile-title">User Management</div>
+                <div class="tile-title">(c) User Management</div>
                 <div class="tile-desc">Otorisasi &amp; Kredensial</div>
               </div>
 
-              <div class="app-tile tile-blue" onclick="window.navigateTo('project-settings');window.closeMobileSidebar();">
+              <div class="app-tile tile-blue" onclick="window._openAddProjectModal();window.closeMobileSidebar();">
                 <div class="tile-header">
                   <div class="tile-icon-glow icon-blue-glow"><i data-lucide="folder-plus"></i></div>
-                  <span class="tile-badge badge-blue">CRUD</span>
+                  <span class="tile-badge badge-blue">+ Project</span>
                 </div>
-                <div class="tile-title">Kelola Project</div>
-                <div class="tile-desc">Tambah/Edit/Hapus Project</div>
+                <div class="tile-title">+ Tambah Project</div>
+                <div class="tile-desc">Buat sub-bab project baru</div>
               </div>
             </div>
           </div>

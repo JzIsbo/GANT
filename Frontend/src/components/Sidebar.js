@@ -72,6 +72,8 @@ const menuSections = [
 
 // Track which sections are manually expanded by user
 let expandedSections = new Set();
+let expandedProjectFolders = new Set(['PRJ-01', 'PRJ-02']);
+window.expandedProjectFolders = expandedProjectFolders;
 
 export function toggleSection(sectionId) {
   if (expandedSections.has(sectionId)) {
@@ -84,6 +86,22 @@ export function toggleSection(sectionId) {
 export function getExpandedSections() {
   return expandedSections;
 }
+
+export function toggleProjectFolder(projectId) {
+  if (!expandedProjectFolders) {
+    expandedProjectFolders = new Set([window.appState?.selectedProjectId || 'PRJ-01']);
+    window.expandedProjectFolders = expandedProjectFolders;
+  }
+  if (expandedProjectFolders.has(projectId)) {
+    expandedProjectFolders.delete(projectId);
+  } else {
+    expandedProjectFolders.add(projectId);
+  }
+  if (typeof window.renderApp === 'function') {
+    window.renderApp();
+  }
+}
+window.toggleProjectFolder = toggleProjectFolder;
 
 export function renderSidebar(activeRoute = 'dashboard') {
   // Auto-expand the section that contains the active route
@@ -135,9 +153,114 @@ export function renderSidebar(activeRoute = 'dashboard') {
         <!-- Collapsible Menu Sections -->
         ${menuSections.map(section => {
           const isExpanded = expandedSections.has(section.id);
-          const isMultiProjectSection = ['activity-management', 'project-timeline', 'master-data', 'document-management'].includes(section.id);
+          const isMasterData = section.id === 'master-data';
+          const isMultiProjectSection = ['activity-management', 'project-timeline', 'document-management'].includes(section.id);
           const activePrj = (window.appState?.projects || []).find(p => p.id === window.appState?.selectedProjectId);
           const currentProjectName = activePrj ? activePrj.name : 'Project 1 — HVAC & Plant Baseline';
+
+          if (isMasterData) {
+            const projects = window.appState?.projects || [
+              { id: 'PRJ-01', code: 'PRJ-01', name: 'Project 1 — HVAC & Plant Baseline', status: 'Active' },
+              { id: 'PRJ-02', code: 'PRJ-02', name: 'Project 2 — Data Center Substation', status: 'Active' }
+            ];
+            const selectedPrjId = window.appState?.selectedProjectId || 'PRJ-01';
+            
+            // Auto expand current project folder
+            if (!expandedProjectFolders || expandedProjectFolders.size === 0) {
+              expandedProjectFolders.add(selectedPrjId);
+            }
+            if (['equipment-list', 'room-building', 'user-management'].includes(activeRoute)) {
+              expandedProjectFolders.add(selectedPrjId);
+            }
+
+            return `
+              <div class="menu-section ${isExpanded ? 'expanded' : 'collapsed'}" id="menu-section-master-data">
+                <div class="menu-category" data-section="${section.id}">
+                  <div class="menu-category-left">
+                    <i data-lucide="${section.icon}" class="menu-category-icon"></i>
+                    <span>${section.title}</span>
+                  </div>
+                  <i data-lucide="chevron-down" class="menu-chevron"></i>
+                </div>
+                <div class="menu-section-items master-data-sidebar-tree" ${!isExpanded ? 'style="display: none;"' : ''}>
+                  
+                  <!-- Top bar: Project Sub-bab Label & Quick Add Project -->
+                  <div style="display:flex;justify-content:space-between;align-items:center;padding:0.4rem 0.85rem 0.35rem 1.6rem;border-bottom:1px solid var(--border-card);margin-bottom:0.35rem;">
+                    <span style="font-size:0.65rem;font-weight:700;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.04em;">Daftar Project</span>
+                    <button type="button" onclick="event.stopPropagation(); window._openAddProjectModal();" title="Tambah Project Baru" style="background:rgba(37,99,235,0.12);color:var(--brand-blue);border:1px solid rgba(37,99,235,0.25);border-radius:4px;padding:0.15rem 0.45rem;font-size:0.68rem;font-weight:700;display:flex;align-items:center;gap:0.25rem;cursor:pointer;">
+                      <i data-lucide="plus" style="width:11px;height:11px;"></i> Project
+                    </button>
+                  </div>
+
+                  <!-- Project Folders List -->
+                  ${projects.map(p => {
+                    const isFolderOpen = expandedProjectFolders.has(p.id);
+                    const isPrjActive = selectedPrjId === p.id;
+                    
+                    const statusColors = {
+                      'Completed': { bg: 'rgba(34,197,94,0.15)', text: '#22c55e', border: '#22c55e' },
+                      'Active':    { bg: 'rgba(37,99,235,0.15)', text: '#2563eb', border: '#2563eb' },
+                      'Planning':  { bg: 'rgba(245,158,11,0.15)', text: '#f59e0b', border: '#f59e0b' }
+                    };
+                    const badgeStyle = statusColors[p.status] || statusColors['Active'];
+
+                    return `
+                      <div class="sidebar-project-folder ${isFolderOpen ? 'open' : 'closed'} ${isPrjActive ? 'active-project' : ''}" style="margin-bottom:0.35rem;">
+                        
+                        <!-- Folder Header (Click to expand/collapse project) -->
+                        <div class="project-folder-row" onclick="window.toggleProjectFolder('${p.id}')" title="Klik untuk membuka sub-bab ${window.escapeHtml(p.name)}" style="display:flex;align-items:center;justify-content:space-between;padding:0.35rem 0.65rem 0.35rem 1.4rem;cursor:pointer;border-radius:6px;transition:background 0.15s ease;${isPrjActive ? 'background:rgba(37,99,235,0.08);border-left:3px solid var(--brand-blue);' : ''}">
+                          <div style="display:flex;align-items:center;gap:0.35rem;overflow:hidden;flex:1;">
+                            <i data-lucide="${isFolderOpen ? 'chevron-down' : 'chevron-right'}" style="width:12px;height:12px;color:var(--text-muted);flex-shrink:0;"></i>
+                            <i data-lucide="folder" style="width:13px;height:13px;color:${isPrjActive ? 'var(--brand-blue)' : 'var(--text-secondary)'};flex-shrink:0;"></i>
+                            <span style="font-size:0.73rem;font-weight:${isPrjActive ? '800' : '600'};color:${isPrjActive ? 'var(--brand-blue)' : 'var(--text-main)'};white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">
+                              ${window.escapeHtml(p.name)}
+                            </span>
+                          </div>
+                          
+                          <div style="display:flex;align-items:center;gap:0.25rem;flex-shrink:0;">
+                            <span style="font-size:0.62rem;font-weight:700;padding:0.1rem 0.35rem;border-radius:10px;background:${badgeStyle.bg};color:${badgeStyle.text};border:1px solid ${badgeStyle.border};">
+                              ${p.status || 'Active'}
+                            </span>
+                            <button type="button" onclick="event.stopPropagation(); window._openEditProjectModal('${p.id}')" title="Edit Project" style="background:transparent;border:none;color:var(--text-muted);cursor:pointer;padding:2px;display:flex;align-items:center;">
+                              <i data-lucide="edit-2" style="width:11px;height:11px;"></i>
+                            </button>
+                            ${projects.length > 1 ? `
+                              <button type="button" onclick="event.stopPropagation(); window._confirmDeleteProject('${p.id}')" title="Hapus Project" style="background:transparent;border:none;color:var(--text-muted);cursor:pointer;padding:2px;display:flex;align-items:center;">
+                                <i data-lucide="trash-2" style="width:11px;height:11px;"></i>
+                              </button>
+                            ` : ''}
+                          </div>
+                        </div>
+
+                        <!-- Sub-bab / Submenus (a, b, c) -->
+                        <div class="project-folder-submenus" ${!isFolderOpen ? 'style="display: none;"' : ''} style="padding-left:0.5rem;">
+                          
+                          <!-- (a) Equipment List -->
+                          <a class="menu-item sub-menu-item ${activeRoute === 'equipment-list' && isPrjActive ? 'active' : ''}" data-route="equipment-list" data-project-id="${p.id}" onclick="window.switchProjectFolder('${p.id}', 'equipment-list')" style="padding-left:2.2rem;font-size:0.73rem;">
+                            <i data-lucide="cpu" class="menu-icon" style="width:13px;height:13px;"></i>
+                            <span>(a) Equipment List</span>
+                          </a>
+
+                          <!-- (b) Building - Floor - Room -->
+                          <a class="menu-item sub-menu-item ${activeRoute === 'room-building' && isPrjActive ? 'active' : ''}" data-route="room-building" data-project-id="${p.id}" onclick="window.switchProjectFolder('${p.id}', 'room-building')" style="padding-left:2.2rem;font-size:0.73rem;">
+                            <i data-lucide="building-2" class="menu-icon" style="width:13px;height:13px;"></i>
+                            <span>(b) Building - Floor - Room</span>
+                          </a>
+
+                          <!-- (c) User Management -->
+                          <a class="menu-item sub-menu-item ${activeRoute === 'user-management' && isPrjActive ? 'active' : ''}" data-route="user-management" data-project-id="${p.id}" onclick="window.switchProjectFolder('${p.id}', 'user-management')" style="padding-left:2.2rem;font-size:0.73rem;">
+                            <i data-lucide="users" class="menu-icon" style="width:13px;height:13px;"></i>
+                            <span>(c) User Management</span>
+                          </a>
+
+                        </div>
+                      </div>
+                    `;
+                  }).join('')}
+                </div>
+              </div>
+            `;
+          }
 
           return `
             <div class="menu-section ${isExpanded ? 'expanded' : 'collapsed'}">
